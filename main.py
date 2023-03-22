@@ -10,6 +10,14 @@ class Game :
         self.clock = pygame.time.Clock() # For setting framerate
         self.running = True
 
+    def create_tile_map(self) :
+        for y, row in enumerate(tilemap) :
+            for x, column in enumerate(row) :
+                if column == "B" :
+                    Tile(self, x, y)
+                if column == "P" :
+                    Player(self, x, y, self.clock)
+
     def start(self) :
         # a new game starts
         self.playing = True
@@ -18,7 +26,7 @@ class Game :
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.tiles = pygame.sprite.LayeredUpdates()
 
-        self.player = Player(self, 1, 2, self.clock)
+        self.create_tile_map()
 
     def events(self) :
         # game loop events
