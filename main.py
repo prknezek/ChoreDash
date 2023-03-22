@@ -18,7 +18,7 @@ class Game :
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.tiles = pygame.sprite.LayeredUpdates()
 
-        self.player = Player(self, 1, 2)
+        self.player = Player(self, 1, 2, self.clock)
 
     def events(self) :
         # game loop events

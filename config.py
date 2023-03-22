@@ -4,7 +4,7 @@ TILESIZE = 16
 FPS = 60
 
 # PLAYER
-PLAYER_SPEED = 3
+PLAYER_SPEED = 300
 
 # LAYERS (higher number means higher priority)
 PLAYER_LAYER = 1

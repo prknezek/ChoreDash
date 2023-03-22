@@ -4,7 +4,7 @@ import math
 import random
 
 class Player(pygame.sprite.Sprite) :
-    def __init__ (self, game, x, y):
+    def __init__ (self, game, x, y, clock):
         self.game = game
         self._layer = PLAYER_LAYER
         self.groups = self.game.all_sprites
@@ -17,6 +17,7 @@ class Player(pygame.sprite.Sprite) :
 
         self.x_change = 0
         self.y_change = 0
+        self.dt = clock.tick(FPS) / 1000
 
         self.facing = FACING_DOWN
 
@@ -43,14 +44,14 @@ class Player(pygame.sprite.Sprite) :
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_LEFT] or keys[pygame.K_a] :
-            self.x_change -= PLAYER_SPEED
+            self.x_change -= PLAYER_SPEED * self.dt
             self.facing = FACING_LEFT
         if keys[pygame.K_RIGHT] or keys[pygame.K_d] :
-            self.x_change += PLAYER_SPEED
+            self.x_change += PLAYER_SPEED * self.dt
             self.facing = FACING_RIGHT
         if keys[pygame.K_UP] or keys[pygame.K_w] :
-            self.y_change -= PLAYER_SPEED
+            self.y_change -= PLAYER_SPEED * self.dt
             self.facing = FACING_UP
         if keys[pygame.K_DOWN] or keys[pygame.K_s] :
-            self.y_change += PLAYER_SPEED
+            self.y_change += PLAYER_SPEED * self.dt
             self.facing = FACING_DOWN
