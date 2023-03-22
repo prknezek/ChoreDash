@@ -1,38 +1,64 @@
 import pygame
+import sys
+from sprites import *
+from config import *
 
-pygame.init()
-FRAMES = 60
-screen = pygame.display.set_mode((1024, 720))
-clock = pygame.time.Clock()
-running = True
-dt = 0
+class Game :
+    def __init__(self) :
+        pygame.init()
+        self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+        self.clock = pygame.time.Clock() # For setting framerate
+        self.running = True
 
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+    def start(self) :
+        # a new game starts
+        self.playing = True
 
-while running:
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
-    for event in pygame.event.get() :
-        if event.type == pygame.QUIT :
-            running = False
+        # setup sprite groups
+        self.all_sprites = pygame.sprite.LayeredUpdates()
+        self.tiles = pygame.sprite.LayeredUpdates()
 
-        # fill screen with a color to wipe away anything from last frame
-    screen.fill("blue")
+        self.player = Player(self, 1, 2)
 
-    pygame.draw.circle(screen, "red", player_pos, 40)
+    def events(self) :
+        # game loop events
+        for event in pygame.event.get() :
+            # user closes window
+            if event.type == pygame.QUIT :
+                self.playing = self.running = False
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_w] :
-        player_pos.y -= 300 * dt
-    if keys[pygame.K_s] :
-        player_pos.y += 300 * dt
-    if keys[pygame.K_a] :
-        player_pos.x -= 300 * dt
-    if keys[pygame.K_d] :
-        player_pos.x += 300 * dt
+    def update(self) :
+        # game loop updates
+        self.all_sprites.update()
 
-    pygame.display.flip()
+    def draw(self) :
+        # game loop draw
+        self.screen.fill(BLACK)
+        self.all_sprites.draw(self.screen)
+        self.clock.tick(FPS)
+        pygame.display.update()
 
-    dt = clock.tick(FRAMES) / 1000
+    def main(self) :
+        # game loop
+        while self.playing :
+            self.events()
+            self.update()
+            self.draw()
+        
+        self.running = False
+
+    def game_over(self) :
+        pass
+
+    def intro_screen(self) :
+        pass
+
+g = Game()
+g.intro_screen()
+g.start()
+while g.running :
+    g.main()
+    g.game_over()
 
 pygame.quit()
+sys.exit()
