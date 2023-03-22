@@ -15,6 +15,11 @@ class Player(pygame.sprite.Sprite) :
         self.width = TILESIZE
         self.height = TILESIZE
 
+        self.x_change = 0
+        self.y_change = 0
+
+        self.facing = FACING_DOWN
+
         # Sprite
         self.image = pygame.Surface([self.width, self.height])
         self.image.fill(RED)
@@ -26,3 +31,26 @@ class Player(pygame.sprite.Sprite) :
 
     def update(self) :
         pass
+        self.movement()
+
+        self.rect.x += self.x_change
+        self.rect.y += self.y_change
+
+        self.x_change = 0
+        self.y_change = 0
+
+    def movement(self) :
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_LEFT] or keys[pygame.K_a] :
+            self.x_change -= PLAYER_SPEED
+            self.facing = FACING_LEFT
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d] :
+            self.x_change += PLAYER_SPEED
+            self.facing = FACING_RIGHT
+        if keys[pygame.K_UP] or keys[pygame.K_w] :
+            self.y_change -= PLAYER_SPEED
+            self.facing = FACING_UP
+        if keys[pygame.K_DOWN] or keys[pygame.K_s] :
+            self.y_change += PLAYER_SPEED
+            self.facing = FACING_DOWN
