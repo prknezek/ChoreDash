@@ -1,7 +1,7 @@
 import pygame
 import sys
 from sprites import *
-from config import *
+from .config import *
 from level import Level
 from game_data import house
 

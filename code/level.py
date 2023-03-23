@@ -1,6 +1,6 @@
 import pygame
+from .config import *
 from support import import_csv_layout, import_cut_graphics
-from config import *
 from tiles import Tile, StaticTile
 
 class Level :

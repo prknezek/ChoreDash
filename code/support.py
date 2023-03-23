@@ -1,5 +1,5 @@
 from csv import reader
-from config import TILESIZE
+from .config import TILESIZE
 import pygame
 
 def import_csv_layout(path) :
