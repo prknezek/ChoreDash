@@ -47,22 +47,3 @@ class Player(pygame.sprite.Sprite) :
         if keys[pygame.K_DOWN] or keys[pygame.K_s] :
             self.rect.y += PLAYER_SPEED * self.dt
             self.facing = FACING_DOWN
-
-class Tile(pygame.sprite.Sprite) :
-    def __init__(self, game, x, y) :
-        self.game = game
-        self._layer = TILE_LAYER
-        self.groups = self.game.all_sprites, self.game.tiles
-        pygame.sprite.Sprite.__init__(self, self.groups)
-
-        self.x = x * TILESIZE
-        self.y = y * TILESIZE
-        self.width = TILESIZE
-        self.height = TILESIZE
-
-        self.image = pygame.Surface([self.width, self.height])
-        self.image.fill(BLUE)
-
-        self.rect = self.image.get_rect()
-        self.rect.x = self.x
-        self.rect.y = self.y

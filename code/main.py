@@ -2,6 +2,8 @@ import pygame
 import sys
 from sprites import *
 from config import *
+from level import Level
+from game_data import house
 
 class Game :
     def __init__(self) :
@@ -9,24 +11,11 @@ class Game :
         self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.clock = pygame.time.Clock() # For setting framerate
         self.running = True
-
-    def create_tile_map(self) :
-        for y, row in enumerate(tilemap) :
-            for x, column in enumerate(row) :
-                if column == "B" :
-                    Tile(self, x, y)
-                if column == "P" :
-                    Player(self, x, y, self.clock)
+        self.level = Level(house, self.screen)
 
     def start(self) :
         # a new game starts
         self.playing = True
-
-        # setup sprite groups
-        self.all_sprites = pygame.sprite.LayeredUpdates()
-        self.tiles = pygame.sprite.LayeredUpdates()
-
-        self.create_tile_map()
 
     def events(self) :
         # game loop events
@@ -34,24 +23,19 @@ class Game :
             # user closes window
             if event.type == pygame.QUIT :
                 self.playing = self.running = False
-
-    def update(self) :
-        # game loop updates
-        self.all_sprites.update()
-
-    def draw(self) :
-        # game loop draw
-        self.screen.fill(BLACK)
-        self.all_sprites.draw(self.screen)
-        self.clock.tick(FPS)
-        pygame.display.update()
+                pygame.quit()
+                sys.exit()
 
     def main(self) :
         # game loop
         while self.playing :
             self.events()
-            self.update()
-            self.draw()
+
+            self.screen.fill('black')
+            self.level.run()
+
+            pygame.display.update()
+            self.clock.tick(FPS)
         
         self.running = False
 
@@ -67,6 +51,3 @@ g.start()
 while g.running :
     g.main()
     g.game_over()
-
-pygame.quit()
-sys.exit()
