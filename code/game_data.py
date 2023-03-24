@@ -1,3 +1,5 @@
+import config as cg
+
 house = {
     'black' : './house/house_csv/house_Black.csv',
     'constraints' : './house/house_csv/house_Constraints.csv',
@@ -26,4 +28,32 @@ house = {
     'living_room_furniture' : './house/house_csv/house_LivingRoomFurniture.csv',
     'living_room_wall_decoration' : './house/house_csv/house_LivingRoomWallDecoration.csv',
     'sports_floor_decoration' : './house/house_csv/house_SportsFloorDecoration.csv',
+}
+
+static_tile_paths = {
+    'black' : cg.BLACK_TILE_PATH,
+    'constraints' : cg.CONSTRAINTS_TILE_PATH,
+    'floor' : cg.FLOOR_TILE_PATH,
+    'player' : cg.PLAYER_TILE_PATH,
+    'walls' : cg.WALL_TILE_PATH,
+    'bathroom_decoration' : cg.BATHROOM_DECORATION_PATH,
+    'bathroom_floor_decoration' : cg.BATHROOM_FLOOR_DECORATION_PATH,
+    'bathroom_furniture' : cg.BATHROOM_FURNITURE_PATH,
+    'bedroom_decoration' : cg.BEDROOM_DECORATION_PATH,
+    'bedroom_floor_decoration' : cg.BEDROOM_FLOOR_DECORATION_PATH,
+    'bedroom_furniture' : cg.BEDROOM_FURNITURE_PATH,
+    'birthday_decoration' : cg.BIRTHDAY_DECORATION_PATH,
+    'gym_floor_decoration' : cg.GYM_FLOOR_DECORATION_PATH,
+    'in_front_bathroom' : cg.IN_FRONT_BATHROOM_PATH,
+    'in_front_living_room' : cg.IN_FRONT_LIVING_ROOM_PATH,
+    'jail_floor_decoration' : cg.JAIL_FLOOR_DECORATION_PATH,
+    'japanese_floor_decoration' : cg.JAPANESE_FLOOR_DECORATION_PATH,
+    'kitchen_decoration_1' : cg.KITCHEN_DECORATION_1_PATH,
+    'kitchen_decoration_2' : cg.KITCHEN_DECORATION_2_PATH,
+    'kitchen_furniture' : cg.KITCHEN_FURNITURE_PATH,
+    'kitchen_wall_decoration' : cg.KITCHEN_WALL_DECORATION_PATH,
+    'living_room_decoration' : cg.LIVING_ROOM_DECORATION_PATH,
+    'living_room_furniture' : cg.LIVING_ROOM_FURNITURE_PATH,
+    'living_room_wall_decoration' : cg.LIVING_ROOM_WALL_DECORATION_PATH,
+    'sports_floor_decoration' : cg.SPORTS_FLOOR_DECORATION_PATH,
 }

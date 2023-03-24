@@ -2,6 +2,7 @@ import pygame
 import config as cg
 from support import import_csv_layout, import_cut_graphics
 from tiles import StaticTile, DoorTile
+from game_data import *
 
 class Level :
     def __init__(self, level_data, surface) :
@@ -10,29 +11,16 @@ class Level :
         self.horizontal_shift = -1
         self.vertical_shift = -1
 
-        # black
-        black_layout = import_csv_layout(level_data['black'])
-        self.black_sprites = self.create_tile_group(black_layout, 'black')
+        self.layouts = {}
+        self.sprites = {}
 
-        # floor
-        floor_layout = import_csv_layout(level_data['floor'])
-        self.floor_sprites = self.create_tile_group(floor_layout, 'floor')
-
-        # furniture
-        wall_layout = import_csv_layout(level_data['walls'])
-        self.wall_sprites = self.create_tile_group(wall_layout, 'walls')
-
-        # left door
-        left_door_layout = import_csv_layout(level_data['left_doors'])
-        self.left_door_sprites = self.create_tile_group(left_door_layout, 'left_doors')
-
-        # right door
-        right_door_layout = import_csv_layout(level_data['right_doors'])
-        self.right_door_sprites = self.create_tile_group(right_door_layout, 'right_doors')
-
-        # bathroom decoration
-        bathroom_decoration_layout = import_csv_layout(level_data['bathroom_decoration'])
-        self.bathroom_decoration_sprites = self.create_tile_group(bathroom_decoration_layout, 'bathroom_decoration')
+        # import csvs
+        for name in house :
+            self.layouts[name] = import_csv_layout(level_data[name])
+        
+        for name in self.layouts :
+            print(name)
+            self.create_and_add_tile_group_to_list(self.layouts[name], name)
 
     def create_tile_group(self, layout, type) :
         sprite_group = pygame.sprite.Group()
@@ -43,29 +31,14 @@ class Level :
                     x = col_index * cg.TILESIZE
                     y = row_index * cg.TILESIZE
 
-                    if type == 'black' :
-                        black_tile_list = import_cut_graphics(cg.BLACK_TILE_PATH)
-                        tile_surface = black_tile_list[int(val)]
-                        sprite = StaticTile(cg.TILESIZE, x, y, tile_surface)
-                        
-                    if type == 'floor' :
-                        floor_tile_list = import_cut_graphics(cg.FLOOR_TILE_PATH)
-                        tile_surface = floor_tile_list[int(val)]
-                        sprite = StaticTile(cg.TILESIZE, x, y, tile_surface)
-                    
-                    if type == 'walls' :
-                        wall_tile_list = import_cut_graphics(cg.WALL_TILE_PATH)
-                        tile_surface = wall_tile_list[int(val)]
-                        sprite = StaticTile(cg.TILESIZE, x, y, tile_surface)
+                    # create static tile sprites
+                    for name in static_tile_paths :
+                        if type == name :
+                            sprite = self.create_static_sprite(static_tile_paths[name], val, x, y)
 
-                    if type == 'bathroom_decoration' :
-                        bathroom_decoration_tile_list = import_cut_graphics(cg.BATHROOM_DECORATION_PATH)
-                        tile_surface = bathroom_decoration_tile_list[int(val)]
-                        sprite = StaticTile(cg.TILESIZE, x, y, tile_surface)
-
+                    # create animated tile sprites
                     if type == 'left_doors' :
                         sprite = DoorTile(cg.TILESIZE, x, y, cg.LEFT_DOOR_PATH)
-
                     if type == 'right_doors' :
                         sprite = DoorTile(cg.TILESIZE, x, y, cg.RIGHT_DOOR_PATH)
 
@@ -75,27 +48,18 @@ class Level :
 
     def run(self) :
         # run the level
+        for sprite in self.sprites :
+            self.update_and_draw(self.sprites[sprite]) 
 
-        # black
-        self.black_sprites.update(self.horizontal_shift, self.vertical_shift)
-        self.black_sprites.draw(self.display_surface)
+    def create_static_sprite(self, path, val, x, y) :
+        tile_list = import_cut_graphics(path)
+        tile_surface = tile_list[int(val)]
+        sprite = StaticTile(cg.TILESIZE, x, y, tile_surface)
+        return sprite
 
-        # floor
-        self.floor_sprites.update(self.horizontal_shift, self.vertical_shift)
-        self.floor_sprites.draw(self.display_surface)
+    def create_and_add_tile_group_to_list(self, layout, name) :
+        self.sprites[name + '_sprites'] = self.create_tile_group(layout, name)
 
-        # walls
-        self.wall_sprites.update(self.horizontal_shift, self.vertical_shift)
-        self.wall_sprites.draw(self.display_surface)
-
-        # left doors
-        self.left_door_sprites.update(self.horizontal_shift, self.vertical_shift)
-        self.left_door_sprites.draw(self.display_surface)
-
-        # right doors
-        self.right_door_sprites.update(self.horizontal_shift, self.vertical_shift)
-        self.right_door_sprites.draw(self.display_surface)
-
-        # bathroom decoration
-        self.bathroom_decoration_sprites.update(self.horizontal_shift, self.vertical_shift)
-        self.bathroom_decoration_sprites.draw(self.display_surface)
+    def update_and_draw(self, sprites) :
+        sprites.update(self.horizontal_shift, self.vertical_shift)
+        sprites.draw(self.display_surface)

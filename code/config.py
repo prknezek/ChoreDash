@@ -26,6 +26,8 @@ FACING_DOWN = 'down'
 BLACK_TILE_PATH = './graphics/tiles/Tileset_32x32_17.png'
 FLOOR_TILE_PATH = './graphics/tiles/Floors_only_32x32.png'
 WALL_TILE_PATH = './graphics/tiles/CorrectTileset_32x32_17.png'
+CONSTRAINTS_TILE_PATH = './graphics/tiles/constraint.png'
+PLAYER_TILE_PATH = './graphics/tiles/player_start.png'
 
 # BATHROOM
 BATHROOM_DECORATION_PATH = './graphics/tiles/3_Bathroom_32x32.png'
