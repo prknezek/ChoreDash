@@ -3,6 +3,7 @@ import config as cg
 from support import import_csv_layout, import_cut_graphics
 from tiles import StaticTile, DoorTile
 from game_data import *
+from player import Player
 
 class Level :
     def __init__(self, level_data, surface) :
@@ -14,13 +15,18 @@ class Level :
         self.layouts = {}
         self.sprites = {}
 
+        self.player = pygame.sprite.GroupSingle()
+
         # import csvs
         for name in house :
-            self.layouts[name] = import_csv_layout(level_data[name])
-        
+            if name != 'player' :
+                self.layouts[name + '_layout'] = import_csv_layout(level_data[name])
+            else :
+                player_layout = import_csv_layout(level_data['player'])
+                self.player_setup(player_layout)
+
         for name in self.layouts :
-            #print(name)
-            self.create_and_add_tile_group_to_list(self.layouts[name], name)
+            self.create_and_add_tile_group_to_list(self.layouts[name], name[:-7])
 
     def create_tile_group(self, layout, type) :
         sprite_group = pygame.sprite.Group()
@@ -47,11 +53,29 @@ class Level :
 
         return sprite_group
 
+    def player_setup(self, layout) :
+        for row_index, row in enumerate(layout) :
+            for col_index, val in enumerate(row) :
+                x = col_index * cg.TILESIZE
+                y = row_index * cg.TILESIZE
+                if val == '0' :
+                    print('player found')
+                    player_sprite = Player((x, y))
+                    self.player.add(player_sprite)
+                    
+
     def run(self) :
         # run the level
         for sprite in self.sprites :
             # furthest back drawn first
-            self.update_and_draw(self.sprites[sprite]) 
+            if sprite != 'constraints_sprites':
+                self.update_and_draw(self.sprites[sprite])
+            else :
+                self.sprites[sprite].update(self.horizontal_shift, self.vertical_shift)
+
+        # draw player
+        self.player.update()
+        self.player.draw(self.display_surface)
 
     def create_static_sprite(self, path, val, x, y) :
         tile_list = import_cut_graphics(path)
