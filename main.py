@@ -2,6 +2,8 @@ import pygame
 import sys
 from sprites import *
 from config import *
+from phone import *
+
 
 class Game :
     def __init__(self) :
@@ -9,6 +11,8 @@ class Game :
         self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.clock = pygame.time.Clock() # For setting framerate
         self.running = True
+        self.showScreen = False
+    
 
     def create_tile_map(self) :
         for y, row in enumerate(tilemap) :
@@ -17,6 +21,7 @@ class Game :
                     Tile(self, x, y)
                 if column == "P" :
                     Player(self, x, y, self.clock)
+
 
     def start(self) :
         # a new game starts
@@ -34,6 +39,11 @@ class Game :
             # user closes window
             if event.type == pygame.QUIT :
                 self.playing = self.running = False
+            # elif event.type == pygame.KEYDOWN:
+            #     if event.key == pygame.K_e:
+            #         self.miniScreen()
+                    
+
 
     def update(self) :
         # game loop updates

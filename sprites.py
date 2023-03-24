@@ -2,6 +2,7 @@ import pygame
 from config import *
 import math
 import random
+# from main import *
 
 class Player(pygame.sprite.Sprite) :
     def __init__ (self, game, x, y, clock):
