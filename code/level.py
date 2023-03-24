@@ -7,8 +7,8 @@ class Level :
     def __init__(self, level_data, surface) :
         # general setup
         self.display_surface = surface
-        self.horizontal_shift = 0
-        self.vertical_shift = 0
+        self.horizontal_shift = -1
+        self.vertical_shift = -1
 
         # black
         black_layout = import_csv_layout(level_data['black'])
@@ -29,6 +29,10 @@ class Level :
         # right door
         right_door_layout = import_csv_layout(level_data['right_doors'])
         self.right_door_sprites = self.create_tile_group(right_door_layout, 'right_doors')
+
+        # bathroom decoration
+        bathroom_decoration_layout = import_csv_layout(level_data['bathroom_decoration'])
+        self.bathroom_decoration_sprites = self.create_tile_group(bathroom_decoration_layout, 'bathroom_decoration')
 
     def create_tile_group(self, layout, type) :
         sprite_group = pygame.sprite.Group()
@@ -52,6 +56,11 @@ class Level :
                     if type == 'walls' :
                         wall_tile_list = import_cut_graphics(cg.WALL_TILE_PATH)
                         tile_surface = wall_tile_list[int(val)]
+                        sprite = StaticTile(cg.TILESIZE, x, y, tile_surface)
+
+                    if type == 'bathroom_decoration' :
+                        bathroom_decoration_tile_list = import_cut_graphics(cg.BATHROOM_DECORATION_PATH)
+                        tile_surface = bathroom_decoration_tile_list[int(val)]
                         sprite = StaticTile(cg.TILESIZE, x, y, tile_surface)
 
                     if type == 'left_doors' :
@@ -86,3 +95,7 @@ class Level :
         # right doors
         self.right_door_sprites.update(self.horizontal_shift, self.vertical_shift)
         self.right_door_sprites.draw(self.display_surface)
+
+        # bathroom decoration
+        self.bathroom_decoration_sprites.update(self.horizontal_shift, self.vertical_shift)
+        self.bathroom_decoration_sprites.draw(self.display_surface)

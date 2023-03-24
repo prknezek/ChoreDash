@@ -35,7 +35,7 @@ def import_cut_graphics(path) :
             x = col * cg.TILESIZE
             y = row * cg.TILESIZE
 
-            new_surface = pygame.Surface((cg.TILESIZE, cg.TILESIZE))
+            new_surface = pygame.Surface((cg.TILESIZE, cg.TILESIZE), pygame.SRCALPHA)
             new_surface.blit(surface, (0, 0), pygame.Rect(x, y, cg.TILESIZE, cg.TILESIZE))
             cut_tiles.append(new_surface)
 
