@@ -1,14 +1,14 @@
 import pygame
 import sys
-from sprites import *
-from .config import *
+#from sprites import *
+import config as cg
 from level import Level
 from game_data import house
 
 class Game :
     def __init__(self) :
         pygame.init()
-        self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+        self.screen = pygame.display.set_mode((cg.WIN_WIDTH, cg.WIN_HEIGHT))
         self.clock = pygame.time.Clock() # For setting framerate
         self.running = True
         self.level = Level(house, self.screen)
@@ -35,7 +35,7 @@ class Game :
             self.level.run()
 
             pygame.display.update()
-            self.clock.tick(FPS)
+            self.clock.tick(cg.FPS)
         
         self.running = False
 
