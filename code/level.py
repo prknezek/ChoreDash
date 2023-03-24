@@ -8,8 +8,8 @@ class Level :
     def __init__(self, level_data, surface) :
         # general setup
         self.display_surface = surface
-        self.horizontal_shift = -1
-        self.vertical_shift = -1
+        self.horizontal_shift = 0
+        self.vertical_shift = 0
 
         self.layouts = {}
         self.sprites = {}
@@ -19,7 +19,7 @@ class Level :
             self.layouts[name] = import_csv_layout(level_data[name])
         
         for name in self.layouts :
-            print(name)
+            #print(name)
             self.create_and_add_tile_group_to_list(self.layouts[name], name)
 
     def create_tile_group(self, layout, type) :
@@ -37,10 +37,11 @@ class Level :
                             sprite = self.create_static_sprite(static_tile_paths[name], val, x, y)
 
                     # create animated tile sprites
-                    if type == 'left_doors' :
-                        sprite = DoorTile(cg.TILESIZE, x, y, cg.LEFT_DOOR_PATH)
-                    if type == 'right_doors' :
-                        sprite = DoorTile(cg.TILESIZE, x, y, cg.RIGHT_DOOR_PATH)
+                    if type == 'doors' :
+                        sprite = DoorTile(cg.TILESIZE, x, y, cg.RIGHT_DOOR_PATH, cg.DOOR_TILE_OFFSET)
+                        # when setting door to open to left, offset by 24
+                        # sprite.offset_x(24)
+                        # sprite.set_open_animation(cg.LEFT_DOOR_PATH)
 
                     sprite_group.add(sprite)
 
@@ -49,6 +50,7 @@ class Level :
     def run(self) :
         # run the level
         for sprite in self.sprites :
+            # furthest back drawn first
             self.update_and_draw(self.sprites[sprite]) 
 
     def create_static_sprite(self, path, val, x, y) :

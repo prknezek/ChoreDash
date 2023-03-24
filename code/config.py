@@ -5,12 +5,10 @@ VERTICAL_TILE_NUMBER = 26
 TILESIZE = 32
 FPS = 60
 
+DOOR_ANIMATION_TIME = 0.15
+
 # PLAYER
 PLAYER_SPEED = 300
-
-# LAYERS (higher number means higher priority)
-PLAYER_LAYER = 2
-TILE_LAYER = 1
 
 # COLORS
 BLACK = (0, 0, 0)
@@ -65,3 +63,4 @@ SPORTS_FLOOR_DECORATION_PATH = './graphics/tiles/Music_and_Sport_Singles_Shadowl
 # DOORS
 LEFT_DOOR_PATH = './graphics/animated_tiles/left_door'
 RIGHT_DOOR_PATH = './graphics/animated_tiles/right_door'
+DOOR_TILE_OFFSET = 6
