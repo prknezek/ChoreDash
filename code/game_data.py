@@ -1,7 +1,6 @@
 import config as cg
 
 house = {
-    'constraints' : './house/house_csv/house_Constraints.csv',
     'black' : './house/house_csv/house_Black.csv',
     'floor' : './house/house_csv/house_Floor.csv',
     'bedroom_floor_decoration' : './house/house_csv/house_BedroomFloorDecoration.csv',
@@ -27,6 +26,7 @@ house = {
     'player' : './house/house_csv/house_Player.csv',
     'in_front_bathroom' : './house/house_csv/house_InFrontBathroom.csv',
     'in_front_living_room' : './house/house_csv/house_InFrontLivingRoom.csv',
+    'constraints' : './house/house_csv/house_Constraints.csv',
 }
 
 static_tile_paths = {
