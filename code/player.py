@@ -1,4 +1,5 @@
 import pygame
+import config as cg
 
 class Player(pygame.sprite.Sprite) :
     def __init__(self, pos) :
@@ -7,6 +8,9 @@ class Player(pygame.sprite.Sprite) :
         self.image.fill('red')
         self.rect = self.image.get_rect(topleft = pos)
         self.direction = pygame.math.Vector2(0, 0)
+        self.clock = pygame.time.Clock()
+
+        self.speed = 300
 
     def get_input(self) :
         keys = pygame.key.get_pressed()
@@ -26,5 +30,6 @@ class Player(pygame.sprite.Sprite) :
         
     def update(self) :
         self.get_input()
-        self.rect.x += self.direction.x
-        self.rect.y += self.direction.y
+        dt = self.clock.tick(cg.FPS) / 1000
+        self.rect.x += self.direction.x * self.speed * dt
+        self.rect.y += self.direction.y * self.speed * dt

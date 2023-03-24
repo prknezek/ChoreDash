@@ -73,7 +73,7 @@ class Level :
             else :
                 self.sprites[sprite].update(self.horizontal_shift, self.vertical_shift)
 
-        # draw player
+        # player
         self.player.update()
         self.player.draw(self.display_surface)
 
