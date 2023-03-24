@@ -22,8 +22,7 @@ class Level :
             if name != 'player' :
                 self.layouts[name + '_layout'] = import_csv_layout(level_data[name])
             else :
-                player_layout = import_csv_layout(level_data['player'])
-                self.player_setup(player_layout)
+                self.player_setup()
 
         for name in self.layouts :
             self.create_and_add_tile_group_to_list(self.layouts[name], name[:-7])
@@ -53,16 +52,29 @@ class Level :
 
         return sprite_group
 
-    def player_setup(self, layout) :
-        for row_index, row in enumerate(layout) :
-            for col_index, val in enumerate(row) :
-                x = col_index * cg.TILESIZE
-                y = row_index * cg.TILESIZE
-                if val == '0' :
-                    print('player found')
-                    player_sprite = Player((x, y))
-                    self.player.add(player_sprite)
+    def player_setup(self) :
+        player_sprite = Player(((cg.WIN_WIDTH / 2) - (cg.TILESIZE / 2), (cg.WIN_HEIGHT / 2)- (cg.TILESIZE / 2)))
+        self.player.add(player_sprite)
                     
+    def scroll(self) :
+        player = self.player.sprite
+
+        direction_x = player.direction.x
+        direction_y = player.direction.y
+
+        if direction_x < 0 :
+            self.horizontal_shift = cg.PLAYER_SPEED
+        elif direction_x > 0:
+            self.horizontal_shift = -cg.PLAYER_SPEED
+        else :
+            self.horizontal_shift = 0
+
+        if direction_y < 0 :
+            self.vertical_shift = cg.PLAYER_SPEED
+        elif direction_y > 0 :
+            self.vertical_shift = -cg.PLAYER_SPEED
+        else :
+            self.vertical_shift = 0
 
     def run(self) :
         # run the level
@@ -76,6 +88,7 @@ class Level :
         # player
         self.player.update()
         self.player.draw(self.display_surface)
+        self.scroll()
 
     def create_static_sprite(self, path, val, x, y) :
         tile_list = import_cut_graphics(path)
@@ -89,3 +102,5 @@ class Level :
     def update_and_draw(self, sprites) :
         sprites.update(self.horizontal_shift, self.vertical_shift)
         sprites.draw(self.display_surface)
+
+    

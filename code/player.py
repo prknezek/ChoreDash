@@ -8,11 +8,9 @@ class Player(pygame.sprite.Sprite) :
         self.image.fill('red')
         self.rect = self.image.get_rect(topleft = pos)
         self.direction = pygame.math.Vector2(0, 0)
-        self.clock = pygame.time.Clock()
-
-        self.speed = 300
 
     def get_input(self) :
+        # player does not move but shifts tiles around them
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_RIGHT] or keys[pygame.K_d] :
@@ -30,6 +28,3 @@ class Player(pygame.sprite.Sprite) :
         
     def update(self) :
         self.get_input()
-        dt = self.clock.tick(cg.FPS) / 1000
-        self.rect.x += self.direction.x * self.speed * dt
-        self.rect.y += self.direction.y * self.speed * dt
