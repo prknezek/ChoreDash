@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite) :
         # movement
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
-        self.speed = 200
+        self.speed = 250
         self.hitbox = self.rect.copy().inflate((-126, -70))
 
     def import_assets(self) :
@@ -29,7 +29,9 @@ class Player(pygame.sprite.Sprite) :
             self.animations[animation] = import_folder(full_path)
 
     def animate(self, dt) :
-        self.frame_index += 4 * dt
+        ANIMATION_SPEED = 20
+
+        self.frame_index += ANIMATION_SPEED * dt
         if self.frame_index >= len(self.animations[self.status]) :
             self.frame_index = 0
         self.image = self.animations[self.status][int(self.frame_index)]
@@ -61,7 +63,7 @@ class Player(pygame.sprite.Sprite) :
     def get_status(self) :
         # if player not moving add _idle to status
         if self.direction.magnitude() == 0 :
-            self.status += '_idle'
+            self.status = self.status.split('_')[0] + '_idle'
 
     def move(self, dt) :
         if self.direction.magnitude() > 0 :
@@ -79,5 +81,6 @@ class Player(pygame.sprite.Sprite) :
         
     def update(self, dt) :
         self.input()
+        self.get_status()
         self.move(dt)
         self.animate(dt)
