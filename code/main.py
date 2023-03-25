@@ -1,4 +1,5 @@
 import pygame
+from pygame.locals import *
 import sys
 import config as cg
 from level import Level
@@ -7,7 +8,7 @@ from phone import *
 class Game :
     def __init__(self) :
         pygame.init()
-        self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT), SCALED)
         self.clock = pygame.time.Clock() # For setting framerate
         pygame.display.set_caption("ChoreDash")
         self.level = Level() #house, self.screen
