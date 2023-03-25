@@ -10,9 +10,25 @@ DOOR_ANIMATION_TIME = 0.15
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 
+# TILED TILE LAYERS
+FLOOR_DECORATION = ['BedroomFloorDecoration', 'JapaneseFloorDecoration', 'JailFloorDecoration', 'GymFloorDecoration', 'SportsFloorDecoration', 'BathroomFloorDecoration']
+WALL_DECORATION = ['LivingRoomWallDecoration', 'KitchenWallDecoration']
+FURNITURE = ['KitchenFurniture', 'BedroomFurniture', 'BathroomFurniture', 'LivingRoomFurniture']
+DECORATION = ['LivingRoomDecoration', 'KitchenDecoration_1', 'BedroomDecoration', 'BathroomDecoration', 'BirthdayDecoration', 'KitchenDecoration_2']
+
 LAYERS = {
-    'house' : 0,
-    'main' : 1
+    'black' : 0,
+    'floor' : 1,
+    'floor_decoration' : 2,
+    'walls' : 3,
+    'wall_decoration' : 4,
+    'furniture' : 5,
+    'decoration' : 6,
+    'doors' : 7,
+    'main' : 8,
+    'in_front_bathroom' : 9,
+    'in_front_living_room' : 10,
+    'constraints' : 11,
 }
 
 # TILE PATHS
