@@ -12,18 +12,18 @@ class Phone:
 
     def initialize(self):
         pygame.init()
-        self.screen = pygame.Surface((cg.SCREEN_WIDTH//2, cg.SCREEN_HEIGHT//2))
+        self.screen = pygame.Surface((cg.SCREEN_WIDTH//4, cg.SCREEN_HEIGHT//2))
 
     def display(self, screen):
-        red = (255, 0, 0) # Define the color red
-        rect = pygame.Rect(0, 0, cg.SCREEN_WIDTH//2, cg.SCREEN_HEIGHT//2) # Create a rectangle
-        pygame.draw.rect(self.screen, red, rect) # Draw the rectangle
-        screen.blit(self.screen, (cg.SCREEN_WIDTH//4, cg.SCREEN_HEIGHT//4)) # Blit phone screen onto main screen
-        pygame.display.flip() # Update the display
+        red = (255, 0, 0)
+        rect = pygame.Rect(0, 0, cg.SCREEN_WIDTH//4, cg.SCREEN_HEIGHT//2)
+        pygame.draw.rect(self.screen, red, rect) 
+        screen.blit(self.screen, (50, cg.SCREEN_HEIGHT//2)) 
+        pygame.display.flip() # Update the display  
 
     def run(self, screen):
-        # game loop
-        self.events() # process events
+ 
+        self.events() 
         if self.show_phone:
             self.display(screen)
         else:
@@ -39,4 +39,4 @@ class Phone:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_e:
-                    self.show_phone = not self.show_phone # Toggle the value of show_phone
+                    self.show_phone = not self.show_phone # toggle
