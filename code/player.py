@@ -27,7 +27,6 @@ class Player(pygame.sprite.Sprite) :
         for animation in self.animations.keys() :
             full_path = './graphics/character/' + animation
             self.animations[animation] = import_folder(full_path)
-        print(self.animations)
 
     def animate(self, dt) :
         self.frame_index += 4 * dt
@@ -41,20 +40,29 @@ class Player(pygame.sprite.Sprite) :
 
         # horizontal movement
         if keys[pygame.K_RIGHT] or keys[pygame.K_d] :
+            self.status = 'right'
             self.direction.x = 1
         elif keys[pygame.K_LEFT] or keys[pygame.K_a] :
+            self.status = 'left'
             self.direction.x = -1
         else :
             self.direction.x = 0
 
         # vertical movement
         if keys[pygame.K_UP] or keys[pygame.K_w] :
+            self.status = 'up'
             self.direction.y = -1
         elif keys[pygame.K_DOWN] or keys[pygame.K_s] :
+            self.status = 'down'
             self.direction.y = 1
         else :
             self.direction.y = 0
     
+    def get_status(self) :
+        # if player not moving add _idle to status
+        if self.direction.magnitude() == 0 :
+            self.status += '_idle'
+
     def move(self, dt) :
         if self.direction.magnitude() > 0 :
             self.direction = self.direction.normalize()
@@ -72,3 +80,4 @@ class Player(pygame.sprite.Sprite) :
     def update(self, dt) :
         self.input()
         self.move(dt)
+        self.animate(dt)
