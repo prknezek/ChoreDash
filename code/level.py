@@ -1,8 +1,9 @@
 import pygame
 import config as cg
 from player import Player
-from sprites import Generic
+from sprites import Generic, Door
 from pytmx.util_pygame import load_pygame
+from support import *
 
 class Level :
     def __init__(self) :
@@ -17,7 +18,7 @@ class Level :
     def setup(self) :
         tmx_data = load_pygame('./house/house_data/house.tmx')
 
-        # draw tiles
+        # draw generic tiles
         self.draw_generic_tiles('Black', 'black')
         self.draw_generic_tiles('Floor', 'floor')
         self.draw_generic_tiles_in_layer(cg.FLOOR_DECORATION, 'floor_decoration')
@@ -26,13 +27,16 @@ class Level :
         self.draw_generic_tiles_in_layer(cg.FURNITURE, 'furniture')
         self.draw_generic_tiles_in_layer(cg.DECORATION, 'decoration')
 
-        self.player = Player((320, 240), self.all_sprites)
+        # draw animated tiles
+        door_frames = import_folder('./graphics/animated_tiles/right_door')
+        print(door_frames)
+        for x, y, surface in tmx_data.get_layer_by_name('Doors').tiles() :
+            Door(pos = (x * cg.TILESIZE, y * cg.TILESIZE),
+                 frames = door_frames,
+                 groups = self.all_sprites,
+                 offset = cg.DOOR_TILE_OFFSET)
 
-        # house
-        # Generic(pos = (0,0),
-        #         surface = pygame.image.load('./graphics/world/house.png').convert_alpha(),
-        #         groups = self.all_sprites,
-        #         z = cg.LAYERS['house'])
+        self.player = Player((320, 240), self.all_sprites)
         
     def run(self, dt) :
         self.display_surface.fill('black')
