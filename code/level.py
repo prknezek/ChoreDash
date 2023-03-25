@@ -28,7 +28,10 @@ class Level :
             self.create_and_add_tile_group_to_list(self.layouts[name], name[:-7])
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
     def player_setup(self) :
         player_sprite = Player(((cg.WIN_WIDTH / 2) - (cg.TILESIZE / 2), (cg.WIN_HEIGHT / 2)- (cg.TILESIZE / 2)))
         self.player.add(player_sprite)
@@ -36,6 +39,9 @@ class Level :
     def create_and_add_tile_group_to_list(self, layout, name) :
         self.sprites[name + '_sprites'] = self.create_tile_group(layout, name)
 
+<<<<<<< HEAD
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
+=======
 >>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
     def create_tile_group(self, layout, type) :
         sprite_group = pygame.sprite.Group()
@@ -63,11 +69,14 @@ class Level :
         return sprite_group
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     def player_setup(self) :
         player_sprite = Player(((cg.WIN_WIDTH / 2) - (cg.TILESIZE / 2), (cg.WIN_HEIGHT / 2)- (cg.TILESIZE / 2)))
         self.player.add(player_sprite)
                     
 =======
+=======
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
     def create_static_sprite(self, path, val, x, y) :
         tile_list = import_cut_graphics(path)
         tile_surface = tile_list[int(val)]
@@ -95,6 +104,9 @@ class Level :
         sprites.update(self.horizontal_shift, self.vertical_shift)
         sprites.draw(self.display_surface)
 
+<<<<<<< HEAD
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
+=======
 >>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
     def scroll(self) :
         player = self.player.sprite
@@ -115,6 +127,7 @@ class Level :
             self.vertical_shift = -cg.PLAYER_SPEED
         else :
             self.vertical_shift = 0
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     def run(self) :
@@ -146,6 +159,8 @@ class Level :
 
     
 =======
+=======
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
     
     def horizontal_movement_collision(self) :
         player = self.player.sprite
@@ -154,5 +169,9 @@ class Level :
             if sprite == 'constraints_sprites' :
                 for tile in self.sprites[sprite].sprites() :
                     if tile.rect.colliderect(player.rect) :
+<<<<<<< HEAD
+                        print("collision")
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
+=======
                         print("collision")
 >>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)

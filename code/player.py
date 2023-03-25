@@ -1,7 +1,10 @@
 import pygame
 <<<<<<< HEAD
+<<<<<<< HEAD
 import config as cg
 =======
+=======
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
 from support import import_folder
 >>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
 
@@ -9,7 +12,11 @@ class Player(pygame.sprite.Sprite) :
     def __init__(self, pos) :
         super().__init__()
 <<<<<<< HEAD
+<<<<<<< HEAD
         self.image = pygame.Surface((32, 64))
+=======
+        self.image = pygame.Surface((32, 32))
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
 =======
         self.image = pygame.Surface((32, 32))
 >>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
@@ -18,7 +25,10 @@ class Player(pygame.sprite.Sprite) :
         self.direction = pygame.math.Vector2(0, 0)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
         self.pos = pygame.math.Vector2(self.rect.center)
         self.speed = 200
         self.hitbox = self.rect.copy().inflate((-126, -70))
@@ -32,6 +42,9 @@ class Player(pygame.sprite.Sprite) :
             full_path = './graphics/character/' + animation
             self.animations[animation] = import_folder(full_path)
 
+<<<<<<< HEAD
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
+=======
 >>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
     def get_input(self) :
         # player does not move but shifts tiles around them
@@ -66,5 +79,9 @@ class Player(pygame.sprite.Sprite) :
         
     def update(self, dt) :
         self.get_input()
+<<<<<<< HEAD
+        self.move(dt)
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
+=======
         self.move(dt)
 >>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
