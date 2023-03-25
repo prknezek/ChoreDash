@@ -2,7 +2,6 @@ import pygame
 import sys
 import config as cg
 from level import Level
-from game_data import house
 
 
 
