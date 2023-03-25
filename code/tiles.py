@@ -7,6 +7,7 @@ class Tile(pygame.sprite.Sprite) :
         super().__init__()
         self.image = pygame.Surface((size, size))
         self.rect = self.image.get_rect(topleft = (x,y))
+        self.hitbox = self.rect.copy().inflate(-self.rect.width * 0.2, -self.rect.height * 0.75)
 
     def update(self, horizontal_shift, vertical_shift) :
         self.rect.x += horizontal_shift
