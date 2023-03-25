@@ -29,6 +29,12 @@ class Player(pygame.sprite.Sprite) :
             self.animations[animation] = import_folder(full_path)
         print(self.animations)
 
+    def animate(self, dt) :
+        self.frame_index += 4 * dt
+        if self.frame_index >= len(self.animations[self.status]) :
+            self.frame_index = 0
+        self.image = self.animations[self.status][int(self.frame_index)]
+
     def input(self) :
         # player does not move but shifts tiles around them
         keys = pygame.key.get_pressed()
