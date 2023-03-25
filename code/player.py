@@ -1,14 +1,38 @@
 import pygame
+<<<<<<< HEAD
 import config as cg
+=======
+from support import import_folder
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
 
 class Player(pygame.sprite.Sprite) :
     def __init__(self, pos) :
         super().__init__()
+<<<<<<< HEAD
         self.image = pygame.Surface((32, 64))
+=======
+        self.image = pygame.Surface((32, 32))
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
         self.image.fill('red')
         self.rect = self.image.get_rect(topleft = pos)
         self.direction = pygame.math.Vector2(0, 0)
 
+<<<<<<< HEAD
+=======
+        self.pos = pygame.math.Vector2(self.rect.center)
+        self.speed = 200
+        self.hitbox = self.rect.copy().inflate((-126, -70))
+        self.direction = pygame.math.Vector2(0, 0)
+
+    def import_assets(self) :
+        self.animations = {'up' : [], 'down' : [], 'left' : [], 'right' : [],
+                           'up_idle' : [], 'down_idle' : [], 'left_idle' : [], 'right_idle' : []}
+
+        for animation in self.animations.keys() :
+            full_path = './graphics/character/' + animation
+            self.animations[animation] = import_folder(full_path)
+
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)
     def get_input(self) :
         # player does not move but shifts tiles around them
         keys = pygame.key.get_pressed()
@@ -26,5 +50,21 @@ class Player(pygame.sprite.Sprite) :
         else :
             self.direction.y = 0
         
+<<<<<<< HEAD
     def update(self) :
         self.get_input()
+=======
+        # horizontal movement
+        self.pos.x += self.direction.x * self.speed * dt
+        self.hitbox.centerx = round(self.pos.x)
+        self.rect.centerx = self.hitbox.centerx
+
+        # vertical movement
+        self.pos.y += self.direction.y * self.speed * dt
+        self.hitbox.centery = round(self.pos.y)
+        self.rect.centery = self.hitbox.centery
+        
+    def update(self, dt) :
+        self.get_input()
+        self.move(dt)
+>>>>>>> parent of 1646815 (Merge pull request #1 from prknezek/redo)

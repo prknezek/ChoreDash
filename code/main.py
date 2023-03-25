@@ -7,10 +7,14 @@ from game_data import house
 class Game :
     def __init__(self) :
         pygame.init()
-        self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((cg.WIN_WIDTH, cg.WIN_HEIGHT))
         self.clock = pygame.time.Clock() # For setting framerate
-        pygame.display.set_caption("ChoreDash")
-        self.level = Level() #house, self.screen
+        self.running = True
+        self.level = Level(house, self.screen)
+
+    def start(self) :
+        # a new game starts
+        self.playing = True
 
     def events(self) :
         # game loop events
@@ -21,17 +25,29 @@ class Game :
                 pygame.quit()
                 sys.exit()
 
-    def run(self) :
+    def main(self) :
         # game loop
-        while True :
+        while self.playing :
             self.events()
 
             dt = self.clock.tick(cg.FPS) / 1000
+            self.screen.fill('black')
             self.level.run(dt)
 
             pygame.display.update()
+        
+        self.running = False
 
-if __name__ == "__main__" :
-    game = Game()
-    game.run()
+    def game_over(self) :
+        pass
+
+    def intro_screen(self) :
+        pass
+
+g = Game()
+g.intro_screen()
+g.start()
+while g.running :
+    g.main()
+    g.game_over()
 
