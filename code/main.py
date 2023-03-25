@@ -11,7 +11,7 @@ class Game :
         self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT), SCALED)
         self.clock = pygame.time.Clock() # For setting framerate
         pygame.display.set_caption("ChoreDash")
-        self.level = Level() #house, self.screen
+        self.level = Level()
         self.show_phone = False
         self.phone  = Phone()
         self.phone.initialize()
