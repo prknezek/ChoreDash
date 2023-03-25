@@ -3,6 +3,7 @@ import sys
 import config as cg
 from level import Level
 from game_data import house
+from phone import *
 
 class Game :
     def __init__(self) :
@@ -11,6 +12,9 @@ class Game :
         self.clock = pygame.time.Clock() # For setting framerate
         pygame.display.set_caption("ChoreDash")
         self.level = Level() #house, self.screen
+        self.show_phone = False
+        self.phone  = Phone()
+        self.phone.initialize()
 
     def events(self) :
         # game loop events
@@ -20,6 +24,9 @@ class Game :
                 self.playing = self.running = False
                 pygame.quit()
                 sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_e:
+                     self.show_phone = not(self.show_phone)
 
     def run(self) :
         # game loop
@@ -28,6 +35,11 @@ class Game :
 
             dt = self.clock.tick(cg.FPS) / 1000
             self.level.run(dt)
+            
+            if self.show_phone:
+                #do some
+                self.phone.run(self.screen)
+
 
             pygame.display.update()
 
