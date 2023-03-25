@@ -6,18 +6,14 @@ FPS = 60
 
 DOOR_ANIMATION_TIME = 0.15
 
-# PLAYER
-PLAYER_SPEED = 5
-
 # COLORS
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 
-# FACING
-FACING_LEFT = 'left'
-FACING_UP = 'up'
-FACING_RIGHT = 'right'
-FACING_DOWN = 'down'
+LAYERS = {
+    'house' : 0,
+    'main' : 1
+}
 
 # TILE PATHS
 BLACK_TILE_PATH = './graphics/tiles/Tileset_32x32_17.png'
