@@ -1,17 +1,24 @@
 import pygame
+import config as cg
 from support import import_folder
 
 class Player(pygame.sprite.Sprite) :
-    def __init__(self, pos) :
-        super().__init__()
-        self.image = pygame.Surface((32, 32))
-        self.image.fill('red')
+    def __init__(self, pos, group) :
+        super().__init__(group)
+
+        self.import_assets()
+        self.status = 'down_idle'
+        self.frame_index = 0
+
+        # general setup
+        self.image = self.animations[self.status][self.frame_index]
         self.rect = self.image.get_rect(topleft = pos)
 
+        # movement
+        self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
         self.speed = 200
         self.hitbox = self.rect.copy().inflate((-126, -70))
-        self.direction = pygame.math.Vector2(0, 0)
 
     def import_assets(self) :
         self.animations = {'up' : [], 'down' : [], 'left' : [], 'right' : [],
@@ -20,17 +27,21 @@ class Player(pygame.sprite.Sprite) :
         for animation in self.animations.keys() :
             full_path = './graphics/character/' + animation
             self.animations[animation] = import_folder(full_path)
+        print(self.animations)
 
-    def get_input(self) :
+    def input(self) :
         # player does not move but shifts tiles around them
         keys = pygame.key.get_pressed()
 
+        # horizontal movement
         if keys[pygame.K_RIGHT] or keys[pygame.K_d] :
             self.direction.x = 1
         elif keys[pygame.K_LEFT] or keys[pygame.K_a] :
             self.direction.x = -1
         else :
             self.direction.x = 0
+
+        # vertical movement
         if keys[pygame.K_UP] or keys[pygame.K_w] :
             self.direction.y = -1
         elif keys[pygame.K_DOWN] or keys[pygame.K_s] :
@@ -53,5 +64,5 @@ class Player(pygame.sprite.Sprite) :
         self.rect.centery = self.hitbox.centery
         
     def update(self, dt) :
-        self.get_input()
+        self.input()
         self.move(dt)
