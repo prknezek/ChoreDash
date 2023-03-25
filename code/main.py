@@ -30,11 +30,11 @@ class Game :
         while self.playing :
             self.events()
 
+            dt = self.clock.tick(cg.FPS) / 1000
             self.screen.fill('black')
-            self.level.run()
+            self.level.run(dt)
 
             pygame.display.update()
-            self.clock.tick(cg.FPS)
         
         self.running = False
 

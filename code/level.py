@@ -65,7 +65,7 @@ class Level :
         sprite = StaticTile(cg.TILESIZE, x, y, tile_surface)
         return sprite
     
-    def run(self) :
+    def run(self, dt) :
         # run the level
         for sprite in self.sprites :
             # furthest back drawn first
@@ -78,7 +78,7 @@ class Level :
         self.scroll()
 
         # player
-        self.player.update()
+        self.player.update(dt)
         self.horizontal_movement_collision()
         self.player.draw(self.display_surface)
 
