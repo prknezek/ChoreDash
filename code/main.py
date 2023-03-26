@@ -23,7 +23,7 @@ class Game :
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_e:
+                if event.key == pygame.K_TAB:
                      self.phone.show_phone = not(self.phone.show_phone)
 
     def run(self) :
