@@ -13,6 +13,8 @@ class Level :
         # sprite groups
         self.all_sprites = CameraGroup()
         self.collision_sprites = pygame.sprite.Group()
+        self.door_sprites = pygame.sprite.Group()
+        self.player_sprite = pygame.sprite.Group()
 
         self.setup()
 
@@ -35,15 +37,16 @@ class Level :
         door_frames = import_folder('./graphics/animated_tiles/right_door')
 
         for x, y, surface in tmx_data.get_layer_by_name('Doors').tiles() :
-            door = Door(pos = (x * cg.TILESIZE, y * cg.TILESIZE),
+            Door(pos = (x * cg.TILESIZE, y * cg.TILESIZE),
                  frames = door_frames,
-                 groups = [self.all_sprites, self.collision_sprites],
-                 offset = cg.DOOR_TILE_OFFSET)
+                 groups = [self.all_sprites, self.collision_sprites, self.door_sprites],
+                 offset = cg.DOOR_TILE_OFFSET,
+                 player_sprite = self.player_sprite)
 
 
         for obj in tmx_data.get_layer_by_name('Player') :
             if obj.name == 'Start' :
-                self.player = Player((obj.x, obj.y), self.all_sprites, self.collision_sprites)
+                self.player = Player((obj.x, obj.y), [self.all_sprites, self.player_sprite], self.collision_sprites, self.door_sprites)
         
     def run(self, dt) :
         self.display_surface.fill('black')

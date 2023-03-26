@@ -1,9 +1,10 @@
 import pygame
 import config as cg
 from support import import_folder
+from sprites import Door
 
 class Player(pygame.sprite.Sprite) :
-    def __init__(self, pos, group, collision_sprites) :
+    def __init__(self, pos, group, collision_sprites, door_sprites) :
         super().__init__(group)
 
         self.import_assets()
@@ -23,6 +24,7 @@ class Player(pygame.sprite.Sprite) :
         # collision
         self.hitbox = self.rect.copy().inflate((-20, -30))
         self.collision_sprites = collision_sprites
+        self.door_sprites = door_sprites
         #self.image.fill('black')
 
     def update(self, dt) :
@@ -78,25 +80,28 @@ class Player(pygame.sprite.Sprite) :
         for sprite in self.collision_sprites.sprites() :
             if hasattr(sprite, 'hitbox') :
                 if sprite.hitbox.colliderect(self.hitbox) :
-                    if direction == 'horizontal' :
-                        # moving right
-                        if self.direction.x > 0 :
-                            self.hitbox.right = sprite.hitbox.left
-                        # moving left
-                        if self.direction.x < 0 :
-                            self.hitbox.left = sprite.hitbox.right
-                        self.rect.centerx = self.hitbox.centerx
-                        self.pos.x = self.hitbox.centerx
+                    # doors have their own collision events so we detect for every other sprite
+                    if sprite not in self.door_sprites :
+                        if direction == 'horizontal' :
+                            # moving right
+                            if self.direction.x > 0 :
+                                self.hitbox.right = sprite.hitbox.left
+                            # moving left
+                            if self.direction.x < 0 :
+                                self.hitbox.left = sprite.hitbox.right
+                            self.rect.centerx = self.hitbox.centerx
+                            self.pos.x = self.hitbox.centerx
 
-                    if direction == 'vertical' :
-                        # moving up
-                        if self.direction.y < 0 :
-                            self.hitbox.top = sprite.hitbox.bottom
-                        # moving down
-                        if self.direction.y > 0 :
-                            self.hitbox.bottom = sprite.hitbox.top
-                        self.rect.centery = self.hitbox.centery
-                        self.pos.y = self.hitbox.centery
+                        if direction == 'vertical' :
+                            # moving up
+                            if self.direction.y < 0 :
+                                self.hitbox.top = sprite.hitbox.bottom
+                            # moving down
+                            if self.direction.y > 0 :
+                                self.hitbox.bottom = sprite.hitbox.top
+                            self.rect.centery = self.hitbox.centery
+                            self.pos.y = self.hitbox.centery
+                    
 
     def move(self, dt) :
         if self.direction.magnitude() > 0 :

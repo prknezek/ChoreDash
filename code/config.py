@@ -17,16 +17,15 @@ LAYERS = {
     'wall_decoration' : 5,
     'furniture' : 6,
     'decoration' : 7,
-    'main' : 8,
-    'in_front' : 9,
-    'in_front_decoration' : 10,
-    'doors' : 11,
+    'doors' : 8,
+    'main' : 9,
+    'in_front' : 10,
+    'in_front_decoration' : 11,
 }
 
 # DOORS
 DOOR_TILE_OFFSET = 6
-DOOR_ANIMATION_SPEED = 4
-# self.offset_x(20) when door opens to left
+DOOR_ANIMATION_SPEED = 12
 
 # PLAYER
 PLAYER_SPEED = 200
