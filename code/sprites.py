@@ -33,7 +33,7 @@ class Door(Generic) :
                          z = cg.LAYERS['doors'])
 
         # offset door to be in middle of door frame
-        self.hitbox = self.rect.copy().inflate(-35, 0)
+        self.hitbox = self.rect.copy().inflate(-30, 0)
         self.hitbox.x -= 10
         self.offset_x(offset)
 
