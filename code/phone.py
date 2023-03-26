@@ -28,6 +28,10 @@ class Phone:
         ]
 
         self.initTexts()
+        self.last_time = 0
+        self.minutes = 3
+        self.seconds = 0
+        self.countdown_time = 3 * 60 
     
     def initTexts(self):
         self.text_surfs = []
@@ -36,7 +40,26 @@ class Phone:
             self.text_surfs.append(text_surf)
         self.text_surfs.reverse()
 
-    def display(self, display_surf):        
+    def display(self, display_surf):
+        #timer
+        # display_surf.blit(self.phone_image, (0, 0))
+
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_time >= 1000: 
+            self.last_time = current_time
+            self.seconds -= 1
+            if self.seconds < 0:
+                self.seconds = 59
+                self.minutes -= 1
+                if self.minutes < 0:
+                    self.minutes = 0
+                    self.seconds = 0
+
+        if self.countdown_time > 0:
+            time_str = f"{self.minutes:02d}:{self.seconds:02d}"
+            time_text = self.font.render(time_str, True, (255, 255, 255))
+            display_surf.blit(time_text, (20, 20))
+                
         # render phone
         self.phone_surf.blit(self.phone_image, (0, 0))
         self.phone_rect = self.phone_surf.get_rect(bottom = cg.SCREEN_HEIGHT, left = self.left_coord)
