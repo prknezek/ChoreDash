@@ -6,24 +6,21 @@ TILESIZE = 32
 FPS = 60
 
 # TILED TILE LAYERS
-FLOOR_DECORATION = ['BedroomFloorDecoration', 'JapaneseFloorDecoration', 'JailFloorDecoration', 'GymFloorDecoration', 'SportsFloorDecoration', 'BathroomFloorDecoration']
-WALL_DECORATION = ['LivingRoomWallDecoration', 'KitchenWallDecoration']
-FURNITURE = ['KitchenFurniture', 'BedroomFurniture', 'BathroomFurniture', 'LivingRoomFurniture']
-DECORATION = ['LivingRoomDecoration', 'KitchenDecoration_1', 'BedroomDecoration', 'BathroomDecoration', 'BirthdayDecoration', 'KitchenDecoration_2']
+DECORATION = ['Decoration_1', 'Decoration_2', 'Decoration_3']
 
 LAYERS = {
-    'black' : 0,
-    'floor' : 1,
-    'floor_decoration' : 2,
-    'walls' : 3,
-    'wall_decoration' : 4,
-    'furniture' : 5,
-    'decoration' : 6,
-    'doors' : 7,
-    'main' : 8,
-    'in_front_bathroom' : 9,
-    'in_front_living_room' : 10,
-    'constraints' : 11,
+    'constraints' : 0,
+    'black' : 1,
+    'floor' : 2,
+    'floor_decoration' : 3,
+    'walls' : 4,
+    'wall_decoration' : 5,
+    'furniture' : 6,
+    'decoration' : 7,
+    'doors' : 8,
+    'main' : 9,
+    'in_front' : 10,
+    'in_front_decoration' : 11
 }
 
 # DOORS

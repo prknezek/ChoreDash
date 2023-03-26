@@ -9,6 +9,15 @@ class Generic(pygame.sprite.Sprite) :
         self.rect = self.image.get_rect(topleft = pos)
         self.z = z
 
+class Constraint(Generic) :
+    def __init__(self, pos, surface, groups, z=cg.LAYERS['main']):
+        super().__init__(pos = pos,
+                         surface = surface,
+                         groups = groups,
+                         z = cg.LAYERS['constraints'])
+        self.hitbox = self.rect.copy()
+        #self.hitbox.top -= 10
+
 class Door(Generic) :
     def __init__(self, pos, frames, groups, offset):
 
@@ -22,6 +31,7 @@ class Door(Generic) :
                          groups = groups,
                          z = cg.LAYERS['doors'])
 
+        #self.hitbox = self.rect.copy().inflate(-40, 20)
         # offset door to be in middle of door frame
         self.offset_x(offset)
 
