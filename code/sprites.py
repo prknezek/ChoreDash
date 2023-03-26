@@ -16,7 +16,6 @@ class Constraint(Generic) :
                          groups = groups,
                          z = cg.LAYERS['constraints'])
         self.hitbox = self.rect.copy()
-        #self.hitbox.top -= 10
 
 class Door(Generic) :
     def __init__(self, pos, frames, groups, offset):
@@ -31,9 +30,10 @@ class Door(Generic) :
                          groups = groups,
                          z = cg.LAYERS['doors'])
 
-        #self.hitbox = self.rect.copy().inflate(-40, 20)
         # offset door to be in middle of door frame
         self.offset_x(offset)
+        self.hitbox = self.rect.copy().inflate(-35, 0)
+        self.hitbox.x -= 10
 
     def update(self, dt) :
         self.animate_close(dt)

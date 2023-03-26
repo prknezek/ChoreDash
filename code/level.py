@@ -35,10 +35,11 @@ class Level :
         door_frames = import_folder('./graphics/animated_tiles/right_door')
 
         for x, y, surface in tmx_data.get_layer_by_name('Doors').tiles() :
-            Door(pos = (x * cg.TILESIZE, y * cg.TILESIZE),
+            door = Door(pos = (x * cg.TILESIZE, y * cg.TILESIZE),
                  frames = door_frames,
                  groups = [self.all_sprites, self.collision_sprites],
                  offset = cg.DOOR_TILE_OFFSET)
+
 
         for obj in tmx_data.get_layer_by_name('Player') :
             if obj.name == 'Start' :
@@ -55,7 +56,7 @@ class Level :
             if tiled_name != 'Constraints' :
                 Generic((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, cg.LAYERS[layer_name])
             else :
-                Constraint((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.collision_sprites], cg.LAYERS[layer_name])
+                Constraint((x * cg.TILESIZE, y * cg.TILESIZE), pygame.Surface((cg.TILESIZE, cg.TILESIZE)), self.collision_sprites)
     
     def draw_generic_tiles_in_layer(self, tiled_layer, layer_name) :
         tmx_data = load_pygame('./house/house_data/house.tmx')

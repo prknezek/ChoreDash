@@ -17,10 +17,10 @@ LAYERS = {
     'wall_decoration' : 5,
     'furniture' : 6,
     'decoration' : 7,
-    'doors' : 8,
-    'main' : 9,
-    'in_front' : 10,
-    'in_front_decoration' : 11
+    'main' : 8,
+    'in_front' : 9,
+    'in_front_decoration' : 10,
+    'doors' : 11,
 }
 
 # DOORS

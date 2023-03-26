@@ -21,8 +21,15 @@ class Player(pygame.sprite.Sprite) :
         self.speed = cg.PLAYER_SPEED
 
         # collision
-        self.hitbox = self.rect.copy().inflate((-10, -30))
+        self.hitbox = self.rect.copy().inflate((-20, -30))
         self.collision_sprites = collision_sprites
+        #self.image.fill('black')
+
+    def update(self, dt) :
+        self.input()
+        self.get_status()
+        self.move(dt)
+        self.animate(dt)
 
     def import_assets(self) :
         self.animations = {'up' : [], 'down' : [], 'left' : [], 'right' : [],
@@ -107,8 +114,3 @@ class Player(pygame.sprite.Sprite) :
         self.rect.centery = self.hitbox.centery
         self.collision('vertical')
         
-    def update(self, dt) :
-        self.input()
-        self.get_status()
-        self.move(dt)
-        self.animate(dt)
