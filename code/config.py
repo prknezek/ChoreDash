@@ -18,9 +18,11 @@ LAYERS = {
     'furniture' : 6,
     'decoration' : 7,
     'trashcans' : 8,
-    'main' : 9,
-    'in_front' : 10,
-    'in_front_decoration' : 11,
+    'doors' : 9,
+    'main' : 10,
+    'in_front' : 11,
+    'in_front_decoration' : 12,
+    'interact_buttons' : 13
 }
 
 # DOORS

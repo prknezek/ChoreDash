@@ -1,7 +1,7 @@
 import pygame
 import config as cg
 from player import Player
-from sprites import Generic, Door, Constraint, Trashcan
+from sprites import Generic, Door, Constraint, Trashcan, InteractButton
 from pytmx.util_pygame import load_pygame
 from support import *
 
@@ -17,6 +17,7 @@ class Level :
         self.door_sprites = pygame.sprite.Group()
         self.player_sprite = pygame.sprite.Group()
         self.trashcan_sprites = pygame.sprite.Group()
+        self.interact_sprites = pygame.sprite.Group()
 
         self.setup()
 
@@ -35,10 +36,14 @@ class Level :
         self.draw_generic_tiles('InFront', 'in_front')
         self.draw_generic_tiles('InFrontDecoration', 'in_front_decoration')
 
+        # draw interact buttons
+        for x, y, surface in tmx_data.get_layer_by_name('InteractButtons').tiles() :
+            InteractButton((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.interact_sprites])
+
         # draw trashcans
         for x, y, surface in tmx_data.get_layer_by_name('Trashcans').tiles() :
             color = ''
-            print(x, y)
+
             if x == 9 :
                 color = 'green'
             elif x == 15 :
@@ -53,9 +58,10 @@ class Level :
                         surface = surface,
                         groups = [self.all_sprites, self.trashcan_sprites],
                         player_sprite = self.player_sprite,
-                        color = color)
+                        color = color,
+                        interact_sprites = self.interact_sprites)
         
-        # draw animated tiles
+        # draw door tiles
         door_frames = import_folder('./graphics/animated_tiles/right_door')
 
         for x, y, surface in tmx_data.get_layer_by_name('Doors').tiles() :
@@ -111,7 +117,7 @@ class CameraGroup(pygame.sprite.Group) :
         self.offset.y = player.rect.centery - cg.SCREEN_HEIGHT / 2
 
         for layer in cg.LAYERS.values() :
-            for sprite in sorted(self.sprites(), key = lambda sprite : sprite.rect.centery) :
+            for sprite in self.sprites() :
                 if sprite.z == layer :
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset

@@ -18,15 +18,22 @@ class Constraint(Generic) :
         self.hitbox = self.rect.copy()
 
 class Trashcan(Generic) :
-    def __init__(self, pos, surface, groups, player_sprite, color):
+    def __init__(self, pos, surface, groups, player_sprite, color, interact_sprites):
         super().__init__(pos, surface, groups, z = cg.LAYERS['trashcans'])
-
+        
         self.player_sprite = player_sprite
+        self.interact_sprites = interact_sprites
 
+        self.pos = pos
         self.color = color
         self.image = surface
         self.rect = self.image.get_rect(topleft = pos)
 
+        for button in self.interact_sprites :
+            if button.pos == self.pos :
+                self.button = button
+
+        self.can_show_button = True
         self.hitbox = self.rect.copy()
         self.is_empty = False
 
@@ -41,6 +48,16 @@ class Trashcan(Generic) :
 
                     if keys[pygame.K_e] :
                         self.empty()
+
+                    if self.can_show_button :
+                        self.button.show()
+
+                    self.can_show_button = False
+                else :
+                    if not self.can_show_button :
+                        self.button.hide()
+
+                    self.can_show_button = True
 
     def empty(self) :
         # update sprite and set is_empty to true
@@ -57,6 +74,21 @@ class Trashcan(Generic) :
             self.image = image_surface
             self.is_empty = True
         
+class InteractButton(Generic) :
+    def __init__(self, pos, surface, groups):
+        super().__init__(pos, surface, groups, z = cg.LAYERS['interact_buttons'])
+
+        self.pos = pos
+        self.image = surface
+        self.rect = self.image.get_rect(topleft = pos)
+
+        self.hide()
+
+    def show(self) :
+        self.image.set_alpha(255)
+
+    def hide(self) :
+        self.image.set_alpha(0)
 
 class Door(Generic) :
     def __init__(self, pos, frames, groups, offset, player_sprite):
@@ -71,7 +103,7 @@ class Door(Generic) :
         super().__init__(pos = pos,
                          surface = self.frames[self.frame_index],
                          groups = groups,
-                         z = cg.LAYERS['main'])
+                         z = cg.LAYERS['doors'])
 
         # offset door to be in middle of door frame
         self.hitbox = self.rect.copy().inflate(-30, 0)
