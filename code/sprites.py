@@ -48,6 +48,7 @@ class Trashcan(Generic) :
 
                     if keys[pygame.K_e] :
                         self.empty()
+                        self.button.hide()
 
                     if self.can_show_button :
                         self.button.show()
@@ -57,7 +58,8 @@ class Trashcan(Generic) :
                     if not self.can_show_button :
                         self.button.hide()
 
-                    self.can_show_button = True
+                    if not self.is_empty :
+                        self.can_show_button = True
 
     def empty(self) :
         # update sprite and set is_empty to true
