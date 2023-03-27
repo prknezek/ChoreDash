@@ -30,7 +30,7 @@ class Door(Generic) :
         super().__init__(pos = pos,
                          surface = self.frames[self.frame_index],
                          groups = groups,
-                         z = cg.LAYERS['doors'])
+                         z = cg.LAYERS['main'])
 
         # offset door to be in middle of door frame
         self.hitbox = self.rect.copy().inflate(-30, 0)
@@ -38,6 +38,7 @@ class Door(Generic) :
         self.offset_x(offset)
 
         self.do_animation = False
+        self.collision = False
         self.original_rect_x = self.rect.x
 
     def update(self, dt) :
@@ -52,17 +53,22 @@ class Door(Generic) :
             if hasattr(sprite, 'hitbox') :
                 if sprite.hitbox.colliderect(self.hitbox) :
                     # player coming from left
-                    if sprite.direction.x > 0 :
-                        self.set_open_animation('right')
-                        if self.rect.x != self.original_rect_x :
-                            self.rect.x = self.original_rect_x
-                    # player coming from right
-                    if sprite.direction.x < 0 :
-                        self.set_open_animation('left')
-                        if self.rect.x == self.original_rect_x:
-                            self.offset_x(20)
+                    print(self.collision)
+                    if not self.collision :
+                        if sprite.direction.x > 0 :
+                            self.set_open_animation('right')
+                            if self.rect.x != self.original_rect_x :
+                                self.rect.x = self.original_rect_x
+                        # player coming from right
+                        if sprite.direction.x < 0 :
+                            self.set_open_animation('left')
+                            if self.rect.x == self.original_rect_x:
+                                self.offset_x(20)
                         
                     self.do_animation = True
+                    self.collision = True
+                else :
+                    self.collision = False
 
 
     def offset_x(self, offset) :
