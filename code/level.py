@@ -37,8 +37,8 @@ class Level :
         self.draw_generic_tiles('InFrontDecoration', 'in_front_decoration')
 
         # draw interact buttons
-        for x, y, surface in tmx_data.get_layer_by_name('InteractButtons').tiles() :
-            InteractButton((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.interact_sprites])
+        for obj in tmx_data.get_layer_by_name('InteractButtons') :
+            InteractButton((int(obj.x), int(obj.y)), obj.name, self.display_surface, [self.all_sprites, self.interact_sprites])
 
         # draw trashcans
         for x, y, surface in tmx_data.get_layer_by_name('Trashcans').tiles() :

@@ -32,7 +32,7 @@ class Trashcan(Generic) :
         for button in self.interact_sprites :
             if button.pos == self.pos :
                 self.button = button
-
+                
         self.can_show_button = True
         self.hitbox = self.rect.copy()
         self.is_empty = False
@@ -75,11 +75,12 @@ class Trashcan(Generic) :
             self.is_empty = True
         
 class InteractButton(Generic) :
-    def __init__(self, pos, surface, groups):
-        super().__init__(pos, surface, groups, z = cg.LAYERS['interact_buttons'])
+    def __init__(self, pos, name, surface, groups, z=cg.LAYERS['interact_buttons']):
+        super().__init__(pos, surface, groups, z)
 
         self.pos = pos
-        self.image = surface
+        self.name = name
+        self.image = pygame.image.load('./graphics/tiles/interact_buttons/e.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
 
         self.hide()

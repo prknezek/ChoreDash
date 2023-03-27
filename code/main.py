@@ -24,7 +24,7 @@ class Game :
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_TAB:
-                     self.phone.show_phone = not(self.phone.show_phone)
+                    self.phone.show_phone = not(self.phone.show_phone)
 
     def run(self) :
         # game loop
