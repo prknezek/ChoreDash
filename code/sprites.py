@@ -53,7 +53,6 @@ class Door(Generic) :
             if hasattr(sprite, 'hitbox') :
                 if sprite.hitbox.colliderect(self.hitbox) :
                     # player coming from left
-                    print(self.collision)
                     if not self.collision :
                         if sprite.direction.x > 0 :
                             self.set_open_animation('right')
