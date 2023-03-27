@@ -17,6 +17,47 @@ class Constraint(Generic) :
                          z = cg.LAYERS['constraints'])
         self.hitbox = self.rect.copy()
 
+class Trashcan(Generic) :
+    def __init__(self, pos, surface, groups, player_sprite, color):
+        super().__init__(pos, surface, groups, z = cg.LAYERS['trashcans'])
+
+        self.player_sprite = player_sprite
+
+        self.color = color
+        self.image = surface
+        self.rect = self.image.get_rect(topleft = pos)
+
+        self.hitbox = self.rect.copy()
+        self.is_empty = False
+
+    def update(self, dt) :
+        self.is_colliding()
+
+    def is_colliding(self) :
+        for sprite in self.player_sprite.sprites() :
+            if hasattr(sprite, 'hitbox') :
+                if sprite.hitbox.colliderect(self.hitbox) :
+                    keys = pygame.key.get_pressed()
+
+                    if keys[pygame.K_e] :
+                        self.empty()
+
+    def empty(self) :
+        # update sprite and set is_empty to true
+        if not self.is_empty :
+            if self.color == 'green' :
+                image_surface = pygame.image.load('./graphics/tiles/trashcans/green.png').convert_alpha()
+            elif self.color == 'white' :
+                image_surface = pygame.image.load('./graphics/tiles/trashcans/white.png').convert_alpha()
+            elif self.color == 'blue' :
+                image_surface = pygame.image.load('./graphics/tiles/trashcans/blue.png').convert_alpha()
+            elif self.color == 'pink' :
+                image_surface = pygame.image.load('./graphics/tiles/trashcans/pink.png').convert_alpha()
+
+            self.image = image_surface
+            self.is_empty = True
+        
+
 class Door(Generic) :
     def __init__(self, pos, frames, groups, offset, player_sprite):
         # collision

@@ -1,7 +1,7 @@
 import pygame
 import config as cg
 from player import Player
-from sprites import Generic, Door, Constraint
+from sprites import Generic, Door, Constraint, Trashcan
 from pytmx.util_pygame import load_pygame
 from support import *
 
@@ -12,9 +12,11 @@ class Level :
 
         # sprite groups
         self.all_sprites = CameraGroup()
+
         self.collision_sprites = pygame.sprite.Group()
         self.door_sprites = pygame.sprite.Group()
         self.player_sprite = pygame.sprite.Group()
+        self.trashcan_sprites = pygame.sprite.Group()
 
         self.setup()
 
@@ -33,6 +35,26 @@ class Level :
         self.draw_generic_tiles('InFront', 'in_front')
         self.draw_generic_tiles('InFrontDecoration', 'in_front_decoration')
 
+        # draw trashcans
+        for x, y, surface in tmx_data.get_layer_by_name('Trashcans').tiles() :
+            color = ''
+            print(x, y)
+            if x == 9 :
+                color = 'green'
+            elif x == 15 :
+                color = 'white'
+            elif x == 12 :
+                color = 'blue'
+            elif x == 30 :
+                color = 'pink'
+
+            if (x, y) in [(9, 6), (15, 6), (12, 11), (30, 13)] :
+                Trashcan(pos = (x * cg.TILESIZE, y * cg.TILESIZE),
+                        surface = surface,
+                        groups = [self.all_sprites, self.trashcan_sprites],
+                        player_sprite = self.player_sprite,
+                        color = color)
+        
         # draw animated tiles
         door_frames = import_folder('./graphics/animated_tiles/right_door')
 
@@ -52,6 +74,17 @@ class Level :
         self.display_surface.fill('black')
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
+        self.event_detection()
+
+    def event_detection(self) :
+        empty_count = 0
+
+        for sprite in self.trashcan_sprites :
+            if sprite.is_empty :
+                empty_count += 1
+        
+        if empty_count == 4 :
+            print('all trashcans empty')
 
     def draw_generic_tiles(self, tiled_name, layer_name) :
         tmx_data = load_pygame('./house/house_data/house.tmx')

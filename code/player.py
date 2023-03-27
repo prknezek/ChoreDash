@@ -22,7 +22,7 @@ class Player(pygame.sprite.Sprite) :
         self.speed = cg.PLAYER_SPEED
 
         # collision
-        self.hitbox = self.rect.copy().inflate((-20, -30))
+        self.hitbox = self.rect.copy().inflate((-20, -40))
         self.collision_sprites = collision_sprites
         self.door_sprites = door_sprites
         #self.image.fill('black')
