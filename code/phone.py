@@ -1,6 +1,5 @@
 import pygame
 import pygame.freetype
-import sys
 import config as cg
 from itertools import chain
 
@@ -45,6 +44,9 @@ def wrap_multi_line(text, font, maxwidth):
 class Phone:
     def __init__(self):
         
+        # game timer - will update when timer is done
+        self.is_Timer_Done = False
+
         # options
         self.width = 110 # 135
         self.height = 196 # 245
@@ -81,7 +83,7 @@ class Phone:
 
         # timer
         self.last_time = 0
-        self.minutes = 3
+        self.minutes = 1
         self.seconds = 0
         self.countdown_time = 3 * 60 
     
@@ -94,15 +96,32 @@ class Phone:
                 text_surf = self.font.render(line, True, 'Black')
                 self.text_surfs.append(text_surf)
             self.all_texts.append(self.text_surfs)
-        #self.text_surfs.reverse()
 
     def showText(self, text_surf, top):
         # show text surf
         text_surf_rect = text_surf.get_rect(midleft = (15, 31+top))
         self.phone_surf.blit(text_surf, text_surf_rect)
 
+    def tickTimer(self):
+        if self.start_timer == False:
+            return
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_time >= 1000: 
+            self.last_time = current_time
+            self.seconds -= 1
+            if self.seconds < 0:
+                self.seconds = 59
+                self.minutes -= 1
+                if self.minutes < 0:
+                    self.minutes = 0
+                    self.seconds = 0
+                    print('TIMER IS UP')
+                    self.is_Timer_Done = True
+        
+
     def display(self, display_surf):
 
+        # set rectangle
         self.phone_rect = self.phone_surf.get_rect(bottom = cg.SCREEN_HEIGHT, left = self.left_coord)
 
         # render phone
@@ -116,23 +135,11 @@ class Phone:
                 topOffset += self.space
             topOffset += 18
         
-        # ETA timer
-        if self.start_timer == True:
-            current_time = pygame.time.get_ticks()
-            if current_time - self.last_time >= 1000: 
-                self.last_time = current_time
-                self.seconds -= 1
-                if self.seconds < 0:
-                    self.seconds = 59
-                    self.minutes -= 1
-                    if self.minutes < 0:
-                        self.minutes = 0
-                        self.seconds = 0        
-        if self.countdown_time > 0:
-            time_str = f"{self.minutes:02d}:{self.seconds:02d}"
-            time_text = self.font.render("ETA            " + time_str, True, (255, 255, 255))
-            time_text_rect = time_text.get_rect(left = 20, bottom = self.phone_rect.height-34)
-            self.phone_surf.blit(time_text, time_text_rect)
+        # render timer                      
+        time_str = f"{self.minutes:02d}:{self.seconds:02d}"
+        time_text = self.font.render("ETA            " + time_str, True, (255, 255, 255))
+        time_text_rect = time_text.get_rect(left = 20, bottom = self.phone_rect.height-34)
+        self.phone_surf.blit(time_text, time_text_rect)
 
         # draw phone to actual display        
         display_surf.blit(self.phone_surf, self.phone_rect)
@@ -146,6 +153,7 @@ class Phone:
 
 
     def run(self, screen):
+        self.tickTimer()
         if self.show_phone:
             self.display(screen)
         else:
