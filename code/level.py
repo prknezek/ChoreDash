@@ -52,6 +52,12 @@ class Level :
             if obj.name == 'dresser' :
                 DresserIndicator((int(obj.x), int(obj.y)), obj.name, indicator_frames, [self.all_sprites, self.indicator_sprites], self.indicator_sprites, self.player)
 
+        # draw laundry event tiles
+        for obj in tmx_data.get_layer_by_name('Laundry') :
+            if 'basket' in obj.name :
+                print((int(obj.x), int(obj.y)))
+                Basket((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.player)
+
         # draw toys
         for obj in tmx_data.get_layer_by_name('Toys') :
             Toy((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, obj.name, self.interact_sprites, self.player)

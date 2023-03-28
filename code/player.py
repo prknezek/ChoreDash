@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite) :
         #self.image.fill('black')
 
         # events
-        self.is_holding_toy = 'None'
+        self.is_holding = 'None'
 
     def update(self, dt) :
         self.input()
@@ -79,7 +79,7 @@ class Player(pygame.sprite.Sprite) :
         if self.direction.magnitude() == 0 :
             self.status = self.status.split('_')[0] + '_idle'
 
-        if self.is_holding_toy == 'dumbbell' :
+        if self.is_holding == 'dumbbell' :
             self.speed = cg.PLAYER_SPEED - 100
         else :
             self.speed = cg.PLAYER_SPEED

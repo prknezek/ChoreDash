@@ -120,6 +120,27 @@ class InteractableObject(Generic) :
                     if not self.interacted :
                         self.can_show_button = True
 
+class Basket(InteractableObject) :
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, player, z = cg.LAYERS['furniture']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+        
+        self.player = player
+        self.has_buttons = True
+        self.interacted = False
+
+        self.hitbox = self.rect.copy().inflate((-10, 0))
+        self.hitbox.y -= 20
+
+    def interact(self) :
+        self.pickup()
+
+    def pickup(self) :
+        if not self.interacted and self.player.is_holding == 'None' :
+            image_surface = pygame.image.load(f'./graphics/tiles/bathroom/basket.png').convert_alpha()
+            self.image = image_surface
+
+            self.player.is_holding = 'basket'
+            self.interacted = True
 
 class Trashcan(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['trashcans']):
@@ -161,10 +182,10 @@ class Toy(InteractableObject) :
         self.pickup()
 
     def pickup(self) :
-        if not self.interacted and self.player.is_holding_toy == 'None' :
+        if not self.interacted and self.player.is_holding == 'None' :
             self.image.set_alpha(0)
 
-            self.player.is_holding_toy = self.type
+            self.player.is_holding = self.type
             self.interacted = True
 
 class DresserIndicator(Indicator) :
@@ -176,7 +197,7 @@ class DresserIndicator(Indicator) :
                 self.indicator = sprite
 
     def determine_show(self):
-        if self.player.is_holding_toy != 'None' :
+        if self.player.is_holding != 'None' :
             self.indicator.show_indicator = True
         else :
             self.indicator.show_indicator = False
@@ -211,8 +232,8 @@ class Dresser(InteractableObject) :
 
     def put_away_toy(self) :
         if self.slots_filled < 4 :
-            if self.player.is_holding_toy != 'None' :
-                self.player.is_holding_toy = 'None'
+            if self.player.is_holding != 'None' :
+                self.player.is_holding = 'None'
                 self.parts[self.slots_filled].image = pygame.image.load(f'./graphics/tiles/dresser/{self.slots_filled}.png').convert_alpha()
                 
                 self.slots_filled += 1
@@ -287,7 +308,7 @@ class Door(Generic) :
             self.frame_index = 4
         if self.frame_index == 4 :
             self.do_animation = False
-        print(self.frame_index)
+
         self.image = self.frames[int(self.frame_index)]
 
     def animate_close(self, dt) :
