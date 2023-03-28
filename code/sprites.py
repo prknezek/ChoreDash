@@ -41,6 +41,7 @@ class InteractableObject(Generic) :
         self.interact_sprites = interact_sprites
         self.pos = pos
 
+        self.has_buttons = True
         self.can_show_button = True
         self.interacted = False
 
@@ -64,80 +65,106 @@ class InteractableObject(Generic) :
                 if sprite.hitbox.colliderect(self.hitbox) :
                     keys = pygame.key.get_pressed()
 
-                    if keys[pygame.K_e] :
+                    if self.has_buttons :
+                        if keys[pygame.K_e] :
+                            self.interact()
+                            self.button.hide()
+                    else :
                         self.interact()
-                        self.button.hide()
 
-                    if self.can_show_button :
+                    if self.can_show_button and self.has_buttons :
                         self.button.show()
 
                     self.can_show_button = False
                 else :
-                    if not self.can_show_button :
+                    if not self.can_show_button and self.has_buttons :
                         self.button.hide()
 
                     if not self.interacted :
                         self.can_show_button = True
 
-class Toy(InteractableObject) :
-    def __init__(self, pos, surface, groups, player_sprite, type, interact_sprites, z=cg.LAYERS['floor_decoration']):
-        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
-
-        # setup
-        self.type = type
-
-        if type == 'bear' :
-            self.image = pygame.image.load('./graphics/tiles/toys/bear.png').convert_alpha()
-        elif type == 'basket_ball' :
-            self.image = pygame.image.load('./graphics/tiles/toys/basket_ball.png').convert_alpha()
-        elif type == 'dumbbell' :
-            self.image = pygame.image.load('./graphics/tiles/toys/dumbbell.png').convert_alpha()
-        elif type == 'car' :
-            self.image = pygame.image.load('./graphics/tiles/toys/car.png').convert_alpha()
-
-        # collision
-        self.rect = self.image.get_rect(topleft = pos)
-        self.hitbox = self.rect.copy()
-
-    def update(self, dt) :
-        self.is_colliding()
-
-    def interact(self) :
-        print('inheritance magic')
 
 class Trashcan(InteractableObject) :
-    def __init__(self, pos, surface, groups, player_sprite, color, interact_sprites, z = cg.LAYERS['trashcans']):
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['trashcans']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
 
         # setup
-        self.color = color
-        self.image = surface
-        self.rect = self.image.get_rect(topleft = pos)
+        self.color = self.button.name
+        self.has_buttons = True
         self.interacted = False
         
         # collision
         self.hitbox = self.rect.copy()
-
-    def update(self, dt) :
-        self.is_colliding()
     
     def interact(self) :
         self.empty()
     
     def empty(self) :
-        # update sprite and set is_empty to true
+        # update sprite and set interacted to true
         if not self.interacted :
-            if self.color == 'green' :
-                image_surface = pygame.image.load('./graphics/tiles/trashcans/green.png').convert_alpha()
-            elif self.color == 'white' :
-                image_surface = pygame.image.load('./graphics/tiles/trashcans/white.png').convert_alpha()
-            elif self.color == 'blue' :
-                image_surface = pygame.image.load('./graphics/tiles/trashcans/blue.png').convert_alpha()
-            elif self.color == 'pink' :
-                image_surface = pygame.image.load('./graphics/tiles/trashcans/pink.png').convert_alpha()
+            image_surface = pygame.image.load(f'./graphics/tiles/trashcans/{self.color}.png').convert_alpha()
 
             self.image = image_surface
-            self.interacted = True        
+            self.interacted = True
+
+class Toy(InteractableObject) :
+    def __init__(self, pos, surface, groups, player_sprite, type, interact_sprites, player, z=cg.LAYERS['floor_decoration']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+
+        # setup
+        self.type = type
+        self.player = player
+        self.interacted = False
+        self.has_buttons = True
+
+        # collision
+        self.hitbox = self.rect.copy()
+
+    def interact(self) :
+        self.pickup()
+
+    def pickup(self) :
+        if not self.interacted and self.player.is_holding_toy == 'None' :
+            self.image.set_alpha(0)
+
+            self.player.is_holding_toy = self.type
+            self.interacted = True
+
+class Dresser(InteractableObject) :
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, player, parts, z=cg.LAYERS['furniture']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+
+        # setup
+        self.has_buttons = False
+        self.interacted = False
+
+        self.slots_filled = 0
+        self.parts = parts
+        
+        # rearrange order
+        self.parts.reverse()
+        parts.insert(1, self)
+
+        temp = self.parts[3]
+        self.parts[3] = self.parts[2]
+        self.parts[2] = temp
+
+        # collision
+        self.player = player
+        self.hitbox = self.rect.copy().inflate((20, 0))
+        self.hitbox.x += 20
+        self.hitbox.y -= 20
+
+    def interact(self) :
+        self.put_away_toy()
+
+    def put_away_toy(self) :
+        if self.slots_filled < 4 :
+            if self.player.is_holding_toy != 'None' :
+                self.player.is_holding_toy = 'None'
+                self.parts[self.slots_filled].image = pygame.image.load(f'./graphics/tiles/dresser/{self.slots_filled}.png').convert_alpha()
+                
+                self.slots_filled += 1
 
 class Door(Generic) :
     def __init__(self, pos, frames, groups, offset, player_sprite):
@@ -219,6 +246,3 @@ class Door(Generic) :
             self.frame_index = 0
 
         self.image = self.frames[int(self.frame_index)]
-
-class Cabinet(Generic) :
-    pass
