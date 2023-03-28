@@ -115,7 +115,6 @@ class Trashcan(InteractableObject) :
         # setup
         self.color = self.button.name
         self.has_buttons = True
-        self.interacted = False
         
         # collision
         self.hitbox = self.rect.copy()
@@ -131,28 +130,6 @@ class Trashcan(InteractableObject) :
             self.image = image_surface
             self.interacted = True
 
-class Toy(InteractableObject) :
-    def __init__(self, pos, surface, groups, player_sprite, type, interact_sprites, player, z=cg.LAYERS['floor_decoration']):
-        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
-
-        # setup
-        self.type = type
-        self.player = player
-        self.interacted = False
-        self.has_buttons = True
-
-        # collision
-        self.hitbox = self.rect.copy()
-
-    def interact(self) :
-        self.pickup()
-
-    def pickup(self) :
-        if not self.interacted and self.player.is_holding == 'None' :
-            self.image.set_alpha(0)
-
-            self.player.is_holding = self.type
-            self.interacted = True
 
 class Basket(InteractableObject) :
     def __init__(self, pos, name, surface, groups, player_sprite, interact_sprites, laundry_machine, player, z = cg.LAYERS['furniture']):
@@ -186,7 +163,7 @@ class LaundryMachine(InteractableObject) :
 
         # setup
         self.has_buttons = False
-        self.interacted = False
+        self.contains = 'None'
 
         # timer setup
         self.start_cycle = False
@@ -196,15 +173,16 @@ class LaundryMachine(InteractableObject) :
         for sprite in indicator_sprites :
             if sprite.name == 'laundry' :
                 self.indicator = sprite
-        
+        print(self.button.pos)
         # collision
         self.player = player    
-        self.hitbox = self.rect.copy().inflate((0, 0))
+        self.hitbox = self.rect.copy()
         self.hitbox.y -= 20
 
     def update(self, dt) :
         self.tick_timer()
         self.is_colliding()
+
         if self.player.is_holding in ['basket_1', 'basket_2'] :
             self.indicator.show()
             self.indicator.animate(dt)
@@ -212,13 +190,24 @@ class LaundryMachine(InteractableObject) :
             self.indicator.hide()
 
     def interact(self) :
-        if not self.start_cycle :
+        # get laundry out of machine
+        if self.has_buttons :
+            self.get_laundry()
+        # place laundry in machine
+        if not self.start_cycle and not self.has_buttons :
             self.put_away_laundry()
 
     def put_away_laundry(self) :
-        if self.player.is_holding in ['basket_1', 'basket_2'] :
+        if self.player.is_holding in ['basket_1', 'basket_2'] and self.contains == 'None' :
+            self.contains = self.player.is_holding
             self.player.is_holding = 'None'
             self.start_cycle = True
+
+    def get_laundry(self) :
+        self.has_buttons = False
+        if self.player.is_holding == 'None' :
+            self.player.is_holding = self.contains
+            self.contains = 'None'
 
     def tick_timer(self) :
         if not self.start_cycle :
@@ -230,10 +219,65 @@ class LaundryMachine(InteractableObject) :
             self.seconds -= 1
             if self.seconds == 0 :
                 print('laundry done!')
+                self.has_buttons = True
                 self.start_cycle = False
                 self.last_time = 0
                 self.seconds = cg.LAUNDRY_CYCLE_LENGTH
+                self.contains = self.contains + '_clean'
         
+class TowelRack(InteractableObject) :
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, indicator_sprites, player, z = cg.LAYERS['wall_decoration']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+
+        self.has_buttons = True
+        self.is_empty = True
+
+        for sprite in indicator_sprites :
+            if sprite.name == 'towel' :
+                self.indicator = sprite
+
+        self.player = player
+        self.hitbox = self.rect.copy()
+    
+    def update(self, dt) :
+        self.is_colliding()
+
+        if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] :
+            self.indicator.show()
+            self.indicator.animate(dt)
+        else :
+            self.indicator.hide()
+
+    def interact(self) :
+        self.place_towel()
+
+    def place_towel(self) :
+        if self.is_empty :
+            if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] :
+                self.image = pygame.image.load('./graphics/tiles/bathroom/towel_rack_full.png').convert_alpha()
+                self.is_empty = False
+                self.player.is_holding = 'None'
+
+class Toy(InteractableObject) :
+    def __init__(self, pos, surface, groups, player_sprite, type, interact_sprites, player, z=cg.LAYERS['floor_decoration']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+
+        # setup
+        self.type = type
+        self.player = player
+
+        # collision
+        self.hitbox = self.rect.copy()
+
+    def interact(self) :
+        self.pickup()
+
+    def pickup(self) :
+        if not self.interacted and self.player.is_holding == 'None' :
+            self.image.set_alpha(0)
+
+            self.player.is_holding = self.type
+            self.interacted = True
 
 class Dresser(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, indicator_sprites, player, parts, z=cg.LAYERS['furniture']):
@@ -241,7 +285,6 @@ class Dresser(InteractableObject) :
 
         # setup
         self.has_buttons = False
-        self.interacted = False
 
         self.slots_filled = 0
         self.parts = parts
