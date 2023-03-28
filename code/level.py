@@ -44,6 +44,11 @@ class Level :
         # draw interact buttons
         for obj in tmx_data.get_layer_by_name('InteractButtons') :
             InteractButton((int(obj.x), int(obj.y)), obj.name, self.display_surface, [self.all_sprites, self.interact_sprites])
+        
+        # draw indicator tiles
+        indicator_frames = import_folder('./graphics/tiles/indicator')
+        for obj in tmx_data.get_layer_by_name('Indicators') :
+            DresserIndicator((int(obj.x), int(obj.y)), indicator_frames, self.all_sprites, self.player)
 
         # draw toys
         for obj in tmx_data.get_layer_by_name('Toys') :

@@ -10,11 +10,8 @@ class Generic(pygame.sprite.Sprite) :
         self.z = z
 
 class Constraint(Generic) :
-    def __init__(self, pos, surface, groups, z=cg.LAYERS['main']):
-        super().__init__(pos = pos,
-                         surface = surface,
-                         groups = groups,
-                         z = cg.LAYERS['constraints'])
+    def __init__(self, pos, surface, groups, z = cg.LAYERS['constraints']):
+        super().__init__(pos, surface, groups, z)
         self.hitbox = self.rect.copy()
 
 class InteractButton(Generic) :
@@ -33,6 +30,54 @@ class InteractButton(Generic) :
 
     def hide(self) :
         self.image.set_alpha(0)
+
+class Indicator(Generic) :
+    def __init__(self, pos, frames, groups, player, z=cg.LAYERS['interact_buttons']):
+        
+        # setup
+        self.frames = frames
+        self.frame_index = 0
+        self.do_animation = False
+        self.show_indicator = False
+
+        super().__init__(pos, self.frames[self.frame_index], groups, z)
+
+        self.player = player
+
+    def update(self, dt) :
+        self.determine_show()
+        self.show()
+        self.animate(dt)
+
+    def animate(self, dt) :
+        if self.do_animation :
+            if self.frame_index < len(self.frames) - 1:
+                self.frame_index += cg.INDICATOR_ANIMATION_SPEED * dt
+            else :
+                self.frame_index = 0
+
+            self.image = self.frames[int(self.frame_index)]
+    
+    def determine_show(self) :
+        pass
+
+    def show(self) :
+        if self.show_indicator :
+            self.do_animation = True
+            self.image.set_alpha(255)
+        else :
+            self.do_animation = False
+            self.image.set_alpha(0)
+
+class DresserIndicator(Indicator) :
+    def __init__(self, pos, frames, groups, player, z=cg.LAYERS['interact_buttons']):
+        super().__init__(pos, frames, groups, player, z)
+
+    def determine_show(self):
+        if self.player.is_holding_toy != 'None' :
+            self.show_indicator = True
+        else :
+            self.show_indicator = False
 
 class InteractableObject(Generic) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z):
@@ -236,7 +281,7 @@ class Door(Generic) :
             self.frame_index = 4
         if self.frame_index == 4 :
             self.do_animation = False
-
+        print(self.frame_index)
         self.image = self.frames[int(self.frame_index)]
 
     def animate_close(self, dt) :
