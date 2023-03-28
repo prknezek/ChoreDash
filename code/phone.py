@@ -66,6 +66,8 @@ class Phone:
 
         self.start_timer = False
         
+        self.button_pressed = False
+
         # making the phone screen borders - updated for bigger phone img
         left = 15
         top = 24
@@ -151,9 +153,20 @@ class Phone:
         
         pygame.display.flip() # Update the display
 
+    def input(self):
+        keys = pygame.key.get_pressed()
 
-    def run(self, screen):
+        if keys[pygame.K_TAB] and self.button_pressed == False:
+            if self.start_timer == False:
+                self.start_timer = True
+            self.show_phone = not(self.show_phone)
+            self.button_pressed = True
+        if not keys[pygame.K_TAB]:
+            self.button_pressed = False
+
+    def run(self, screen):        
         self.tickTimer()
+        self.input()
         if self.show_phone:
             self.display(screen)
         else:
