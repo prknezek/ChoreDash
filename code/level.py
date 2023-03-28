@@ -55,8 +55,8 @@ class Level :
         for obj in tmx_data.get_layer_by_name('Laundry') :
             if 'basket' in obj.name :
                 Basket((int(obj.x), int(obj.y)), obj.name, obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.player)
-            elif obj.name == 'laundry_machine' :
-                LaundryMachine((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.indicator_sprites, self.player)
+            # elif obj.name == 'laundry_machine' :
+            #     LaundryMachine((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.indicator_sprites, self.player)
 
         # draw toys
         for obj in tmx_data.get_layer_by_name('Toys') :

@@ -95,7 +95,6 @@ class InteractableObject(Generic) :
                             self.interact()
                             self.button.hide()
                     else :
-                        print('calling interact')
                         self.interact()
 
                     if self.can_show_button and self.has_buttons :
@@ -197,6 +196,7 @@ class LaundryMachine(InteractableObject) :
         self.hitbox.y += 35
 
     def update(self, dt) :
+        self.is_colliding()
         if self.player.is_holding in ['basket_1', 'basket_2'] :
             self.indicator.show()
             self.indicator.animate(dt)
@@ -241,6 +241,7 @@ class Dresser(InteractableObject) :
         self.hitbox.y -= 20
 
     def update(self, dt) :
+        self.is_colliding()
         if self.player.is_holding in ['bear', 'basket_ball', 'car', 'dumbbell'] :
             self.indicator.show()
             self.indicator.animate(dt)
