@@ -57,6 +57,7 @@ class InteractableObject(Generic) :
     def interact(self) :
         pass
 
+    # calls self.interact() if player is colliding with object
     def is_colliding(self) :
         for sprite in self.player_sprite.sprites() :
             if hasattr(sprite, 'hitbox') :
@@ -112,7 +113,7 @@ class Trashcan(InteractableObject) :
         self.color = color
         self.image = surface
         self.rect = self.image.get_rect(topleft = pos)
-        self.is_empty = False
+        self.interacted = False
         
         # collision
         self.hitbox = self.rect.copy()
@@ -125,7 +126,7 @@ class Trashcan(InteractableObject) :
     
     def empty(self) :
         # update sprite and set is_empty to true
-        if not self.is_empty :
+        if not self.interacted :
             if self.color == 'green' :
                 image_surface = pygame.image.load('./graphics/tiles/trashcans/green.png').convert_alpha()
             elif self.color == 'white' :
@@ -136,7 +137,7 @@ class Trashcan(InteractableObject) :
                 image_surface = pygame.image.load('./graphics/tiles/trashcans/pink.png').convert_alpha()
 
             self.image = image_surface
-            self.is_empty = True        
+            self.interacted = True        
 
 class Door(Generic) :
     def __init__(self, pos, frames, groups, offset, player_sprite):

@@ -90,7 +90,7 @@ class Level :
         empty_count = 0
 
         for sprite in self.trashcan_sprites :
-            if sprite.is_empty :
+            if sprite.interacted :
                 empty_count += 1
         
         if empty_count == 4 :
