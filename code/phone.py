@@ -73,8 +73,8 @@ class Phone:
         print(self.phonescreen_rect.width, self.phonescreen_rect.height)
 
         self.texts = [
-            ("almost home, do your chores !", "5:10"),
-            ("check the fridge list ! ", "5:28"),
+            ("almost home, do the chores !", "5:10"),
+            ("check the list on fridge", "5:28"),
             ("press tab to start ! ", "5:28")
         ]
         self.initTexts()
@@ -97,20 +97,11 @@ class Phone:
         #self.text_surfs.reverse()
 
     def showText(self, text_surf, top):
-        # white background
-        # bg_rect = pygame.Rect(self.phonescreen_rect.left + 5,
-        #                       self.phonescreen_rect.top + top + 30,
-        #                       self.phonescreen_rect.width - 20,
-        #                       text_surf.get_height() + (self.padding * 2))
-        # pygame.draw.rect(self.phone_surf, 'White', bg_rect, 0, 4)
-
         # show text surf
         text_surf_rect = text_surf.get_rect(midleft = (15, 31+top))
         self.phone_surf.blit(text_surf, text_surf_rect)
 
     def display(self, display_surf):
-        #timer
-        # display_surf.blit(self.phone_image, (0, 0))
 
         self.phone_rect = self.phone_surf.get_rect(bottom = cg.SCREEN_HEIGHT, left = self.left_coord)
 
@@ -121,16 +112,11 @@ class Phone:
         topOffset = 0
         for text in self.all_texts:
             for text_surf in text:
-                # text_surf_rect = text_surf.get_rect(left = 15, bottom = self.height - (text_surf_index * 10))
-                # self.phone_surf.blit(text_surf, text_surf_rect)
                 self.showText(text_surf, topOffset)
                 topOffset += self.space
             topOffset += 18
         
-        # contact_text = self.font.render("Mom", True, 'White')
-        # contact_text_rect = contact_text.get_rect(midbottom = (self.phonescreen_rect.center[0], self.phonescreen_rect.top + 17))
-        #self.phone_surf.blit(contact_text, contact_text_rect)
-        
+        # ETA timer
         if self.start_timer == True:
             current_time = pygame.time.get_ticks()
             if current_time - self.last_time >= 1000: 
@@ -141,12 +127,11 @@ class Phone:
                     self.minutes -= 1
                     if self.minutes < 0:
                         self.minutes = 0
-                        self.seconds = 0
-
+                        self.seconds = 0        
         if self.countdown_time > 0:
             time_str = f"{self.minutes:02d}:{self.seconds:02d}"
             time_text = self.font.render("ETA            " + time_str, True, (255, 255, 255))
-            time_text_rect = time_text.get_rect(left = 20, bottom = self.phone_rect.height-32)
+            time_text_rect = time_text.get_rect(left = 20, bottom = self.phone_rect.height-34)
             self.phone_surf.blit(time_text, time_text_rect)
 
         # draw phone to actual display        
