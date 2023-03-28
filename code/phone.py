@@ -51,7 +51,7 @@ class Phone:
         self.width = 110 # 135
         self.height = 196 # 245
 
-        self.show_phone = True
+        self.show_phone = False
         self.phone_surf = pygame.Surface((self.width, self.height), pygame.SRCALPHA) 
         self.font = pygame.font.Font('graphics/5x5.ttf', 10)
         #self.font = pygame.font.SysFont(None, 15)
@@ -69,11 +69,7 @@ class Phone:
         self.button_pressed = False
 
         # making the phone screen borders - updated for bigger phone img
-        left = 15
-        top = 24
-        bottom = 224
-        right = 148
-        self.phonescreen_rect = pygame.Rect(left, top, right-left, bottom-top)
+        self.phonescreen_rect = self.phone_image.get_rect()
         print(self.phonescreen_rect.width, self.phonescreen_rect.height)
 
         self.texts = [
@@ -81,6 +77,7 @@ class Phone:
             ("check the list on fridge", "5:28"),
             ("press tab to start ! ", "5:28")
         ]
+
         self.initTexts()
 
         # timer

@@ -22,10 +22,13 @@ class Player(pygame.sprite.Sprite) :
         self.speed = cg.PLAYER_SPEED
 
         # collision
-        self.hitbox = self.rect.copy().inflate((-20, -40))
+        self.hitbox = self.rect.copy().inflate((-20, -32))
         self.collision_sprites = collision_sprites
         self.door_sprites = door_sprites
         #self.image.fill('black')
+
+        # events
+        self.is_holding = 'None'
 
     def update(self, dt) :
         self.input()
@@ -76,6 +79,11 @@ class Player(pygame.sprite.Sprite) :
         if self.direction.magnitude() == 0 :
             self.status = self.status.split('_')[0] + '_idle'
 
+        if self.is_holding == 'dumbbell' :
+            self.speed = cg.PLAYER_SPEED - 100
+        else :
+            self.speed = cg.PLAYER_SPEED
+
     def collision(self, direction) :
         for sprite in self.collision_sprites.sprites() :
             if hasattr(sprite, 'hitbox') :
@@ -102,7 +110,6 @@ class Player(pygame.sprite.Sprite) :
                             self.rect.centery = self.hitbox.centery
                             self.pos.y = self.hitbox.centery
                     
-
     def move(self, dt) :
         if self.direction.magnitude() > 0 :
             self.direction = self.direction.normalize()

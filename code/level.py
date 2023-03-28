@@ -1,7 +1,7 @@
 import pygame
 import config as cg
 from player import Player
-from sprites import Generic, Door, Constraint, Trashcan, InteractButton
+from sprites import *
 from pytmx.util_pygame import load_pygame
 from support import *
 
@@ -18,6 +18,7 @@ class Level :
         self.player_sprite = pygame.sprite.Group()
         self.trashcan_sprites = pygame.sprite.Group()
         self.interact_sprites = pygame.sprite.Group()
+        self.indicator_sprites = pygame.sprite.Group()
 
         self.setup()
 
@@ -36,30 +37,40 @@ class Level :
         self.draw_generic_tiles('InFront', 'in_front')
         self.draw_generic_tiles('InFrontDecoration', 'in_front_decoration')
 
+        # draw player
+        for obj in tmx_data.get_layer_by_name('Player') :
+            if obj.name == 'Start' :
+                self.player = Player((obj.x, obj.y), [self.all_sprites, self.player_sprite], self.collision_sprites, self.door_sprites)
+
         # draw interact buttons
-        for x, y, surface in tmx_data.get_layer_by_name('InteractButtons').tiles() :
-            InteractButton((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.interact_sprites])
+        for obj in tmx_data.get_layer_by_name('InteractButtons') :
+            InteractButton((int(obj.x), int(obj.y)), obj.name, self.display_surface, [self.all_sprites, self.interact_sprites])
+        
+        # draw indicator tiles
+        indicator_frames = import_folder('./graphics/tiles/indicator')
+        for obj in tmx_data.get_layer_by_name('Indicators') :
+            if obj.name == 'dresser' :
+                DresserIndicator((int(obj.x), int(obj.y)), obj.name, indicator_frames, [self.all_sprites, self.indicator_sprites], self.indicator_sprites, self.player)
+
+        # draw laundry event tiles
+        for obj in tmx_data.get_layer_by_name('Laundry') :
+            if 'basket' in obj.name :
+                print((int(obj.x), int(obj.y)))
+                Basket((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.player)
+
+        # draw toys
+        for obj in tmx_data.get_layer_by_name('Toys') :
+            Toy((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, obj.name, self.interact_sprites, self.player)
+
+        # draw dresser
+        parts = self.draw_generic_tiles('Dresser', 'furniture')
+        for x, y, surface in tmx_data.get_layer_by_name('Dresser').tiles() :
+            if (x, y) == (19, 14) :
+                self.dresser = Dresser((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, self.player_sprite, self.interact_sprites, self.player, parts)                
 
         # draw trashcans
         for x, y, surface in tmx_data.get_layer_by_name('Trashcans').tiles() :
-            color = ''
-
-            if x == 9 :
-                color = 'green'
-            elif x == 15 :
-                color = 'white'
-            elif x == 12 :
-                color = 'blue'
-            elif x == 30 :
-                color = 'pink'
-
-            if (x, y) in [(9, 6), (15, 6), (12, 11), (30, 13)] :
-                Trashcan(pos = (x * cg.TILESIZE, y * cg.TILESIZE),
-                        surface = surface,
-                        groups = [self.all_sprites, self.trashcan_sprites],
-                        player_sprite = self.player_sprite,
-                        color = color,
-                        interact_sprites = self.interact_sprites)
+            Trashcan((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trashcan_sprites], self.player_sprite, self.interact_sprites)
         
         # draw door tiles
         door_frames = import_folder('./graphics/animated_tiles/right_door')
@@ -71,10 +82,6 @@ class Level :
                  offset = cg.DOOR_TILE_OFFSET,
                  player_sprite = self.player_sprite)
 
-        # draw player
-        for obj in tmx_data.get_layer_by_name('Player') :
-            if obj.name == 'Start' :
-                self.player = Player((obj.x, obj.y), [self.all_sprites, self.player_sprite], self.collision_sprites, self.door_sprites)
         
     def run(self, dt) :
         self.display_surface.fill('black')
@@ -86,19 +93,29 @@ class Level :
         empty_count = 0
 
         for sprite in self.trashcan_sprites :
-            if sprite.is_empty :
+            if sprite.interacted :
                 empty_count += 1
-        
+        if self.dresser.slots_filled == 4 :
+            print('toys put away')
+
         if empty_count == 4 :
             print('all trashcans empty')
 
     def draw_generic_tiles(self, tiled_name, layer_name) :
         tmx_data = load_pygame('./house/house_data/house.tmx')
+        parts = []
         for x, y, surface in tmx_data.get_layer_by_name(tiled_name).tiles() :
-            if tiled_name != 'Constraints' :
-                Generic((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, cg.LAYERS[layer_name])
-            else :
+            if tiled_name == 'Constraints' :
                 Constraint((x * cg.TILESIZE, y * cg.TILESIZE), pygame.Surface((cg.TILESIZE, cg.TILESIZE)), self.collision_sprites)
+            elif tiled_name == 'Dresser' :
+                if (x, y) != (19, 14) :
+                    tile = Generic((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, cg.LAYERS[layer_name])
+                    parts.append(tile)
+            else :
+                Generic((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, cg.LAYERS[layer_name])
+        
+        return parts
+                    
     
     def draw_generic_tiles_in_layer(self, tiled_layer, layer_name) :
         tmx_data = load_pygame('./house/house_data/house.tmx')
@@ -122,4 +139,3 @@ class CameraGroup(pygame.sprite.Group) :
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset
                     self.display_surface.blit(sprite.image, offset_rect)
-    
