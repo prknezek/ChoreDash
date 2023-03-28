@@ -36,8 +36,9 @@ class Indicator(Generic) :
         
         # setup
         self.name = name
+
         self.frames = frames
-        self.frames[0] = pygame.image.load('./graphics/tiles/indicator/0.png').convert_alpha()
+        self.frames_copy = frames
         self.frame_index = 0
 
         super().__init__(pos, self.frames[self.frame_index], groups, z)
@@ -54,10 +55,12 @@ class Indicator(Generic) :
         self.image = self.frames[int(self.frame_index)]
 
     def show(self) :
-        self.image.set_alpha(255)
+        self.frames = self.frames_copy
+        self.image = self.frames[int(self.frame_index)]
 
     def hide(self) :
-        self.image.set_alpha(0)
+        self.frames = pygame.image.load('./graphics/tiles/indicator/empty.png').convert_alpha()
+        self.image = self.frames
 
 class InteractableObject(Generic) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z):
@@ -130,7 +133,6 @@ class Trashcan(InteractableObject) :
             self.image = image_surface
             self.interacted = True
 
-
 class Basket(InteractableObject) :
     def __init__(self, pos, name, surface, groups, player_sprite, interact_sprites, laundry_machine, player, z = cg.LAYERS['furniture']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
@@ -173,7 +175,10 @@ class LaundryMachine(InteractableObject) :
         for sprite in indicator_sprites :
             if sprite.name == 'laundry' :
                 self.indicator = sprite
-        print(self.button.pos)
+        
+        self.button.rect.x += 16
+        self.button.rect.y += 16
+
         # collision
         self.player = player    
         self.hitbox = self.rect.copy()
@@ -206,6 +211,7 @@ class LaundryMachine(InteractableObject) :
     def get_laundry(self) :
         self.has_buttons = False
         if self.player.is_holding == 'None' :
+            self.indicator.hide()
             self.player.is_holding = self.contains
             self.contains = 'None'
 
@@ -257,6 +263,7 @@ class TowelRack(InteractableObject) :
                 self.image = pygame.image.load('./graphics/tiles/bathroom/towel_rack_full.png').convert_alpha()
                 self.is_empty = False
                 self.player.is_holding = 'None'
+                self.interacted = True
 
 class Toy(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, type, interact_sprites, player, z=cg.LAYERS['floor_decoration']):
