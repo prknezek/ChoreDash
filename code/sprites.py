@@ -37,39 +37,27 @@ class Indicator(Generic) :
         # setup
         self.name = name
         self.frames = frames
+        self.frames[0] = pygame.image.load('./graphics/tiles/indicator/0.png').convert_alpha()
         self.frame_index = 0
-        self.do_animation = False
-        self.show_indicator = False
 
         super().__init__(pos, self.frames[self.frame_index], groups, z)
 
         self.player = player
-
-    def update(self, dt) :
-        self.determine_show()
-        self.show()
-        self.animate(dt)
+        self.hide()
 
     def animate(self, dt) :
-        if self.do_animation :
-            if self.frame_index < len(self.frames) - 1:
-                self.frame_index += cg.INDICATOR_ANIMATION_SPEED * dt
-            else :
-                self.frame_index = 0
+        if self.frame_index < len(self.frames) - 1:
+            self.frame_index += cg.INDICATOR_ANIMATION_SPEED * dt
+        else :
+            self.frame_index = 0
 
-            self.image = self.frames[int(self.frame_index)]
-    
-    def determine_show(self) :
-        pass
+        self.image = self.frames[int(self.frame_index)]
 
     def show(self) :
-        if self.show_indicator :
-            self.do_animation = True
-            self.image.set_alpha(255)
-        else :
-            self.do_animation = False
-            self.image.set_alpha(0)
+        self.image.set_alpha(255)
 
+    def hide(self) :
+        self.image.set_alpha(0)
 
 class InteractableObject(Generic) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z):
@@ -107,6 +95,7 @@ class InteractableObject(Generic) :
                             self.interact()
                             self.button.hide()
                     else :
+                        print('calling interact')
                         self.interact()
 
                     if self.can_show_button and self.has_buttons :
@@ -119,28 +108,6 @@ class InteractableObject(Generic) :
 
                     if not self.interacted :
                         self.can_show_button = True
-
-class Basket(InteractableObject) :
-    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, player, z = cg.LAYERS['furniture']):
-        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
-        
-        self.player = player
-        self.has_buttons = True
-        self.interacted = False
-
-        self.hitbox = self.rect.copy().inflate((-10, 0))
-        self.hitbox.y -= 20
-
-    def interact(self) :
-        self.pickup()
-
-    def pickup(self) :
-        if not self.interacted and self.player.is_holding == 'None' :
-            image_surface = pygame.image.load(f'./graphics/tiles/bathroom/basket.png').convert_alpha()
-            self.image = image_surface
-
-            self.player.is_holding = 'basket'
-            self.interacted = True
 
 class Trashcan(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['trashcans']):
@@ -188,22 +155,64 @@ class Toy(InteractableObject) :
             self.player.is_holding = self.type
             self.interacted = True
 
-class DresserIndicator(Indicator) :
-    def __init__(self, pos, name, frames, groups, indicator_sprites, player, z=cg.LAYERS['interact_buttons']):
-        super().__init__(pos, name, frames, groups, player, z)
+class Basket(InteractableObject) :
+    def __init__(self, pos, name, surface, groups, player_sprite, interact_sprites, player, z = cg.LAYERS['furniture']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+        
+        self.name = name
+        self.player = player
+        self.has_buttons = True
+        self.interacted = False
+
+        self.hitbox = self.rect.copy().inflate((-10, 0))
+        self.hitbox.y -= 20
+
+    def interact(self) :
+        self.pickup()
+
+    def pickup(self) :
+        if not self.interacted and self.player.is_holding == 'None' :
+            image_surface = pygame.image.load(f'./graphics/tiles/bathroom/basket.png').convert_alpha()
+            self.image = image_surface
+
+            self.player.is_holding = self.name
+            self.interacted = True
+
+class LaundryMachine(InteractableObject) :
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, indicator_sprites, player, z = cg.LAYERS['furniture']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+
+        # setup
+        self.has_buttons = False
+        self.interacted = False
+        self.running = False
 
         for sprite in indicator_sprites :
-            if sprite.name == 'dresser' :
+            if sprite.name == 'laundry' :
                 self.indicator = sprite
+        
+        # collision
+        self.player = player    
+        self.hitbox = self.rect.copy().inflate((20, 20))
+        self.hitbox.y += 35
 
-    def determine_show(self):
-        if self.player.is_holding != 'None' :
-            self.indicator.show_indicator = True
+    def update(self, dt) :
+        if self.player.is_holding in ['basket_1', 'basket_2'] :
+            self.indicator.show()
+            self.indicator.animate(dt)
         else :
-            self.indicator.show_indicator = False
+            self.indicator.hide()
+
+    def interact(self) :
+        print('colliding')
+        self.put_away_laundry()
+
+    def put_away_laundry(self) :
+        if self.player.is_holding in ['basket_1', 'basket_2'] :
+            self.player.is_holding = 'None'
 
 class Dresser(InteractableObject) :
-    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, player, parts, z=cg.LAYERS['furniture']):
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, indicator_sprites, player, parts, z=cg.LAYERS['furniture']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
 
         # setup
@@ -212,6 +221,10 @@ class Dresser(InteractableObject) :
 
         self.slots_filled = 0
         self.parts = parts
+
+        for sprite in indicator_sprites :
+            if sprite.name == 'dresser' :
+                self.indicator = sprite
 
         # rearrange order
         self.parts.reverse()
@@ -227,12 +240,19 @@ class Dresser(InteractableObject) :
         self.hitbox.x += 20
         self.hitbox.y -= 20
 
+    def update(self, dt) :
+        if self.player.is_holding in ['bear', 'basket_ball', 'car', 'dumbbell'] :
+            self.indicator.show()
+            self.indicator.animate(dt)
+        else :
+            self.indicator.hide()
+
     def interact(self) :
         self.put_away_toy()
 
     def put_away_toy(self) :
         if self.slots_filled < 4 :
-            if self.player.is_holding != 'None' :
+            if self.player.is_holding in ['bear', 'basket_ball', 'car', 'dumbbell'] :
                 self.player.is_holding = 'None'
                 self.parts[self.slots_filled].image = pygame.image.load(f'./graphics/tiles/dresser/{self.slots_filled}.png').convert_alpha()
                 
@@ -260,7 +280,6 @@ class Door(Generic) :
         self.do_animation = False
         self.collision = False
         self.original_rect_x = self.rect.x
-
 
     def update(self, dt) :
         self.is_colliding()

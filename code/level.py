@@ -49,14 +49,14 @@ class Level :
         # draw indicator tiles
         indicator_frames = import_folder('./graphics/tiles/indicator')
         for obj in tmx_data.get_layer_by_name('Indicators') :
-            if obj.name == 'dresser' :
-                DresserIndicator((int(obj.x), int(obj.y)), obj.name, indicator_frames, [self.all_sprites, self.indicator_sprites], self.indicator_sprites, self.player)
+            Indicator((int(obj.x), int(obj.y)), obj.name, indicator_frames, [self.all_sprites, self.indicator_sprites], self.player)
 
         # draw laundry event tiles
         for obj in tmx_data.get_layer_by_name('Laundry') :
             if 'basket' in obj.name :
-                print((int(obj.x), int(obj.y)))
-                Basket((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.player)
+                Basket((int(obj.x), int(obj.y)), obj.name, obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.player)
+            elif obj.name == 'laundry_machine' :
+                LaundryMachine((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.indicator_sprites, self.player)
 
         # draw toys
         for obj in tmx_data.get_layer_by_name('Toys') :
@@ -66,7 +66,7 @@ class Level :
         parts = self.draw_generic_tiles('Dresser', 'furniture')
         for x, y, surface in tmx_data.get_layer_by_name('Dresser').tiles() :
             if (x, y) == (19, 14) :
-                self.dresser = Dresser((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, self.player_sprite, self.interact_sprites, self.player, parts)                
+                self.dresser = Dresser((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, self.player_sprite, self.interact_sprites, self.indicator_sprites, self.player, parts)                
 
         # draw trashcans
         for x, y, surface in tmx_data.get_layer_by_name('Trashcans').tiles() :
