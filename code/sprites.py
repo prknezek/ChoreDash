@@ -32,9 +32,10 @@ class InteractButton(Generic) :
         self.image.set_alpha(0)
 
 class Indicator(Generic) :
-    def __init__(self, pos, frames, groups, player, z=cg.LAYERS['interact_buttons']):
+    def __init__(self, pos, name, frames, groups, player, z=cg.LAYERS['interact_buttons']):
         
         # setup
+        self.name = name
         self.frames = frames
         self.frame_index = 0
         self.do_animation = False
@@ -69,15 +70,6 @@ class Indicator(Generic) :
             self.do_animation = False
             self.image.set_alpha(0)
 
-class DresserIndicator(Indicator) :
-    def __init__(self, pos, frames, groups, player, z=cg.LAYERS['interact_buttons']):
-        super().__init__(pos, frames, groups, player, z)
-
-    def determine_show(self):
-        if self.player.is_holding_toy != 'None' :
-            self.show_indicator = True
-        else :
-            self.show_indicator = False
 
 class InteractableObject(Generic) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z):
@@ -175,6 +167,20 @@ class Toy(InteractableObject) :
             self.player.is_holding_toy = self.type
             self.interacted = True
 
+class DresserIndicator(Indicator) :
+    def __init__(self, pos, name, frames, groups, indicator_sprites, player, z=cg.LAYERS['interact_buttons']):
+        super().__init__(pos, name, frames, groups, player, z)
+
+        for sprite in indicator_sprites :
+            if sprite.name == 'dresser' :
+                self.indicator = sprite
+
+    def determine_show(self):
+        if self.player.is_holding_toy != 'None' :
+            self.indicator.show_indicator = True
+        else :
+            self.indicator.show_indicator = False
+
 class Dresser(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, player, parts, z=cg.LAYERS['furniture']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
@@ -185,7 +191,7 @@ class Dresser(InteractableObject) :
 
         self.slots_filled = 0
         self.parts = parts
-        
+
         # rearrange order
         self.parts.reverse()
         parts.insert(1, self)

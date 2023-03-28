@@ -18,6 +18,7 @@ class Level :
         self.player_sprite = pygame.sprite.Group()
         self.trashcan_sprites = pygame.sprite.Group()
         self.interact_sprites = pygame.sprite.Group()
+        self.indicator_sprites = pygame.sprite.Group()
 
         self.setup()
 
@@ -48,7 +49,8 @@ class Level :
         # draw indicator tiles
         indicator_frames = import_folder('./graphics/tiles/indicator')
         for obj in tmx_data.get_layer_by_name('Indicators') :
-            DresserIndicator((int(obj.x), int(obj.y)), indicator_frames, self.all_sprites, self.player)
+            if obj.name == 'dresser' :
+                DresserIndicator((int(obj.x), int(obj.y)), obj.name, indicator_frames, [self.all_sprites, self.indicator_sprites], self.indicator_sprites, self.player)
 
         # draw toys
         for obj in tmx_data.get_layer_by_name('Toys') :
