@@ -60,7 +60,7 @@ class Level :
         parts = self.draw_generic_tiles('Dresser', 'furniture')
         for x, y, surface in tmx_data.get_layer_by_name('Dresser').tiles() :
             if (x, y) == (19, 14) :
-                Dresser((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, self.player_sprite, self.interact_sprites, self.player, parts)                
+                self.dresser = Dresser((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, self.player_sprite, self.interact_sprites, self.player, parts)                
 
         # draw trashcans
         for x, y, surface in tmx_data.get_layer_by_name('Trashcans').tiles() :
@@ -89,7 +89,9 @@ class Level :
         for sprite in self.trashcan_sprites :
             if sprite.interacted :
                 empty_count += 1
-        
+        if self.dresser.slots_filled == 4 :
+            print('toys put away')
+
         if empty_count == 4 :
             print('all trashcans empty')
 
