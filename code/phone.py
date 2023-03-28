@@ -61,6 +61,8 @@ class Phone:
         self.leftrightspace = 7 # space on left and right side of texts
 
         self.left_coord = 30
+
+        self.start_timer = False
         
         # making the phone screen borders - updated for bigger phone img
         left = 15
@@ -129,16 +131,17 @@ class Phone:
         # contact_text_rect = contact_text.get_rect(midbottom = (self.phonescreen_rect.center[0], self.phonescreen_rect.top + 17))
         #self.phone_surf.blit(contact_text, contact_text_rect)
         
-        current_time = pygame.time.get_ticks()
-        if current_time - self.last_time >= 1000: 
-            self.last_time = current_time
-            self.seconds -= 1
-            if self.seconds < 0:
-                self.seconds = 59
-                self.minutes -= 1
-                if self.minutes < 0:
-                    self.minutes = 0
-                    self.seconds = 0
+        if self.start_timer == True:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.last_time >= 1000: 
+                self.last_time = current_time
+                self.seconds -= 1
+                if self.seconds < 0:
+                    self.seconds = 59
+                    self.minutes -= 1
+                    if self.minutes < 0:
+                        self.minutes = 0
+                        self.seconds = 0
 
         if self.countdown_time > 0:
             time_str = f"{self.minutes:02d}:{self.seconds:02d}"
