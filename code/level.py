@@ -1,7 +1,7 @@
 import pygame
 import config as cg
 from player import Player
-from sprites import Generic, Door, Constraint, Trashcan, InteractButton
+from sprites import *
 from pytmx.util_pygame import load_pygame
 from support import *
 
@@ -39,6 +39,10 @@ class Level :
         # draw interact buttons
         for obj in tmx_data.get_layer_by_name('InteractButtons') :
             InteractButton((int(obj.x), int(obj.y)), obj.name, self.display_surface, [self.all_sprites, self.interact_sprites])
+
+        # draw toys
+        for obj in tmx_data.get_layer_by_name('Toys') :
+            Toy((int(obj.x), int(obj.y)), self.display_surface, self.all_sprites, self.player_sprite, obj.name, self.interact_sprites)
 
         # draw trashcans
         for x, y, surface in tmx_data.get_layer_by_name('Trashcans').tiles() :

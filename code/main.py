@@ -15,7 +15,7 @@ class Game :
         self.phone  = Phone()        
 
     def events(self) :
-        # game loop events
+        # game loop eventssd
         for event in pygame.event.get() :
             # user closes window
             if event.type == pygame.QUIT :
