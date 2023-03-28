@@ -8,6 +8,7 @@ from phone import *
 class Game :
     def __init__(self) :
         pygame.init()
+        pygame.key.set_repeat(1000)
         self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT), SCALED)
         self.clock = pygame.time.Clock() # For setting framerate
         pygame.display.set_caption("ChoreDash")
@@ -22,9 +23,6 @@ class Game :
                 self.playing = self.running = False
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_TAB:
-                    self.phone.show_phone = not(self.phone.show_phone)
 
     def run(self) :
         # game loop
