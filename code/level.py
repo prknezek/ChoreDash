@@ -51,13 +51,15 @@ class Level :
         for obj in tmx_data.get_layer_by_name('Indicators') :
             Indicator((int(obj.x), int(obj.y)), obj.name, indicator_frames, [self.all_sprites, self.indicator_sprites], self.player)
 
-        # draw laundry event tiles
+        # draw laundry machine
+        for obj in tmx_data.get_layer_by_name('Laundry') :
+            if obj.name == 'laundry_machine' :
+                laundry_machine = LaundryMachine((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.indicator_sprites, self.player)
+
+        # draw laundry baskets
         for obj in tmx_data.get_layer_by_name('Laundry') :
             if 'basket' in obj.name :
-                Basket((int(obj.x), int(obj.y)), obj.name, obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.player)
-            # elif obj.name == 'laundry_machine' :
-            #     LaundryMachine((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.indicator_sprites, self.player)
-
+                Basket((int(obj.x), int(obj.y)), obj.name, obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, laundry_machine, self.player)
         # draw toys
         for obj in tmx_data.get_layer_by_name('Toys') :
             Toy((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, obj.name, self.interact_sprites, self.player)

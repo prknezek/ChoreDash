@@ -155,13 +155,12 @@ class Toy(InteractableObject) :
             self.interacted = True
 
 class Basket(InteractableObject) :
-    def __init__(self, pos, name, surface, groups, player_sprite, interact_sprites, player, z = cg.LAYERS['furniture']):
+    def __init__(self, pos, name, surface, groups, player_sprite, interact_sprites, laundry_machine, player, z = cg.LAYERS['furniture']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
         
         self.name = name
         self.player = player
-        self.has_buttons = True
-        self.interacted = False
+        self.laundry_machine = laundry_machine
 
         self.hitbox = self.rect.copy().inflate((-10, 0))
         self.hitbox.y -= 20
@@ -170,12 +169,16 @@ class Basket(InteractableObject) :
         self.pickup()
 
     def pickup(self) :
-        if not self.interacted and self.player.is_holding == 'None' :
-            image_surface = pygame.image.load(f'./graphics/tiles/bathroom/basket.png').convert_alpha()
-            self.image = image_surface
+        # pickup laundry
+        if not self.laundry_machine.start_cycle :
+            if not self.interacted and self.player.is_holding == 'None' :
+                image_surface = pygame.image.load('./graphics/tiles/bathroom/basket.png').convert_alpha()
+                self.image = image_surface
 
-            self.player.is_holding = self.name
-            self.interacted = True
+                self.player.is_holding = self.name
+                self.interacted = True
+        else :
+            print('cannot pickup, laundry machine is running')
 
 class LaundryMachine(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, indicator_sprites, player, z = cg.LAYERS['furniture']):
@@ -184,7 +187,11 @@ class LaundryMachine(InteractableObject) :
         # setup
         self.has_buttons = False
         self.interacted = False
-        self.running = False
+
+        # timer setup
+        self.start_cycle = False
+        self.last_time = 0
+        self.seconds = cg.LAUNDRY_CYCLE_LENGTH
 
         for sprite in indicator_sprites :
             if sprite.name == 'laundry' :
@@ -192,10 +199,11 @@ class LaundryMachine(InteractableObject) :
         
         # collision
         self.player = player    
-        self.hitbox = self.rect.copy().inflate((20, 20))
-        self.hitbox.y += 35
+        self.hitbox = self.rect.copy().inflate((0, 0))
+        self.hitbox.y -= 20
 
     def update(self, dt) :
+        self.tick_timer()
         self.is_colliding()
         if self.player.is_holding in ['basket_1', 'basket_2'] :
             self.indicator.show()
@@ -204,12 +212,28 @@ class LaundryMachine(InteractableObject) :
             self.indicator.hide()
 
     def interact(self) :
-        print('colliding')
-        self.put_away_laundry()
+        if not self.start_cycle :
+            self.put_away_laundry()
 
     def put_away_laundry(self) :
         if self.player.is_holding in ['basket_1', 'basket_2'] :
             self.player.is_holding = 'None'
+            self.start_cycle = True
+
+    def tick_timer(self) :
+        if not self.start_cycle :
+            return
+
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_time >= 1000 :
+            self.last_time = current_time
+            self.seconds -= 1
+            if self.seconds == 0 :
+                print('laundry done!')
+                self.start_cycle = False
+                self.last_time = 0
+                self.seconds = cg.LAUNDRY_CYCLE_LENGTH
+        
 
 class Dresser(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, indicator_sprites, player, parts, z=cg.LAYERS['furniture']):
@@ -293,8 +317,8 @@ class Door(Generic) :
         for sprite in self.player_sprite.sprites() :
             if hasattr(sprite, 'hitbox') :
                 if sprite.hitbox.colliderect(self.hitbox) :
-                    # player coming from left
                     if not self.collision :
+                        # player coming from left
                         if sprite.direction.x > 0 :
                             self.set_open_animation('right')
                             if self.rect.x != self.original_rect_x :
