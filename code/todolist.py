@@ -15,6 +15,7 @@ class todoList:
         self.font_size = 10
 
         # critical variables
+        self.allTasksCompleted = False                      ### turns true when all tasks are completed
         self.taskStrings = ["TODO List:",
                             "TAKE OUT TRASH",
                             "LAUNDRY",
@@ -45,7 +46,13 @@ class todoList:
         # draw to screen
         todo_surf_rect = self.todo_surf.get_rect(topright = (cg.SCREEN_WIDTH - 31, self.box_top_offset))
         display_surf.blit(self.todo_surf, todo_surf_rect)
-        
+
+    def checkCompletion(self):
+        for x in self.taskCompletions:
+            if x == 0:
+                self.allTasksCompleted = False
+                return
+        self.allTasksCompleted = True
 
     def run(self, displayScreen):
         condition = True
@@ -53,3 +60,4 @@ class todoList:
             self.display(displayScreen)
         else:
             return
+        self.checkCompletion()
