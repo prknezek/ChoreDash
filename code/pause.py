@@ -26,7 +26,7 @@ class Pause:
         self.HEIGHT = 33 * SIZE_MULTIPLIER
         self.pause_text_top_offset = 38
         self.smalltext_spacing_from_mid = 32
-        self.smalltext_bottom_offset = 45
+        self.smalltext_bottom_offset = 39
 
         # critical variables
         self.show_pause = False
@@ -101,19 +101,16 @@ class Pause:
 
     def cursor_collision(self, mask):
         if self.buttons.check_collision(mask):
-            if pygame.mouse.get_pos()[0] < cg.SCREEN_WIDTH/2:
-                print("highlighting")
+            if pygame.mouse.get_pos()[0] < cg.SCREEN_WIDTH/2:                
                 self.highlight_retry = True
             else:
                 self.highlight_resume = True
 
             if pygame.mouse.get_pressed()[0] and not self.mouse1_clicked:            
                 self.mouse1_clicked = True
-                if pygame.mouse.get_pos()[0] < cg.SCREEN_WIDTH/2:
-                    print("clicking retry")
+                if pygame.mouse.get_pos()[0] < cg.SCREEN_WIDTH/2:                    
                     self.retry_bool = True
                 else:
-                    print("clicking resume")
                     self.show_pause = False
         else:
             self.highlight_retry = False
