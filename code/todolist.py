@@ -1,5 +1,12 @@
 import pygame
 import config as cg
+from enum import Enum
+
+class TaskIndex(Enum):
+    TRASH = 0
+    LAUNDRY = 1
+    TOYS = 2
+    DISHES = 3
 
 class todoList:
 
@@ -21,13 +28,26 @@ class todoList:
                             "LAUNDRY",
                             "CLEAN ROOM",
                             "DISHES"]
-        self.taskCompletions = [1,0,1,0]
+        self.taskCompletions = [0,0,0,0]
         self.todo_surf = pygame.transform.scale(pygame.image.load('graphics/todolist.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
         # self.todo_surf = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
 
         # mundane variables
         self.font = pygame.font.Font('graphics/5x5.ttf', self.font_size)
 
+    def complete(self, taskToMark:str):
+        match taskToMark.lower():
+            case "trash":
+                self.taskCompletions[TaskIndex.TRASH.value] = True
+            case "laundry":
+                self.taskCompletions[TaskIndex.LAUNDRY.value] = True
+            case "toys":
+                self.taskCompletions[TaskIndex.TOYS.value] = True
+            case "dishes":
+                self.taskCompletions[TaskIndex.DISHES.value] = True
+
+    def updateCompleted(self, updatedArr):
+        self.taskCompletions = updatedArr
 
     def display(self, display_surf):
         # draw to custom surface
@@ -54,9 +74,9 @@ class todoList:
                 return
         self.allTasksCompleted = True
 
-    def run(self, displayScreen):
-        condition = True
-        if condition:
+    def run(self, displayScreen, showToDoList, updatedArr):
+        self.updateCompleted(updatedArr)
+        if showToDoList:
             self.display(displayScreen)
         else:
             return

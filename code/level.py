@@ -4,11 +4,19 @@ from player import Player
 from sprites import *
 from pytmx.util_pygame import load_pygame
 from support import *
+from todolist import TaskIndex
 
 class Level :
     def __init__(self) :
         # get display surface
         self.display_surface = pygame.display.get_surface()
+
+        # task completion trackers
+        # self.trash_completed = False
+        # self.laundry_completed = False
+        # self.toy_completed = False
+        # self.dishes_completed = False
+        self.completed_array = [False, False, False, False]
 
         # sprite groups
         self.all_sprites = CameraGroup()
@@ -96,6 +104,7 @@ class Level :
         self.all_sprites.update(dt)
         self.event_detection()
 
+    
     def event_detection(self) :
         empty_count = 0
 
@@ -104,9 +113,11 @@ class Level :
                 empty_count += 1
         if self.dresser.slots_filled == 4 :
             print('toys put away')
+            self.completed_array[TaskIndex.TOYS.value] = True
 
         if empty_count == 4 :
             print('all trashcans empty')
+            self.completed_array[TaskIndex.TRASH.value] = True
 
     def draw_generic_tiles(self, tiled_name, layer_name) :
         tmx_data = load_pygame('./house/house_data/house.tmx')
