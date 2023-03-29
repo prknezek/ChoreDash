@@ -28,8 +28,8 @@ class Level :
         self.interact_sprites = pygame.sprite.Group()
         self.indicator_sprites = pygame.sprite.Group()
 
-        self.font = pygame.font.Font('graphics/5x5.ttf', 10)
-        self.bgfont = pygame.font.Font('graphics/5x5.ttf', 10)
+        self.font = pygame.font.Font('graphics/5x5.ttf', 15)
+        self.bgfont = pygame.font.Font('graphics/5x5.ttf', 15)
 
         self.setup()
 
@@ -131,10 +131,10 @@ class Level :
             
             # testing equip message
             testing_surf = self.bgfont.render(item + " EQUIPPED", False, 'Black')
-            testing_surf_rect = testing_surf.get_rect(center = (cg.SCREEN_WIDTH/2 + 1, cg.SCREEN_HEIGHT - 100 + 1))
+            testing_surf_rect = testing_surf.get_rect(center = (cg.SCREEN_WIDTH/2 + 1, cg.SCREEN_HEIGHT - 20 + 1))
             self.display_surface.blit(testing_surf, testing_surf_rect)
             testing_surf = self.font.render(item + " EQUIPPED", False, 'White')
-            testing_surf_rect = testing_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 100))
+            testing_surf_rect = testing_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 20))
             self.display_surface.blit(testing_surf, testing_surf_rect)
 
     def event_detection(self) :
