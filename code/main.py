@@ -15,6 +15,10 @@ class Game :
         self.clock = pygame.time.Clock() # For setting framerate
         pygame.display.set_caption("ChoreDash")        
 
+        pygame.mouse.set_visible(False)
+        self.cursor_img = pygame.image.load('graphics/cursor.png').convert_alpha()
+        self.cursor_img_rect = self.cursor_img.get_rect()
+
         # loading screen here
 
         self.level = Level()        
@@ -33,6 +37,10 @@ class Game :
                 pygame.quit()
                 sys.exit()
 
+    def displayCursor(self):
+        self.cursor_img_rect.center = pygame.mouse.get_pos()  # update position 
+        self.screen.blit(self.cursor_img, self.cursor_img_rect) # draw over it
+
     def run(self) :
         # game loop
         while True :
@@ -42,8 +50,9 @@ class Game :
             self.level.run(dt, self.phone.start_timer and not (self.pause.show_pause))
             self.phone.run(self.screen, self.pause.show_pause)
             self.todolist.run(self.screen, self.level.fridge.show_todolist, self.level.completed_array)
-
             self.pause.run()
+            
+            self.displayCursor()
 
             pygame.display.update()
 
