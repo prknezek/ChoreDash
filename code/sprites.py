@@ -253,7 +253,7 @@ class TowelRack(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, indicator_sprites, player, z = cg.LAYERS['wall_decoration']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
 
-        self.has_buttons = True
+        self.has_buttons = False
         self.is_empty = True
 
         for sprite in indicator_sprites :
@@ -267,9 +267,11 @@ class TowelRack(InteractableObject) :
         self.is_colliding()
 
         if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] and self.is_empty :
+            self.has_buttons = True
             self.indicator.show()
             self.indicator.animate(dt)
         else :
+            self.has_buttons = False
             self.indicator.hide()
 
     def interact(self) :
@@ -287,7 +289,7 @@ class BedSheet(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, indicator_sprites, player, z = cg.LAYERS['furniture']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
 
-        self.has_buttons = True
+        self.has_buttons = False
         self.is_made = False
 
         self.button.rect.x += 16
@@ -306,9 +308,11 @@ class BedSheet(InteractableObject) :
         self.is_colliding()
 
         if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] and not self.is_made :
+            self.has_buttons = True
             self.indicator.show()
             self.indicator.animate(dt)
         else :
+            self.has_buttons = False
             self.indicator.hide()
 
     def interact(self) :
@@ -316,10 +320,11 @@ class BedSheet(InteractableObject) :
 
     def make_bed(self) :
         if not self.is_made :
-            self.image.set_alpha(255)
-            self.player.is_holding = 'None'
-            self.interacted = True
-            self.is_made = True
+            if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] :
+                self.image.set_alpha(255)
+                self.player.is_holding = 'None'
+                self.interacted = True
+                self.is_made = True
 
 class Toy(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, type, interact_sprites, player, z=cg.LAYERS['floor_decoration']):
