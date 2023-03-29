@@ -126,7 +126,7 @@ class Fridge(InteractableObject) :
         if not self.can_show_button :
             self.show_todolist = True
         else :
-            self.show_todolist = False    
+            self.show_todolist = False
         
 
 class Trashcan(InteractableObject) :
@@ -167,7 +167,7 @@ class Basket(InteractableObject) :
 
     def pickup(self) :
         # pickup laundry
-        if not self.laundry_machine.start_cycle :
+        if self.laundry_machine.contains == 'None' :
             if not self.interacted and self.player.is_holding == 'None' :
                 image_surface = pygame.image.load('./graphics/tiles/bathroom/basket.png').convert_alpha()
                 self.image = image_surface
@@ -227,8 +227,8 @@ class LaundryMachine(InteractableObject) :
             self.start_cycle = True
 
     def get_laundry(self) :
-        self.has_buttons = False
         if self.player.is_holding == 'None' :
+            self.has_buttons = False
             self.indicator.hide()
             self.player.is_holding = self.contains
             self.contains = 'None'
@@ -266,7 +266,7 @@ class TowelRack(InteractableObject) :
     def update(self, dt) :
         self.is_colliding()
 
-        if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] :
+        if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] and self.is_empty :
             self.indicator.show()
             self.indicator.animate(dt)
         else :
@@ -282,6 +282,44 @@ class TowelRack(InteractableObject) :
                 self.is_empty = False
                 self.player.is_holding = 'None'
                 self.interacted = True
+
+class BedSheet(InteractableObject) :
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, indicator_sprites, player, z = cg.LAYERS['furniture']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+
+        self.has_buttons = True
+        self.is_made = False
+
+        self.button.rect.x += 16
+        self.button.rect.y += 16
+
+        for sprite in indicator_sprites :
+            if sprite.name == 'bed' :
+                self.indicator = sprite
+
+        self.player = player
+        self.hitbox = self.rect.copy()
+        self.image = pygame.image.load('./graphics/tiles/bathroom/bedsheet.png').convert_alpha()
+        self.image.set_alpha(0)
+
+    def update(self, dt) :
+        self.is_colliding()
+
+        if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] and not self.is_made :
+            self.indicator.show()
+            self.indicator.animate(dt)
+        else :
+            self.indicator.hide()
+
+    def interact(self) :
+        self.make_bed()
+
+    def make_bed(self) :
+        if not self.is_made :
+            self.image.set_alpha(255)
+            self.player.is_holding = 'None'
+            self.interacted = True
+            self.is_made = True
 
 class Toy(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, type, interact_sprites, player, z=cg.LAYERS['floor_decoration']):

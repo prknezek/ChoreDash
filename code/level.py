@@ -76,9 +76,13 @@ class Level :
             if 'basket' in obj.name :
                 Basket((int(obj.x), int(obj.y)), obj.name, obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, laundry_machine, self.player)
         
+        # draw bed
+        for obj in tmx_data.get_layer_by_name('BedSheet') :
+            self.bed = BedSheet((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.indicator_sprites, self.player)
+
         # draw towel rack
         for obj in tmx_data.get_layer_by_name('TowelRack') :
-            TowelRack((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.indicator_sprites, self.player)
+            self.towel_rack = TowelRack((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.indicator_sprites, self.player)
 
         # draw toys
         for obj in tmx_data.get_layer_by_name('Toys') :
@@ -114,14 +118,24 @@ class Level :
         self.event_detection()
 
     def equip_message(self):
+        item = "None"
         if self.player.is_holding != "None":
+            if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] :
+                item = "CLEAN LAUNDRY"
+            elif self.player.is_holding in ['basket_1', 'basket_2'] :
+                item = "LAUNDRY"
+            elif self.player.is_holding == 'basket_ball' :
+                item = "BASKETBALL"
+            else :
+                item = self.player.is_holding
+            
             # testing equip message
-            testing_surf = self.bgfont.render(self.player.is_holding + " EQUIPPED", False, 'Black')
+            testing_surf = self.bgfont.render(item + " EQUIPPED", False, 'Black')
             testing_surf_rect = testing_surf.get_rect(center = (cg.SCREEN_WIDTH/2 + 1, cg.SCREEN_HEIGHT - 100 + 1))
             self.display_surface.blit(testing_surf, testing_surf_rect)
-            testing_surf = self.font.render(self.player.is_holding + " EQUIPPED", False, 'White')
+            testing_surf = self.font.render(item + " EQUIPPED", False, 'White')
             testing_surf_rect = testing_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 100))
-            self.display_surface.blit(testing_surf, testing_surf_rect)    
+            self.display_surface.blit(testing_surf, testing_surf_rect)
 
     def event_detection(self) :
         empty_count = 0
@@ -129,13 +143,15 @@ class Level :
         for sprite in self.trashcan_sprites :
             if sprite.interacted :
                 empty_count += 1
+        
         if self.dresser.slots_filled == 4 :
-            print('toys put away')
             self.completed_array[TaskIndex.TOYS.value] = True
 
         if empty_count == 4 :
-            print('all trashcans empty')
             self.completed_array[TaskIndex.TRASH.value] = True
+        
+        if self.bed.is_made and not self.towel_rack.is_empty :
+            self.completed_array[TaskIndex.LAUNDRY.value] = True
 
     def draw_generic_tiles(self, tiled_name, layer_name) :
         tmx_data = load_pygame('./house/house_data/house.tmx')
