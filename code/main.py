@@ -16,6 +16,8 @@ class Game :
         self.level = Level()
         self.phone  = Phone()
         self.todolist = todoList()  
+        self.font = pygame.font.Font('graphics/5x5.ttf', 15)
+        self.bgfont = pygame.font.Font('graphics/5x5.ttf', 15)
 
     def events(self) :
         # game loop eventssd
@@ -34,7 +36,7 @@ class Game :
             dt = self.clock.tick(cg.FPS) / 1000
             self.level.run(dt)
             self.phone.run(self.screen)
-            self.todolist.run(self.screen, True, self.level.completed_array)
+            self.todolist.run(self.screen, self.level.fridge.show_todolist, self.level.completed_array)
 
             pygame.display.update()
 

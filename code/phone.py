@@ -143,10 +143,7 @@ class Phone:
         # draw phone to actual display        
         display_surf.blit(self.phone_surf, self.phone_rect)
 
-        # random vacuum text testing
-        # testing_surf = self.font.render("VACUUM EQUIPPED", False, 'White')
-        # testing_surf_rect = testing_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT/2 + 60))
-        # display_surf.blit(testing_surf, testing_surf_rect)
+        # random vacuum text testing        
 
     def input(self):
         keys = pygame.key.get_pressed()

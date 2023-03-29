@@ -28,6 +28,9 @@ class Level :
         self.interact_sprites = pygame.sprite.Group()
         self.indicator_sprites = pygame.sprite.Group()
 
+        self.font = pygame.font.Font('graphics/5x5.ttf', 10)
+        self.bgfont = pygame.font.Font('graphics/5x5.ttf', 10)
+
         self.setup()
 
     def setup(self) :
@@ -106,9 +109,19 @@ class Level :
         self.display_surface.fill('black')
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
+        self.equip_message()
         self.event_detection()
 
-    
+    def equip_message(self):
+        if self.player.is_holding != "None":
+            # testing equip message
+            testing_surf = self.bgfont.render(self.player.is_holding + " EQUIPPED", False, 'Black')
+            testing_surf_rect = testing_surf.get_rect(center = (cg.SCREEN_WIDTH/2 + 1, cg.SCREEN_HEIGHT - 100 + 1))
+            self.display_surface.blit(testing_surf, testing_surf_rect)
+            testing_surf = self.font.render(self.player.is_holding + " EQUIPPED", False, 'White')
+            testing_surf_rect = testing_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 100))
+            self.display_surface.blit(testing_surf, testing_surf_rect)    
+
     def event_detection(self) :
         empty_count = 0
 

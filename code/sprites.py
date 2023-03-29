@@ -90,7 +90,7 @@ class InteractableObject(Generic) :
     def is_colliding(self) :
         for sprite in self.player_sprite.sprites() :
             if hasattr(sprite, 'hitbox') :
-                if sprite.hitbox.colliderect(self.hitbox) :
+                if sprite.hitbox.colliderect(self.hitbox) :                    
                     keys = pygame.key.get_pressed()
 
                     if self.has_buttons :
@@ -104,7 +104,7 @@ class InteractableObject(Generic) :
                         self.button.show()
 
                     self.can_show_button = False
-                else :
+                else :                    
                     if not self.can_show_button and self.has_buttons :
                         self.button.hide()
 
@@ -121,11 +121,13 @@ class Fridge(InteractableObject) :
         self.hitbox = self.rect.copy()
         self.hitbox.y -= 20
 
-    def interact(self) :
+    def update(self, dt) :
+        self.is_colliding()
         if not self.can_show_button :
             self.show_todolist = True
         else :
-            self.show_todolist = False
+            self.show_todolist = False    
+        
 
 class Trashcan(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['trashcans']):
