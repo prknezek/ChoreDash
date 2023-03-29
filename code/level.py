@@ -105,10 +105,11 @@ class Level :
                  player_sprite = self.player_sprite)
 
         
-    def run(self, dt) :
+    def run(self, dt, whether_to_update) :
         self.display_surface.fill('black')
         self.all_sprites.custom_draw(self.player)
-        self.all_sprites.update(dt)
+        if whether_to_update:
+            self.all_sprites.update(dt)
         self.equip_message()
         self.event_detection()
 

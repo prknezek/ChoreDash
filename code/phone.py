@@ -54,6 +54,7 @@ class Phone:
         self.show_phone = True
         self.phone_surf = pygame.Surface((self.width, self.height), pygame.SRCALPHA) 
         self.font = pygame.font.Font('graphics/5x5.ttf', 10)
+        self.bigfont = pygame.font.Font('graphics/5x5.ttf', 15)
         #self.font = pygame.font.SysFont(None, 15)
         self.phone_image = pygame.transform.scale(pygame.image.load('graphics/phone/phonesprite-2.png').convert_alpha(), (self.width, self.height))
         self.phone_image.set_colorkey((0, 0, 0))       
@@ -135,9 +136,9 @@ class Phone:
             topOffset += 18
         
         # render timer                      
-        time_str = f"{self.minutes:02d}:{self.seconds:02d}"
-        time_text = self.font.render("ETA            " + time_str, True, (255, 255, 255))
-        time_text_rect = time_text.get_rect(left = 20, bottom = self.phone_rect.height-34)
+        time_str = f"{self.minutes:02d}:{self.seconds:02d}"        
+        time_text = self.bigfont.render("ETA  " + time_str, False, 'White')
+        time_text_rect = time_text.get_rect(left = 18, bottom = self.phone_rect.height-32)        
         self.phone_surf.blit(time_text, time_text_rect)
 
         # draw phone to actual display        
