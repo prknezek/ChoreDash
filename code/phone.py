@@ -157,9 +157,10 @@ class Phone:
         if not keys[pygame.K_TAB]:
             self.button_pressed = False
 
-    def run(self, screen):        
-        self.tickTimer()
-        self.input()
+    def run(self, screen, pause):
+        if not pause:
+            self.tickTimer()
+            self.input()
         if self.show_phone:
             self.display(screen)
         else:
