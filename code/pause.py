@@ -1,6 +1,12 @@
 import pygame
 import config as cg
 
+class Buttons(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.buttons_only_surf = pygame.transform.scale(pygame.image.load('graphics/pausebuttonsonly.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
+        self.buttons_mask = pygame.mask.from_surface(self.buttons_only_surf)
+
 class Pause:
     def __init__(self):
         
