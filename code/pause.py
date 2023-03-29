@@ -22,6 +22,7 @@ class Pause:
 
         # other
         self.display_surface = pygame.display.get_surface()
+        self.button_pressed = False        
         
 
     def events(self):
@@ -48,10 +49,18 @@ class Pause:
         pause_surf_rect = self.pause_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT/2))
         screen.blit(self.pause_surf, pause_surf_rect)
 
-    def run(self, pause_bool):
-        if pause_bool:
-            self.show_pause = True
+    def run(self):
+        self.input()
+        if self.show_pause == True:            
             self.display(self.display_surface)
-        else:
-            self.show_pause = False
+        else:            
             return
+
+    def input(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_ESCAPE] and self.button_pressed == False:
+            self.show_pause = not(self.show_pause)
+            self.button_pressed = True
+        if not keys[pygame.K_ESCAPE]:
+            self.button_pressed = False

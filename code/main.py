@@ -39,11 +39,11 @@ class Game :
             self.events()
 
             dt = self.clock.tick(cg.FPS) / 1000            
-            self.level.run(dt, self.phone.start_timer)
+            self.level.run(dt, self.phone.start_timer and not (self.pause.show_pause))
             self.phone.run(self.screen)
             self.todolist.run(self.screen, self.level.fridge.show_todolist, self.level.completed_array)
 
-            self.pause.run(True)
+            self.pause.run()
 
             pygame.display.update()
 
