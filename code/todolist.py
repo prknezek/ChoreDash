@@ -47,9 +47,8 @@ class todoList:
         display_surf.blit(self.todo_surf, todo_surf_rect)
         
 
-    def run(self, displayScreen):
-        condition = True
-        if condition:
+    def run(self, displayScreen, showToDoList):
+        if showToDoList:
             self.display(displayScreen)
         else:
             return

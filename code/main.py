@@ -34,7 +34,7 @@ class Game :
             dt = self.clock.tick(cg.FPS) / 1000
             self.level.run(dt)
             self.phone.run(self.screen)
-            self.todolist.run(self.screen)
+            self.todolist.run(self.screen, True)
 
             pygame.display.update()
 
