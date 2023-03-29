@@ -43,8 +43,15 @@ class Game :
         self.screen.blit(self.cursor_img, self.cursor_img_rect) # draw over it
 
     def run(self) :
+        
+        # splash screen here with (Hungry Games)
+
         # game loop
         while True :
+            
+            if self.pause.retry_bool == True:
+                self.__init__()
+
             self.events()
 
             dt = self.clock.tick(cg.FPS) / 1000            

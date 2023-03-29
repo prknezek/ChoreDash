@@ -35,6 +35,8 @@ class Pause:
         self.font = pygame.font.Font('graphics/5x5.ttf', 70)
         self.smfont = pygame.font.Font('graphics/5x5.ttf', 20)
 
+        self.retry_bool = False
+
         self.buttons = Buttons(self.WIDTH, self.HEIGHT, self.pause_surf_rect.left + (cursor_width/2.0), self.pause_surf_rect.top + (cursor_height/2.0))
         # self.resume_button_rect = pygame.Rect(cg.SCREEN_WIDTH // 2 - 50, cg.SCREEN_HEIGHT // 2 - 25, 100, 50)
 
@@ -91,7 +93,9 @@ class Pause:
                 self.mouse1_clicked = True
                 if pygame.mouse.get_pos()[0] < cg.SCREEN_WIDTH/2:
                     print("clicking retry")
+                    self.retry_bool = True
                 else:
-                    print("clicking resume")                
+                    print("clicking resume")
+                    self.show_pause = False
             elif not pygame.mouse.get_pressed()[0]:
                 self.mouse1_clicked = False
