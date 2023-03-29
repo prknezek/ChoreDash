@@ -184,6 +184,7 @@ class LaundryMachine(InteractableObject) :
         # setup
         self.has_buttons = False
         self.contains = 'None'
+        self.show_indicator = False
 
         # timer setup
         self.start_cycle = False
@@ -195,7 +196,7 @@ class LaundryMachine(InteractableObject) :
                 self.indicator = sprite
         
         self.button.rect.x += 16
-        self.button.rect.y += 16
+        #self.button.rect.y += 16
 
         # collision
         self.player = player    
@@ -207,10 +208,9 @@ class LaundryMachine(InteractableObject) :
         self.is_colliding()
 
         if self.player.is_holding in ['basket_1', 'basket_2'] :
-            self.indicator.show()
-            self.indicator.animate(dt)
-        else :
-            self.indicator.hide()
+            self.show_indicator = True
+
+        self.indicator_control(dt)
 
     def interact(self) :
         # get laundry out of machine
@@ -224,12 +224,13 @@ class LaundryMachine(InteractableObject) :
         if self.player.is_holding in ['basket_1', 'basket_2'] and self.contains == 'None' :
             self.contains = self.player.is_holding
             self.player.is_holding = 'None'
+            self.show_indicator = False
             self.start_cycle = True
 
     def get_laundry(self) :
         if self.player.is_holding == 'None' :
             self.has_buttons = False
-            self.indicator.hide()
+            self.show_indicator = False
             self.player.is_holding = self.contains
             self.contains = 'None'
 
@@ -243,11 +244,20 @@ class LaundryMachine(InteractableObject) :
             self.seconds -= 1
             if self.seconds == 0 :
                 print('laundry done!')
+                self.show_indicator = True
                 self.has_buttons = True
                 self.start_cycle = False
+
                 self.last_time = 0
                 self.seconds = cg.LAUNDRY_CYCLE_LENGTH
                 self.contains = self.contains + '_clean'
+    
+    def indicator_control(self, dt) :
+        if self.show_indicator :
+            self.indicator.show()
+            self.indicator.animate(dt)
+        else :
+            self.indicator.hide()
         
 class TowelRack(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, indicator_sprites, player, z = cg.LAYERS['wall_decoration']):
