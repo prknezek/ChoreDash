@@ -111,6 +111,22 @@ class InteractableObject(Generic) :
                     if not self.interacted :
                         self.can_show_button = True
 
+class Fridge(InteractableObject) :
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['furniture']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+
+        self.show_todolist = False
+        self.has_buttons = False
+
+        self.hitbox = self.rect.copy()
+        self.hitbox.y -= 20
+
+    def interact(self) :
+        if not self.can_show_button :
+            self.show_todolist = True
+        else :
+            self.show_todolist = False
+
 class Trashcan(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['trashcans']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)

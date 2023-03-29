@@ -50,6 +50,10 @@ class Level :
             if obj.name == 'Start' :
                 self.player = Player((obj.x, obj.y), [self.all_sprites, self.player_sprite], self.collision_sprites, self.door_sprites)
 
+        # draw fridge
+        for obj in tmx_data.get_layer_by_name('Fridge') :
+            self.fridge = Fridge((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites)
+
         # draw interact buttons
         for obj in tmx_data.get_layer_by_name('InteractButtons') :
             InteractButton((int(obj.x), int(obj.y)), obj.name, self.display_surface, [self.all_sprites, self.interact_sprites])
