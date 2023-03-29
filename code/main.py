@@ -5,6 +5,7 @@ import config as cg
 from level import Level
 from phone import *
 from todolist import todoList
+from pause import Pause
 
 class Game :
     def __init__(self) :        
@@ -19,6 +20,7 @@ class Game :
         self.level = Level()        
         self.phone  = Phone()
         self.todolist = todoList()          
+        self.pause = Pause()
         self.font = pygame.font.Font('graphics/5x5.ttf', 15)
         self.bgfont = pygame.font.Font('graphics/5x5.ttf', 15)
 
@@ -40,6 +42,8 @@ class Game :
             self.level.run(dt, self.phone.start_timer)
             self.phone.run(self.screen)
             self.todolist.run(self.screen, self.level.fridge.show_todolist, self.level.completed_array)
+
+            self.pause.run(True)
 
             pygame.display.update()
 
