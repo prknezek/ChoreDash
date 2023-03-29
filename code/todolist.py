@@ -1,5 +1,12 @@
 import pygame
 import config as cg
+from enum import Enum
+
+class TaskIndex(Enum):
+    TRASH = 0
+    LAUNDRY = 1
+    TOYS = 2
+    DISHES = 3
 
 class todoList:
 
@@ -15,18 +22,32 @@ class todoList:
         self.font_size = 10
 
         # critical variables
+        self.allTasksCompleted = False                      ### turns true when all tasks are completed
         self.taskStrings = ["TODO List:",
                             "TAKE OUT TRASH",
                             "LAUNDRY",
                             "CLEAN ROOM",
                             "DISHES"]
-        self.taskCompletions = [1,0,1,0]
+        self.taskCompletions = [0,0,0,0]
         self.todo_surf = pygame.transform.scale(pygame.image.load('graphics/todolist.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
         # self.todo_surf = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
 
         # mundane variables
         self.font = pygame.font.Font('graphics/5x5.ttf', self.font_size)
 
+    def complete(self, taskToMark:str):
+        match taskToMark.lower():
+            case "trash":
+                self.taskCompletions[TaskIndex.TRASH.value] = True
+            case "laundry":
+                self.taskCompletions[TaskIndex.LAUNDRY.value] = True
+            case "toys":
+                self.taskCompletions[TaskIndex.TOYS.value] = True
+            case "dishes":
+                self.taskCompletions[TaskIndex.DISHES.value] = True
+
+    def updateCompleted(self, updatedArr):
+        self.taskCompletions = updatedArr
 
     def display(self, display_surf):
         # draw to custom surface
@@ -45,10 +66,18 @@ class todoList:
         # draw to screen
         todo_surf_rect = self.todo_surf.get_rect(topright = (cg.SCREEN_WIDTH - 31, self.box_top_offset))
         display_surf.blit(self.todo_surf, todo_surf_rect)
-        
 
-    def run(self, displayScreen, showToDoList):
+    def checkCompletion(self):
+        for x in self.taskCompletions:
+            if x == 0:
+                self.allTasksCompleted = False
+                return
+        self.allTasksCompleted = True
+
+    def run(self, displayScreen, showToDoList, updatedArr):
+        self.updateCompleted(updatedArr)
         if showToDoList:
             self.display(displayScreen)
         else:
             return
+        self.checkCompletion()
