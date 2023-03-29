@@ -121,7 +121,7 @@ class Phone:
     def display(self, display_surf):
 
         # set rectangle
-        self.phone_rect = self.phone_surf.get_rect(bottom = cg.SCREEN_HEIGHT, left = self.left_coord)
+        self.phone_rect = self.phone_surf.get_rect(bottom = cg.SCREEN_HEIGHT-1, left = self.left_coord)
 
         # render phone
         self.phone_surf.blit(self.phone_image, (0, 0))        
@@ -147,8 +147,6 @@ class Phone:
         # testing_surf = self.font.render("VACUUM EQUIPPED", False, 'White')
         # testing_surf_rect = testing_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT/2 + 60))
         # display_surf.blit(testing_surf, testing_surf_rect)
-        
-        pygame.display.flip() # Update the display
 
     def input(self):
         keys = pygame.key.get_pressed()

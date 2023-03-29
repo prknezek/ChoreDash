@@ -4,6 +4,7 @@ import sys
 import config as cg
 from level import Level
 from phone import *
+from todolist import todoList
 
 class Game :
     def __init__(self) :
@@ -13,7 +14,8 @@ class Game :
         self.clock = pygame.time.Clock() # For setting framerate
         pygame.display.set_caption("ChoreDash")
         self.level = Level()
-        self.phone  = Phone()        
+        self.phone  = Phone()
+        self.todolist = todoList()  
 
     def events(self) :
         # game loop eventssd
@@ -31,8 +33,8 @@ class Game :
 
             dt = self.clock.tick(cg.FPS) / 1000
             self.level.run(dt)
-            
             self.phone.run(self.screen)
+            self.todolist.run(self.screen)
 
             pygame.display.update()
 
