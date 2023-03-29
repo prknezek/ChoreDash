@@ -3,7 +3,7 @@ SCREEN_WIDTH = 460
 SCREEN_HEIGHT = 330
 
 TILESIZE = 32
-FPS = 60
+FPS = 144
 
 # TILED TILE LAYERS
 DECORATION = ['Decoration_1', 'Decoration_2', 'Decoration_3']
