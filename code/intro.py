@@ -9,7 +9,7 @@ class Intro:
         
     def run(self,screen):
         while True:
-            self.video.draw(screen(0,0))
+            self.video.draw(screen, (0,0))
             pygame.display.update()
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.KEYDOWN:

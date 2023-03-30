@@ -46,6 +46,7 @@ class Game :
     def run(self) :
         
         # splash screen here with (Hungry Games)
+        self.intro.run(self.screen)
 
         # game loop
         while True :
@@ -66,7 +67,6 @@ class Game :
             pygame.display.update()
 
 if __name__ == "__main__" :
-    game = Game()
-    game.intro.run(game.screen)
+    game = Game()    
     game.run()
 
