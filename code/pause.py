@@ -26,12 +26,16 @@ class Pause:
         self.HEIGHT = 33 * SIZE_MULTIPLIER
         self.pause_text_top_offset = 38
         self.smalltext_spacing_from_mid = 32
-        self.smalltext_bottom_offset = 45
+        self.smalltext_bottom_offset = 39
 
         # critical variables
         self.show_pause = False
         self.pause_surf = pygame.transform.scale(pygame.image.load('graphics/pause.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
         self.pause_surf_rect = self.pause_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT/2))
+        self.retry_highlight_surf = pygame.transform.scale(pygame.image.load('graphics/retryhighlight.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
+        self.retry_highlight_surf_rect = self.retry_highlight_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT/2))
+        self.resume_highlight_surf = pygame.transform.scale(pygame.image.load('graphics/resumehighlight.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
+        self.resume_highlight_surf_rect = self.resume_highlight_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT/2))
         self.font = pygame.font.Font('graphics/5x5.ttf', 70)
         self.smfont = pygame.font.Font('graphics/5x5.ttf', 20)
 
@@ -44,6 +48,8 @@ class Pause:
         self.display_surface = pygame.display.get_surface()
         self.button_pressed = False        
         self.mouse1_clicked = False
+        self.highlight_retry = False
+        self.highlight_resume = False
         
 
     def events(self):
@@ -53,6 +59,8 @@ class Pause:
         bg_surf = pygame.Surface((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT))
         bg_surf.set_alpha(150)
         bg_surf.fill((0, 0, 0))        
+
+        self.pause_surf = pygame.transform.scale(pygame.image.load('graphics/pause.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
         
         paused_text = self.font.render('Pause', False, 'White')
         paused_text_rect = paused_text.get_rect(center = (self.pause_surf.get_width() / 2 + 3, self.pause_text_top_offset))
@@ -68,6 +76,10 @@ class Pause:
 
         screen.blit(bg_surf, (0,0))
         # pause_surf_rect = self.pause_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT/2))
+        if self.highlight_retry:
+            self.pause_surf.blit(self.retry_highlight_surf, (0,0))
+        elif self.highlight_resume:
+            self.pause_surf.blit(self.resume_highlight_surf, (0,0))
         screen.blit(self.pause_surf, self.pause_surf_rect)
 
     def run(self, mask):
@@ -86,16 +98,22 @@ class Pause:
             self.button_pressed = True
         if not keys[pygame.K_ESCAPE]:
             self.button_pressed = False
-    
+
     def cursor_collision(self, mask):
         if self.buttons.check_collision(mask):
+            if pygame.mouse.get_pos()[0] < cg.SCREEN_WIDTH/2:                
+                self.highlight_retry = True
+            else:
+                self.highlight_resume = True
+
             if pygame.mouse.get_pressed()[0] and not self.mouse1_clicked:            
                 self.mouse1_clicked = True
-                if pygame.mouse.get_pos()[0] < cg.SCREEN_WIDTH/2:
-                    print("clicking retry")
+                if pygame.mouse.get_pos()[0] < cg.SCREEN_WIDTH/2:                    
                     self.retry_bool = True
                 else:
-                    print("clicking resume")
                     self.show_pause = False
-            elif not pygame.mouse.get_pressed()[0]:
-                self.mouse1_clicked = False
+        else:
+            self.highlight_retry = False
+            self.highlight_resume = False
+        if not pygame.mouse.get_pressed()[0]:
+            self.mouse1_clicked = False
