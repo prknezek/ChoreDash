@@ -5,6 +5,7 @@ from sprites import *
 from pytmx.util_pygame import load_pygame
 from support import *
 from todolist import TaskIndex
+from random import randint, uniform
 
 class Level :
     def __init__(self) :
@@ -12,10 +13,6 @@ class Level :
         self.display_surface = pygame.display.get_surface()
 
         # task completion trackers
-        # self.trash_completed = False
-        # self.laundry_completed = False
-        # self.toy_completed = False
-        # self.dishes_completed = False
         self.completed_array = [False, False, False, False]
 
         # sprite groups
@@ -53,6 +50,9 @@ class Level :
             if obj.name == 'Start' :
                 self.player = Player((obj.x, obj.y), [self.all_sprites, self.player_sprite], self.collision_sprites, self.door_sprites)
 
+        # create clean minigame
+        self.clean_minigame = CleanMinigame(self.player, self.player_sprite)
+
         # draw fridge
         for obj in tmx_data.get_layer_by_name('Fridge') :
             self.fridge = Fridge((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites)
@@ -65,6 +65,10 @@ class Level :
         indicator_frames = import_folder('./graphics/tiles/indicator')
         for obj in tmx_data.get_layer_by_name('Indicators') :
             Indicator((int(obj.x), int(obj.y)), obj.name, indicator_frames, [self.all_sprites, self.indicator_sprites], self.player)
+
+        # draw dishes
+        for obj in tmx_data.get_layer_by_name('Dishes') :
+            self.dishes = Dishes((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites)
 
         # draw laundry machine
         for obj in tmx_data.get_layer_by_name('Laundry') :
@@ -115,7 +119,7 @@ class Level :
         if whether_to_update:
             self.all_sprites.update(dt)
         self.equip_message()
-        self.event_detection()
+        self.event_detection(dt)
 
     def equip_message(self):
         item = "None"
@@ -137,8 +141,12 @@ class Level :
             testing_surf_rect = testing_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 20))
             self.display_surface.blit(testing_surf, testing_surf_rect)
 
-    def event_detection(self) :
+    def event_detection(self, dt) :
         empty_count = 0
+
+        # dishes minigame
+        if self.dishes.is_washing :
+            self.clean_minigame.run(dt)
 
         for sprite in self.trashcan_sprites :
             if sprite.interacted :
@@ -191,3 +199,147 @@ class CameraGroup(pygame.sprite.Group) :
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset
                     self.display_surface.blit(sprite.image, offset_rect)
+
+class CleanMinigame :
+    def __init__(self, player, player_sprite) :
+        self.display_surface = pygame.display.get_surface()
+        self.all_sprites = CameraGroup()
+
+        # spawning
+        self.player_sprite = player_sprite
+        self.player = player
+        self.can_spawn_enemies = True
+        self.enemy_spawn_pos = pygame.math.Vector2()
+    
+        # delay timing
+        self.run_delay = False
+        self.last_time = 0
+        self.seconds = cg.ENEMY_SPAWN_INTERVAL
+
+        # teleport
+        self.teleport_to_start = False
+
+    # constantly running
+    def run(self, dt) :
+        if not self.teleport_to_start :
+            self.teleport_to_start = True
+            self.player.pos.x += 200
+
+        self.update_spawn_boundaries()
+        self.enemy_spawn_delay()
+        self.all_sprites.update(dt)
+        self.all_sprites.custom_draw(self.player)
+
+        if self.can_spawn_enemies :
+            self.spawn_enemies()
+
+    def spawn_enemies(self) :
+        self.determine_spawn_location()
+
+        Enemy(pos = (self.enemy_spawn_pos.x, self.enemy_spawn_pos.y), 
+              group = self.all_sprites, 
+              player_sprite = self.player_sprite,
+              player = self.player)
+        
+        self.can_spawn_enemies = False
+        self.run_delay = True
+
+    def determine_spawn_location(self) :
+        spawn_side = randint(1, 4)
+
+        match spawn_side :
+            case 1 : # top
+                self.enemy_spawn_pos.y = randint(self.max_top_y, self.min_top_y)
+                self.enemy_spawn_pos.x = randint(self.max_left_x, self.max_right_x)
+            case 2 : # bottom
+                self.enemy_spawn_pos.y = randint(self.min_bottom_y, self.max_bottom_y)
+                self.enemy_spawn_pos.x = randint(self.max_left_x, self.max_right_x)
+            case 3 : # left
+                self.enemy_spawn_pos.y = randint(self.max_top_y, self.max_bottom_y)
+                self.enemy_spawn_pos.x = randint(self.max_left_x, self.min_left_x)
+            case 4 : # right
+                self.enemy_spawn_pos.y = randint(self.max_top_y, self.max_bottom_y)
+                self.enemy_spawn_pos.x = randint(self.max_left_x, self.max_right_x)
+
+        print('enemy pos:')
+        print(self.enemy_spawn_pos.x, self.enemy_spawn_pos.y)
+        
+    def update_spawn_boundaries(self) :
+        pos_x = int(self.player.pos.x)
+        pos_y = int(self.player.pos.y)
+
+        max_spawn_distance = 250
+        min_spawn_distance = 200
+
+        self.max_right_x = pos_x + max_spawn_distance
+        self.min_right_x = pos_x + min_spawn_distance
+        self.max_left_x = pos_x - max_spawn_distance
+        self.min_left_x = pos_x - min_spawn_distance
+
+        self.max_bottom_y = pos_y + max_spawn_distance
+        self.min_bottom_y = pos_y + min_spawn_distance
+        self.max_top_y = pos_y - max_spawn_distance
+        self.min_top_y = pos_y - min_spawn_distance
+
+    def enemy_spawn_delay(self) :
+        if not self.run_delay :
+            return
+        
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_time >= 1000 :
+            self.last_time = current_time
+            self.seconds -= 1
+            if self.seconds == 0 :
+                self.can_spawn_enemies = True
+                self.last_time = 0
+                self.seconds = cg.ENEMY_SPAWN_INTERVAL
+
+class Enemy(pygame.sprite.Sprite) :
+    def __init__(self, pos, group, player_sprite, player) :
+        super().__init__(group)
+
+        # setup
+        image_path = './graphics/tiles/clean_minigame/enemies/' + str(randint(1, 7)) + '.png'
+        self.image = pygame.image.load(image_path).convert_alpha()
+        self.rect = self.image.get_rect(topleft = pos)
+        self.z = cg.LAYERS['main']
+
+        # movement
+        self.direction = pygame.math.Vector2()
+        self.pos = pygame.math.Vector2(self.rect.center)
+        self.speed = uniform(cg.ENEMY_MIN_SPEED, cg.ENEMY_MAX_SPEED)
+
+        # collision
+        self.hitbox = self.rect.copy().inflate((0, 0))
+        self.player = player
+        self.player_sprite = player_sprite
+
+    def update(self, dt) :
+        self.player_collision()
+        self.move(dt)
+
+    def player_collision(self) :
+        player = self.player_sprite.sprites()[0]
+        if player.hitbox.colliderect(self.hitbox) :
+            # handle collision
+            print('collided with player')
+
+    def move(self, dt) :
+        if self.pos != self.player.pos :
+            if self.direction.magnitude() > 0 :
+                self.direction = self.direction.normalize()
+                
+            stepx = self.player.pos.x - self.pos.x
+            stepy = self.player.pos.y - self.pos.y
+
+            # horizontal movement
+            self.pos.x += stepx * self.speed * dt
+            self.hitbox.centerx = round(self.pos.x)
+            self.rect.centerx = self.hitbox.centerx
+
+            # vertical movement
+            self.pos.y += stepy * self.speed  * dt
+            self.hitbox.centery = round(self.pos.y)
+            self.rect.centery = self.hitbox.centery
+
+            print(self.pos)

@@ -128,6 +128,17 @@ class Fridge(InteractableObject) :
         else :
             self.show_todolist = False
         
+class Dishes(InteractableObject) :
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['decoration']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+
+        self.hitbox = self.rect.copy()
+        self.hitbox.y += 20
+        self.is_washing = False
+    
+    def interact(self) :
+        self.is_washing = True
+
 
 class Trashcan(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['trashcans']):
@@ -276,7 +287,7 @@ class TowelRack(InteractableObject) :
     def update(self, dt) :
         self.is_colliding()
 
-        if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] and self.is_empty :
+        if self.player.is_holding == 'basket_2_clean' and self.is_empty :
             self.has_buttons = True
             self.indicator.show()
             self.indicator.animate(dt)
@@ -289,7 +300,7 @@ class TowelRack(InteractableObject) :
 
     def place_towel(self) :
         if self.is_empty :
-            if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] :
+            if self.player.is_holding == 'basket_2_clean' :
                 self.image = pygame.image.load('./graphics/tiles/bathroom/towel_rack_full.png').convert_alpha()
                 self.is_empty = False
                 self.player.is_holding = 'None'
@@ -317,7 +328,7 @@ class BedSheet(InteractableObject) :
     def update(self, dt) :
         self.is_colliding()
 
-        if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] and not self.is_made :
+        if self.player.is_holding == 'basket_1_clean' and not self.is_made :
             self.has_buttons = True
             self.indicator.show()
             self.indicator.animate(dt)
@@ -330,7 +341,7 @@ class BedSheet(InteractableObject) :
 
     def make_bed(self) :
         if not self.is_made :
-            if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] :
+            if self.player.is_holding == 'basket_1_clean' :
                 self.image.set_alpha(255)
                 self.player.is_holding = 'None'
                 self.interacted = True
