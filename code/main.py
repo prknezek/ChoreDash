@@ -6,6 +6,7 @@ from level import Level
 from phone import *
 from todolist import todoList
 from pause import Pause
+from intro import *
 
 class Game :
     def __init__(self) :        
@@ -21,7 +22,7 @@ class Game :
         self.cursor_img_mask = pygame.mask.from_surface(self.cursor_img)
 
         # loading screen here
-
+        self.intro = Intro()
         self.level = Level()        
         self.phone  = Phone()
         self.todolist = todoList()          
@@ -66,5 +67,6 @@ class Game :
 
 if __name__ == "__main__" :
     game = Game()
+    game.intro.run(game.screen)
     game.run()
 
