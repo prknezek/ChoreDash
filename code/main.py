@@ -22,7 +22,7 @@ class Game :
 
         # loading screen here
 
-        self.level = Level()        
+        self.level = Level()
         self.phone  = Phone()
         self.todolist = todoList()          
         self.pause = Pause(self.cursor_img.get_width(), self.cursor_img.get_height())
