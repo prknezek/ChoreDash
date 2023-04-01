@@ -25,6 +25,7 @@ class Level :
         self.trashcan_sprites = pygame.sprite.Group()
         self.interact_sprites = pygame.sprite.Group()
         self.indicator_sprites = pygame.sprite.Group()
+        self.trash_sprites = pygame.sprite.Group()
 
         # fonts
         self.equip_font = pygame.font.Font('graphics/5x5.ttf', 15)
@@ -122,8 +123,13 @@ class Level :
             Trashcan((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trashcan_sprites], self.player_sprite, self.interact_sprites)
         
         # draw trash
-        #for x, y, surface in tmx_data.get_layer_by_name('Trash').tiles() :
+        for x, y, surface in tmx_data.get_layer_by_name('Trash').tiles() :
+            trash = Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trash_sprites], self.player, self.player_sprite, self.interact_sprites)
+            self.warning_items.append(trash)
 
+        for x, y, surface in tmx_data.get_layer_by_name('CounterTrash').tiles() :
+            trash = Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trash_sprites], self.player, self.player_sprite, self.interact_sprites, z = cg.LAYERS['in_front_decoration'])
+            self.warning_items.append(trash)
 
         # draw door tiles
         door_frames = import_folder('./graphics/animated_tiles/right_door')
@@ -185,10 +191,8 @@ class Level :
             self.last_time = current_time
             self.seconds -= 1
             if self.seconds == 0 :
-                self.laundry_machine.display_message = 'None' 
-                self.dishes.display_message = 'None' 
-                for basket in self.baskets :
-                    basket.display_message = 'None' 
+                for item in self.warning_items :
+                    item.display_message = 'None'
 
                 self.countdown = False
                 self.seconds = 3

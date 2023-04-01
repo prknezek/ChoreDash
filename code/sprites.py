@@ -1,6 +1,7 @@
 import pygame
 import config as cg
 from support import *
+from random import randint
 
 class Generic(pygame.sprite.Sprite) :
     def __init__(self, pos, surface, groups, z = cg.LAYERS['main']) :
@@ -111,6 +112,21 @@ class InteractableObject(Generic) :
                     if not self.interacted :
                         self.can_show_button = True
 
+class Trash(InteractableObject) :
+    def __init__(self, pos, surface, groups, player, player_sprite, interact_sprites, z = cg.LAYERS['decoration']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+
+        self.hitbox = self.rect.copy().inflate(-12, -12)
+        self.player = player
+        self.display_message = 'None'
+        self.hitbox.y -= 14
+
+    def interact(self) :
+        if self.player.is_holding == 'None' :
+            self.kill()
+        else :
+            self.display_message = 'cannot pickup while holding item'
+
 class Fridge(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['furniture']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
@@ -160,20 +176,89 @@ class Trashcan(InteractableObject) :
         # setup
         self.color = self.button.name
         self.has_buttons = True
+        #self.empty()
+
+        # game
+        self.letter_sequence = []
+        self.step = 0
+        self.do_sequence = False
+        self.moved_letter = False
         
         # collision
         self.hitbox = self.rect.copy()
-    
+
+    def update(self, dt) :
+        self.is_colliding()
+        if self.do_sequence :
+            self.run_sequence()
+
     def interact(self) :
-        self.empty()
+        if not self.do_sequence :
+            self.start_sequence()
     
+    def start_sequence(self) :
+        sequence_length = randint(3, 5)
+
+        for i in range(sequence_length) :
+            key = randint(1, 24)
+            key += 96 # convert to ascii
+            while key in [117, 118, 119, 97, 115, 100, 101] :
+                key = randint(1, 24)
+                key += 96
+            self.letter_sequence.append(key)
+
+        self.do_sequence = True
+    
+    def run_sequence(self) :
+        if self.step == len(self.letter_sequence) :
+            self.do_sequence = False
+            self.interacted = True
+            self.empty()
+
+        if not self.interacted :
+            keys = pygame.key.get_pressed()
+            letter = chr(self.letter_sequence[self.step])
+
+            self.move_letter()
+
+            self.button.image = pygame.image.load(f'./graphics/tiles/alphabet/{letter}.png').convert_alpha()
+            if (keys[self.letter_sequence[self.step]]) :
+                self.step += 1
+
+    def move_letter(self) :
+        if not self.moved_letter :
+            self.button.rect.x += 8
+            self.button.rect.y += 4
+            self.moved_letter = True
+
     def empty(self) :
         # update sprite and set interacted to true
-        if not self.interacted :
-            image_surface = pygame.image.load(f'./graphics/tiles/trashcans/{self.color}.png').convert_alpha()
+        image_surface = pygame.image.load(f'./graphics/tiles/trashcans/{self.color}.png').convert_alpha()
+        self.image = image_surface
+        self.button.hide()
 
-            self.image = image_surface
-            self.interacted = True
+    def is_colliding(self) :
+        for sprite in self.player_sprite.sprites() :
+            if hasattr(sprite, 'hitbox') :
+                if sprite.hitbox.colliderect(self.hitbox) :                    
+                    keys = pygame.key.get_pressed()
+
+                    if self.has_buttons :
+                        if keys[pygame.K_e] :
+                            self.interact()
+                    else :
+                        self.interact()
+
+                    if self.can_show_button and self.has_buttons :
+                        self.button.show()
+
+                    self.can_show_button = False
+                else :                    
+                    if not self.can_show_button and self.has_buttons :
+                        self.button.hide()
+
+                    if not self.interacted :
+                        self.can_show_button = True
 
 class Basket(InteractableObject) :
     def __init__(self, pos, name, surface, groups, player_sprite, interact_sprites, laundry_machine, player, z = cg.LAYERS['furniture']):
