@@ -97,7 +97,7 @@ class Level :
         # draw dresser
         parts = self.draw_generic_tiles('Dresser', 'furniture')
         for x, y, surface in tmx_data.get_layer_by_name('Dresser').tiles() :
-            if (x, y) == (19, 17) :
+            if (x, y) == (19, 18) :
                 self.dresser = Dresser((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, self.player_sprite, self.interact_sprites, self.indicator_sprites, self.player, parts)                
 
         # draw trashcans
@@ -178,7 +178,7 @@ class Level :
             if tiled_name == 'Constraints' :
                 Constraint((x * cg.TILESIZE, y * cg.TILESIZE), pygame.Surface((cg.TILESIZE, cg.TILESIZE)), self.collision_sprites)
             elif tiled_name == 'Dresser' :
-                if (x, y) != (19, 14) :
+                if (x, y) != (19, 18) :
                     tile = Generic((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, cg.LAYERS[layer_name])
                     parts.append(tile)
             else :

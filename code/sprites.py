@@ -203,6 +203,11 @@ class LaundryMachine(InteractableObject) :
         self.has_buttons = False
         self.contains = 'None'
         self.show_indicator = False
+        self.clean = False
+
+        # animation
+        self.frames = import_folder('./graphics/animated_tiles/laundry_machine')
+        self.frame_index = 0
 
         # timer setup
         self.start_cycle = False
@@ -230,6 +235,21 @@ class LaundryMachine(InteractableObject) :
 
         self.indicator_control(dt)
 
+        if self.start_cycle :
+            self.animate(dt)
+        
+        if self.clean :
+            self.image = pygame.image.load('./graphics/tiles/bathroom/laundry_machine_done.png').convert_alpha()
+        elif not self.start_cycle :
+            self.image = pygame.image.load('./graphics/tiles/bathroom/laundry_machine.png').convert_alpha()
+
+    def animate(self, dt) :
+        if self.frame_index < len(self.frames) - 1 :
+            self.frame_index += cg.LAUNDRY_ANIMATION_SPEED * dt
+        else :
+            self.frame_index = 0
+        self.image= self.frames[int(self.frame_index)]
+
     def interact(self) :
         # get laundry out of machine
         if self.has_buttons :
@@ -249,6 +269,7 @@ class LaundryMachine(InteractableObject) :
         if self.player.is_holding == 'None' :
             self.has_buttons = False
             self.show_indicator = False
+            self.clean = False
             self.player.is_holding = self.contains
             self.contains = 'None'
 
@@ -265,6 +286,7 @@ class LaundryMachine(InteractableObject) :
                 self.show_indicator = True
                 self.has_buttons = True
                 self.start_cycle = False
+                self.clean = True
 
                 self.last_time = 0
                 self.seconds = cg.LAUNDRY_CYCLE_LENGTH
