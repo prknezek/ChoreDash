@@ -1,9 +1,6 @@
 import pygame
 import config as cg
 from support import import_folder
-from sprites import Door
-from clean_minigame import Sponge
-import sys
 
 class Player(pygame.sprite.Sprite) :
     def __init__(self, pos, group, collision_sprites, door_sprites) :

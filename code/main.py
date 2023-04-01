@@ -1,6 +1,6 @@
 import pygame
-from pygame.locals import *
-import sys
+from pygame.locals import * 
+import sys  
 import config as cg
 from level import Level
 from phone import *

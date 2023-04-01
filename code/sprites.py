@@ -537,3 +537,66 @@ class Door(Generic) :
             self.frame_index = 0
 
         self.image = self.frames[int(self.frame_index)]
+
+class DustParticle(Generic) :
+    def __init__(self, pos, groups, player, z=cg.LAYERS['floor_decoration']):
+
+        self.player = player
+        self.pos = pos
+
+        # animation
+        self.set_dust_run_particles('horizontal')
+        self.frame_index = 0
+
+        super().__init__(pos, self.frames[self.frame_index], groups, z)
+
+    def update(self, dt) :
+        self.animate_dust(dt)
+
+    def set_dust_run_particles(self, direction) :
+        if direction == 'horizontal' :
+            self.frames = import_folder('./graphics/character/dust_particles/horizontal/')
+        else :
+            self.frames = import_folder('./graphics/character/dust_particles/vertical/')
+
+    def animate_dust(self, dt) :
+        if 'idle' not in self.player.status : # player is moving
+            self.image.set_alpha(255)
+            if self.player.status in ['right', 'left'] :
+                self.set_dust_run_particles('horizontal')
+            else :
+                self.set_dust_run_particles('vertical')
+    
+            self.frame_index += cg.DUST_ANIMATION_SPEED * dt
+            if self.frame_index >= len(self.frames) :
+                self.frame_index = 0
+
+            if self.player.status == 'right' :
+                self.pos = self.player.pos + pygame.math.Vector2(-24, 28)
+                self.rect.bottomleft = self.pos
+
+                dust_particle = self.frames[int(self.frame_index)]
+                self.image = dust_particle
+            elif self.player.status == 'left' :
+                self.pos = self.player.pos + pygame.math.Vector2(8, 28)
+                self.rect.bottomleft = self.pos
+
+                dust_particle = self.frames[int(self.frame_index)]
+                flipped_dust_particle = pygame.transform.flip(dust_particle, True, False)
+                self.image = flipped_dust_particle
+            elif self.player.status == 'down' :
+                self.pos = self.player.pos
+                self.rect.bottomleft = self.pos + pygame.math.Vector2(-8, -6)
+
+                dust_particle = self.frames[int(self.frame_index)]
+                flipped_dust_particle = pygame.transform.flip(dust_particle, False, True)
+                self.image = flipped_dust_particle
+            elif self.player.status == 'up' :
+                self.pos = self.player.pos
+                self.rect.bottomleft = self.pos + pygame.math.Vector2(-8, 40)
+
+                dust_particle = self.frames[int(self.frame_index)]
+                self.image = dust_particle
+        else :
+            self.frame_index = 0
+            self.image.set_alpha(0)

@@ -5,7 +5,6 @@ from sprites import *
 from pytmx.util_pygame import load_pygame
 from support import *
 from todolist import TaskIndex
-from random import randint, uniform
 from camera_group import CameraGroup
 from clean_minigame import CleanMinigame
 
@@ -63,6 +62,9 @@ class Level :
 
         # create clean minigame
         self.clean_minigame = CleanMinigame(self.player, self.player_sprite, self.collision_sprites)
+
+        # create dust particle object
+        DustParticle(self.player.pos, self.all_sprites, self.player)
 
         # draw fridge
         for obj in tmx_data.get_layer_by_name('Fridge') :
@@ -161,15 +163,9 @@ class Level :
             text_surf = self.equip_font.render(item + " EQUIPPED", False, 'White')
             text_surf_rect = text_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 20))
             self.display_surface.blit(text_surf, text_surf_rect)
-
+        # warning messages
         for item in self.warning_items :
             if item.display_message != 'None' :
-                # print(item.display_message)
-                # if item in self.baskets and self.laundry_machine.contains != 'None' :
-                #     item.display_message = 'Cannot perform while laundry full'
-                # else :
-                #     item.display_message = 'cannot perform while holding item'
-
                 text_surf = self.warning_bgfont.render(f"{item.display_message}", False, 'Black')
                 text_surf_rect = text_surf.get_rect(center = (cg.SCREEN_WIDTH/2 + 1, cg.SCREEN_HEIGHT - 40 + 2))
                 self.display_surface.blit(text_surf, text_surf_rect)
