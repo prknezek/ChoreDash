@@ -6,10 +6,17 @@ from math import atan2, sin, cos
 
 class CleanMinigame :
     def __init__(self, player, player_sprite, collision_sprites) :
+        # surfaces & groups
         self.display_surface = pygame.display.get_surface()
         self.all_sprites = CameraGroup()
         self.sponge_sprite = pygame.sprite.Group()
         self.enemy_sprites = pygame.sprite.Group()
+
+        # text
+        self.font = pygame.font.Font('graphics/5x5.ttf', 15)
+        self.bgfont = pygame.font.Font('graphics/5x5.ttf', 15)
+        self.live_font = pygame.font.Font('graphics/5x5.ttf', 15)
+        self.live_bgfont = pygame.font.Font('graphics/5x5.ttf', 15)
 
         # spawning
         self.player_sprite = player_sprite
@@ -28,7 +35,9 @@ class CleanMinigame :
         self.collision_sprites = collision_sprites
 
         # game
-        self.enemy_spawn_number = 18
+        self.enemy_spawn_number = cg.NUM_ENEMIES
+        self.loss = False
+        self.won = False
 
     # constantly running
     def run(self, dt) :
@@ -37,19 +46,46 @@ class CleanMinigame :
             self.teleport_to_start = True
             self.player.pos.x = 1632
             self.player.pos.y = 448
-            
+
             self.sponge = Sponge(self.player.pos, [self.all_sprites, self.sponge_sprite], self.collision_sprites)
 
-        self.update_spawn_boundaries()
-        self.enemy_spawn_delay()
         self.all_sprites.update(dt)
         self.all_sprites.custom_draw(self.player)
-
+        self.update_spawn_boundaries()
+        self.enemy_spawn_delay()
+        self.event_detection()
+        self.text()
+        
+    def event_detection(self) :
         if self.can_spawn_enemies :
             self.spawn_enemies()
         
         if len(self.enemy_sprites.sprites()) == 0 and self.enemy_spawn_number == 0 :
-            print('GAME DONE')
+            self.won = True
+        
+        if self.player.lives == 0 and len(self.enemy_sprites.sprites()) != 0 :
+            self.loss = True
+            for sprite in self.enemy_sprites.sprites() :
+                sprite.kill()
+        
+        if self.won or self.loss :
+            self.player.pos.x = 644
+            self.player.pos.y = 380
+    
+    def text(self) :
+        text_surf = self.bgfont.render("Lives: ", False, 'Black')
+        text_surf_rect = text_surf.get_rect(center = (cg.SCREEN_WIDTH/2 + 1, cg.SCREEN_HEIGHT - 20 + 2))
+        self.display_surface.blit(text_surf, text_surf_rect)
+        text_surf = self.font.render("Lives: ", False, 'White')
+        text_surf_rect = text_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 20))
+        self.display_surface.blit(text_surf, text_surf_rect)
+
+        live_surf = self.live_bgfont.render(f"                    {self.player.lives}", False, 'Black')
+        live_surf_rect = live_surf.get_rect(center = (cg.SCREEN_WIDTH/2 + 1, cg.SCREEN_HEIGHT - 20 + 2))
+        self.display_surface.blit(live_surf, live_surf_rect)
+        live_surf = self.live_font.render(f"                    {self.player.lives}", False, 'Red')
+        live_surf_rect = live_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 20))
+        self.display_surface.blit(live_surf, live_surf_rect)
 
     def spawn_enemies(self) :
         if self.enemy_spawn_number > 0 and len(self.enemy_sprites.sprites()) < 4 :
@@ -84,18 +120,22 @@ class CleanMinigame :
         pos_x = int(self.player.pos.x)
         pos_y = int(self.player.pos.y)
 
+        # too close to top
         if pos_y - player_radius < top_wall :
             self.min_y_spawn_distance = pos_y + player_radius
             self.max_y_spawn_distance = bottom_wall
+        # too close to bottom
         if pos_y + player_radius > bottom_wall :
             self.min_y_spawn_distance = top_wall
             self.max_y_spawn_distance = pos_y - player_radius
+        # too close to right
         if pos_x + player_radius > right_wall :
             self.min_x_spawn_distance = left_wall
-            max_x_spawn_distance = pos_x - player_radius
+            self.max_x_spawn_distance = pos_x - player_radius
+        # too close to left
         if pos_x + player_radius < left_wall :
             self.min_x_spawn_distance = pos_x + player_radius
-            max_x_spawn_distance = right_wall
+            self.max_x_spawn_distance = right_wall
 
     def enemy_spawn_delay(self) :
         if not self.run_delay :
@@ -139,10 +179,10 @@ class Enemy(pygame.sprite.Sprite) :
         player = self.player_sprite.sprites()[0]
         sponge = self.sponge_sprite.sprites()[0]
 
-        if player.hitbox.colliderect(self.hitbox) :
-            # handle collision
-            #print('collided with player')
-            pass
+        if player.hitbox.colliderect(self.hitbox) and not self.player.iframes :
+            # handle player collision
+            self.player.lives -= 1
+            self.player.iframes = True
         
         if sponge.hitbox.colliderect(self.hitbox) :
             # handle sponge collision

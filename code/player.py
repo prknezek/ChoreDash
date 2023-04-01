@@ -31,12 +31,19 @@ class Player(pygame.sprite.Sprite) :
 
         # events
         self.is_holding = 'None'
+        self.lives = 3
+
+        # iframes
+        self.iframes = False
+        self.last_time = 0
+        self.seconds = cg.IFRAME_TIME
 
     def update(self, dt) :
         self.input()
         self.get_status()
         self.move(dt)
         self.animate(dt)
+        self.iframes_delay()
 
     def import_assets(self) :
         self.animations = {'up' : [], 'down' : [], 'left' : [], 'right' : [],
@@ -127,3 +134,16 @@ class Player(pygame.sprite.Sprite) :
         self.hitbox.centery = round(self.pos.y)
         self.rect.centery = self.hitbox.centery
         self.collision('vertical')
+
+    def iframes_delay(self) :
+        if not self.iframes :
+            return
+        
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_time >= 1000 :
+            self.last_time = current_time
+            self.seconds -= 1
+            if self.seconds == 0 :
+                self.iframes = False
+                self.last_time = 0
+                self.seconds = cg.IFRAME_TIME

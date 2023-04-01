@@ -135,20 +135,28 @@ class Level :
                 item = self.player.is_holding
             
             # testing equip message
-            testing_surf = self.bgfont.render(item + " EQUIPPED", False, 'Black')
-            testing_surf_rect = testing_surf.get_rect(center = (cg.SCREEN_WIDTH/2 + 1, cg.SCREEN_HEIGHT - 20 + 2))
-            self.display_surface.blit(testing_surf, testing_surf_rect)
-            testing_surf = self.font.render(item + " EQUIPPED", False, 'White')
-            testing_surf_rect = testing_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 20))
-            self.display_surface.blit(testing_surf, testing_surf_rect)
+            text_surf = self.bgfont.render(item + " EQUIPPED", False, 'Black')
+            text_surf_rect = text_surf.get_rect(center = (cg.SCREEN_WIDTH/2 + 1, cg.SCREEN_HEIGHT - 20 + 2))
+            self.display_surface.blit(text_surf, text_surf_rect)
+            text_surf = self.font.render(item + " EQUIPPED", False, 'White')
+            text_surf_rect = text_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 20))
+            self.display_surface.blit(text_surf, text_surf_rect)
 
     def event_detection(self, dt) :
         empty_count = 0
 
         # dishes minigame
         if self.dishes.is_washing :
-            self.player.is_washing = True
             self.clean_minigame.run(dt)
+
+            if self.clean_minigame.won :
+                self.dishes.is_washing = False
+                self.dishes.clean = True
+                self.completed_array[TaskIndex.DISHES.value] = True
+            elif self.clean_minigame.loss :
+                self.dishes.is_washing = False
+                self.clean_minigame = CleanMinigame(self.player, self.player_sprite, self.collision_sprites)
+                self.player.lives = 3
 
         for sprite in self.trashcan_sprites :
             if sprite.interacted :

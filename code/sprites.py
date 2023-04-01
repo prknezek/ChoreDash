@@ -135,9 +135,16 @@ class Dishes(InteractableObject) :
         self.hitbox = self.rect.copy()
         self.hitbox.y += 20
         self.is_washing = False
+        self.clean = False
     
     def interact(self) :
         self.is_washing = True
+
+    def update(self, dt) :
+        if not self.clean :
+            self.is_colliding()
+        if self.clean :
+            self.image.set_alpha(0)
 
 
 class Trashcan(InteractableObject) :
