@@ -34,7 +34,6 @@ class Game :
         for event in pygame.event.get() :
             # user closes window
             if event.type == pygame.QUIT :
-                self.playing = self.running = False
                 pygame.quit()
                 sys.exit()
 

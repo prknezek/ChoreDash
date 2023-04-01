@@ -2,6 +2,8 @@ import pygame
 import config as cg
 from support import import_folder
 from sprites import Door
+from clean_minigame import Sponge
+import sys
 
 class Player(pygame.sprite.Sprite) :
     def __init__(self, pos, group, collision_sprites, door_sprites) :
@@ -55,20 +57,20 @@ class Player(pygame.sprite.Sprite) :
         keys = pygame.key.get_pressed()
 
         # horizontal movement
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d] :
+        if keys[pygame.K_d] :
             self.status = 'right'
             self.direction.x = 1
-        elif keys[pygame.K_LEFT] or keys[pygame.K_a] :
+        elif keys[pygame.K_a] :
             self.status = 'left'
             self.direction.x = -1
         else :
             self.direction.x = 0
 
         # vertical movement
-        if keys[pygame.K_UP] or keys[pygame.K_w] :
+        if keys[pygame.K_w] :
             self.status = 'up'
             self.direction.y = -1
-        elif keys[pygame.K_DOWN] or keys[pygame.K_s] :
+        elif keys[pygame.K_s] :
             self.status = 'down'
             self.direction.y = 1
         else :
@@ -125,4 +127,3 @@ class Player(pygame.sprite.Sprite) :
         self.hitbox.centery = round(self.pos.y)
         self.rect.centery = self.hitbox.centery
         self.collision('vertical')
-        

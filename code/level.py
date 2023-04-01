@@ -53,7 +53,7 @@ class Level :
                 self.player = Player((obj.x, obj.y), [self.all_sprites, self.player_sprite], self.collision_sprites, self.door_sprites)
 
         # create clean minigame
-        self.clean_minigame = CleanMinigame(self.player, self.player_sprite)
+        self.clean_minigame = CleanMinigame(self.player, self.player_sprite, self.collision_sprites)
 
         # draw fridge
         for obj in tmx_data.get_layer_by_name('Fridge') :
@@ -147,6 +147,7 @@ class Level :
 
         # dishes minigame
         if self.dishes.is_washing :
+            self.player.is_washing = True
             self.clean_minigame.run(dt)
 
         for sprite in self.trashcan_sprites :
