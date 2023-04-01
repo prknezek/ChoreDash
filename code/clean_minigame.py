@@ -110,7 +110,7 @@ class CleanMinigame :
         bottom_wall = 704
         left_wall = 1280
         right_wall = 2016
-        player_radius = 200
+        player_radius = 150
 
         self.max_x_spawn_distance = right_wall
         self.min_x_spawn_distance = left_wall

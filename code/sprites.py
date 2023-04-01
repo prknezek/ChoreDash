@@ -122,23 +122,29 @@ class Fridge(InteractableObject) :
         self.hitbox.y -= 20
 
     def update(self, dt) :
-        self.is_colliding()
+        self.is_colliding() 
         if not self.can_show_button :
             self.show_todolist = True
         else :
             self.show_todolist = False
         
 class Dishes(InteractableObject) :
-    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['decoration']):
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, player, z = cg.LAYERS['decoration']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
 
         self.hitbox = self.rect.copy()
-        self.hitbox.y += 20
+        self.hitbox.y += 10
         self.is_washing = False
         self.clean = False
+        self.player = player
+        self.display_message = 'None' 
     
     def interact(self) :
-        self.is_washing = True
+        self.display_message = 'None' 
+        if self.player.is_holding == 'None' :
+            self.is_washing = True
+        else :
+            self.display_message = 'cannot perform while holding item'
 
     def update(self, dt) :
         if not self.clean :
@@ -176,6 +182,7 @@ class Basket(InteractableObject) :
         self.name = name
         self.player = player
         self.laundry_machine = laundry_machine
+        self.display_message = 'None' 
 
         self.hitbox = self.rect.copy().inflate((-10, 0))
         self.hitbox.y -= 20
@@ -186,14 +193,18 @@ class Basket(InteractableObject) :
     def pickup(self) :
         # pickup laundry
         if self.laundry_machine.contains == 'None' :
-            if not self.interacted and self.player.is_holding == 'None' :
-                image_surface = pygame.image.load('./graphics/tiles/bathroom/basket.png').convert_alpha()
-                self.image = image_surface
+            if not self.interacted :
+                if self.player.is_holding == 'None' :
+                    image_surface = pygame.image.load('./graphics/tiles/bathroom/basket.png').convert_alpha()
+                    self.image = image_surface
 
-                self.player.is_holding = self.name
-                self.interacted = True
+                    self.player.is_holding = self.name
+                    self.interacted = True
+                    self.display_message = 'None'
+                else :
+                    self.display_message = 'cannot perform while holding item'
         else :
-            print('cannot pickup, laundry machine is running')
+            self.display_message = 'Cannot perform while laundry full'
 
 class LaundryMachine(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, indicator_sprites, player, z = cg.LAYERS['furniture']):
@@ -204,6 +215,7 @@ class LaundryMachine(InteractableObject) :
         self.contains = 'None'
         self.show_indicator = False
         self.clean = False
+        self.display_message = 'None' 
 
         # animation
         self.frames = import_folder('./graphics/animated_tiles/laundry_machine')
@@ -248,7 +260,7 @@ class LaundryMachine(InteractableObject) :
             self.frame_index += cg.LAUNDRY_ANIMATION_SPEED * dt
         else :
             self.frame_index = 0
-        self.image= self.frames[int(self.frame_index)]
+        self.image = self.frames[int(self.frame_index)]
 
     def interact(self) :
         # get laundry out of machine
@@ -269,9 +281,12 @@ class LaundryMachine(InteractableObject) :
         if self.player.is_holding == 'None' :
             self.has_buttons = False
             self.show_indicator = False
+            self.display_message = 'None' 
             self.clean = False
             self.player.is_holding = self.contains
             self.contains = 'None'
+        else :
+            self.display_message = 'Cannot perform while holding item' 
 
     def tick_timer(self) :
         if not self.start_cycle :
@@ -282,7 +297,6 @@ class LaundryMachine(InteractableObject) :
             self.last_time = current_time
             self.seconds -= 1
             if self.seconds == 0 :
-                print('laundry done!')
                 self.show_indicator = True
                 self.has_buttons = True
                 self.start_cycle = False

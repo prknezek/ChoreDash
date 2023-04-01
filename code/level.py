@@ -27,8 +27,17 @@ class Level :
         self.interact_sprites = pygame.sprite.Group()
         self.indicator_sprites = pygame.sprite.Group()
 
-        self.font = pygame.font.Font('graphics/5x5.ttf', 15)
-        self.bgfont = pygame.font.Font('graphics/5x5.ttf', 15)
+        # fonts
+        self.equip_font = pygame.font.Font('graphics/5x5.ttf', 15)
+        self.equip_bgfont = pygame.font.Font('graphics/5x5.ttf', 15)
+        self.warning_font = pygame.font.Font('graphics/5x5.ttf', 15)
+        self.warning_bgfont = pygame.font.Font('graphics/5x5.ttf', 15)
+        self.warning_items = []
+
+        # text timer setup
+        self.last_time = 0
+        self.seconds = 3
+        self.countdown = False
 
         self.setup()
 
@@ -70,18 +79,24 @@ class Level :
 
         # draw dishes
         for obj in tmx_data.get_layer_by_name('Dishes') :
-            self.dishes = Dishes((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites)
+            self.dishes = Dishes((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.player)
+            self.warning_items.append(self.dishes)
 
         # draw laundry machine
         for obj in tmx_data.get_layer_by_name('Laundry') :
             if obj.name == 'laundry_machine' :
-                laundry_machine = LaundryMachine((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.indicator_sprites, self.player)
+                self.laundry_machine = LaundryMachine((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.indicator_sprites, self.player)
+                self.warning_items.append(self.laundry_machine)
 
         # draw laundry baskets
+        self.baskets = []
         for obj in tmx_data.get_layer_by_name('Laundry') :
             if 'basket' in obj.name :
-                Basket((int(obj.x), int(obj.y)), obj.name, obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, laundry_machine, self.player)
+                self.baskets.append(Basket((int(obj.x), int(obj.y)), obj.name, obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.laundry_machine, self.player))
         
+        self.warning_items.append(self.baskets[0])
+        self.warning_items.append(self.baskets[1])
+
         # draw bed
         for obj in tmx_data.get_layer_by_name('BedSheet') :
             self.bed = BedSheet((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.indicator_sprites, self.player)
@@ -92,7 +107,7 @@ class Level :
 
         # draw toys
         for obj in tmx_data.get_layer_by_name('Toys') :
-            Toy((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, obj.name, self.interact_sprites, self.player)
+            self.toy = Toy((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, obj.name, self.interact_sprites, self.player)
 
         # draw dresser
         parts = self.draw_generic_tiles('Dresser', 'furniture')
@@ -104,6 +119,10 @@ class Level :
         for x, y, surface in tmx_data.get_layer_by_name('Trashcans').tiles() :
             Trashcan((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trashcan_sprites], self.player_sprite, self.interact_sprites)
         
+        # draw trash
+        #for x, y, surface in tmx_data.get_layer_by_name('Trash').tiles() :
+
+
         # draw door tiles
         door_frames = import_folder('./graphics/animated_tiles/right_door')
 
@@ -124,6 +143,7 @@ class Level :
 
     def equip_message(self):
         item = "None"
+
         if self.player.is_holding != "None":
             if self.player.is_holding in ['basket_1_clean', 'basket_2_clean'] :
                 item = "CLEAN LAUNDRY"
@@ -134,13 +154,49 @@ class Level :
             else :
                 item = self.player.is_holding
             
-            # testing equip message
-            text_surf = self.bgfont.render(item + " EQUIPPED", False, 'Black')
+            # equip message
+            text_surf = self.equip_bgfont.render(item + " EQUIPPED", False, 'Black')
             text_surf_rect = text_surf.get_rect(center = (cg.SCREEN_WIDTH/2 + 1, cg.SCREEN_HEIGHT - 20 + 2))
             self.display_surface.blit(text_surf, text_surf_rect)
-            text_surf = self.font.render(item + " EQUIPPED", False, 'White')
+            text_surf = self.equip_font.render(item + " EQUIPPED", False, 'White')
             text_surf_rect = text_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 20))
             self.display_surface.blit(text_surf, text_surf_rect)
+
+        for item in self.warning_items :
+            if item.display_message != 'None' :
+                # print(item.display_message)
+                # if item in self.baskets and self.laundry_machine.contains != 'None' :
+                #     item.display_message = 'Cannot perform while laundry full'
+                # else :
+                #     item.display_message = 'cannot perform while holding item'
+
+                text_surf = self.warning_bgfont.render(f"{item.display_message}", False, 'Black')
+                text_surf_rect = text_surf.get_rect(center = (cg.SCREEN_WIDTH/2 + 1, cg.SCREEN_HEIGHT - 40 + 2))
+                self.display_surface.blit(text_surf, text_surf_rect)
+                text_surf = self.warning_font.render(f"{item.display_message}", False, 'White')
+                text_surf_rect = text_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 40))
+                self.display_surface.blit(text_surf, text_surf_rect)
+
+                self.countdown = True
+                self.text_timer()
+
+    def text_timer(self) :
+        if not self.countdown :
+            return
+        
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_time >= 1000 :
+            self.last_time = current_time
+            self.seconds -= 1
+            if self.seconds == 0 :
+                self.laundry_machine.display_message = 'None' 
+                self.dishes.display_message = 'None' 
+                for basket in self.baskets :
+                    basket.display_message = 'None' 
+
+                self.countdown = False
+                self.seconds = 3
+                self.last_time = 0
 
     def event_detection(self, dt) :
         empty_count = 0
