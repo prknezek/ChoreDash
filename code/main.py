@@ -6,7 +6,7 @@ from level import Level
 from phone import *
 from todolist import todoList
 from pause import Pause
-from intro import *
+from intro import Intro
 
 class Game :
     def __init__(self) :        
