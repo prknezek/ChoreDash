@@ -24,7 +24,7 @@ class Game :
         self.cursor_img_mask = pygame.mask.from_surface(self.cursor_img)
 
         # loading screen here
-        #self.intro = Intro()
+        self.intro = Intro()
         self.level = Level()        
         self.phone  = Phone()
         self.todolist = todoList()          
@@ -62,7 +62,9 @@ class Game :
 
         self.end.show_end = False
 
-        #self.intro.run(self.screen)
+        self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT))
+        self.intro.run(self.screen)
+        self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT), SCALED)
         mixer.music.play(-1)
         
         # game loop

@@ -84,8 +84,8 @@ class EndScreen:
         # draw points and time
         # score procesing
         score_str = str(score)
-        while len(score_str) < 3:
-            score_str = '0' + score_str
+        # while len(score_str) < 3:              add 0s to end of score
+        #     score_str = '0' + score_str
         score_text = self.smfont.render('Score: ' + score_str, False, 'Black')
         score_text_rect = score_text.get_rect(midleft = ( self.scoretime_center_x, (cg.SCREEN_HEIGHT/2 - 40) ))
         self.end_surf.blit(score_text, score_text_rect)
