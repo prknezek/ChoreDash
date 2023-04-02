@@ -39,9 +39,9 @@ class Game :
         
 
     def events(self) :
-        # game loop eventssd
+        # game loop events
+
         for event in pygame.event.get() :
-            # user closes windows
             if event.type == pygame.QUIT :
                 pygame.quit()
                 sys.exit()
@@ -60,8 +60,6 @@ class Game :
         
         # splash screen here with (Hungry Games)
 
-        self.end.show_end = False
-
         self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT))
         self.intro.run(self.screen)
         self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT), SCALED)
@@ -69,8 +67,6 @@ class Game :
         
         # game loop
         while True :
-            if self.pause.retry_bool == True:
-                self.__init__()
                 
             self.events()
             dt = self.clock.tick(cg.FPS) / 1000            
