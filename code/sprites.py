@@ -112,19 +112,72 @@ class InteractableObject(Generic) :
                     if not self.interacted :
                         self.can_show_button = True
 
+class BarBG(Generic) :
+    def __init__(self, pos, surface, groups, z=cg.LAYERS['decoration']):
+        super().__init__(pos, surface, groups, z)
+
+    def show(self):
+        self.image.set_alpha(255)
+    
+    def hide(self) :
+        self.image.set_alpha(0)
+
+class SpamBar(Generic) :
+    def __init__(self, pos, surface, groups, bg, z=cg.LAYERS['trashcans']):
+        super().__init__(pos, surface, groups, z)
+
+        self.rect = self.image.get_rect(topleft = pos)
+        self.bg = bg
+
+        self.pos = pos
+        self.finished = False
+        self.width = 4
+
+        self.max_presses = 100
+        self.press_amount = 0
+
+        self.bg.hide()
+
+    def update(self, dt) :
+        #self.image = pygame.transform.scale(self.image, (10, 12))
+        self.update_bar()
+        pass
+
+    def update_bar(self) :
+        if not self.finished :
+            self.width = (self.press_amount / self.max_presses * 24) + 1
+            self.image = pygame.transform.scale(self.image, (self.width, 6))
+            self.rect = self.image.get_rect(topleft = self.pos)
+
+    def do_work(self) :
+        # spamming e
+        self.press_amount += 1
+        if self.press_amount >= self.max_presses :
+            self.finished = True
+
 class Toilet(InteractableObject) :
-    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['furniture']):
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, progress_bar, z = cg.LAYERS['furniture']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
 
-        self.hitbox = self.rect.copy().inflate((0, 0))
+        self.hitbox = self.rect.copy()
+        self.hitbox.y -= 20
 
         self.button.rect.y += 32
+        self.bar = progress_bar
+        self.showing_bar = False
+
+        self.clean = False
 
     def update(self, dt) :
         self.is_colliding()
+        if self.bar.finished :
+            self.clean = True
+            self.bar.bg.kill()
+            self.bar.kill()
+            self.image = pygame.image.load('./graphics/tiles/bathroom/clean_toilet.png').convert_alpha()
 
     def interact(self) :
-        pass
+        self.bar.do_work()
 
     def is_colliding(self) :
         for sprite in self.player_sprite.sprites() :
@@ -134,8 +187,8 @@ class Toilet(InteractableObject) :
 
                     if self.has_buttons :
                         if keys[pygame.K_e] :
+                            self.bar.bg.show()
                             self.interact()
-                            self.button.hide()
                     else :
                         self.interact()
 

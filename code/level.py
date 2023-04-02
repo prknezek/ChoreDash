@@ -145,9 +145,15 @@ class Level :
             broom = Broom((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.floor_trash_sprites, self.player)
             self.warning_items.append(broom)
         
+        # draw progress bar
+        bar_bg = pygame.image.load('./graphics/tiles/indicator/bar_bg.png').convert_alpha()
+        bg = BarBG((992, 586), bar_bg, self.all_sprites)
+        image = pygame.image.load('./graphics/tiles/indicator/bar.png').convert_alpha()
+        progress_bar = SpamBar((996, 599), image, self.all_sprites, bg)
+
         # draw toilet
         for obj in tmx_data.get_layer_by_name('Toilet') :
-            self.toilet = Toilet((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites)
+            self.toilet = Toilet((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, progress_bar)
 
         # draw door tiles
         door_frames = import_folder('./graphics/animated_tiles/right_door')
