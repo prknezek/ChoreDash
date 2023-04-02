@@ -179,8 +179,6 @@ class Dishes(InteractableObject) :
             self.updated_image = True
             self.image = pygame.image.load('./graphics/tiles/clean_minigame/clean_dishes.png').convert_alpha()
 
-
-
 class Trashcan(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['trashcans']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
@@ -324,7 +322,7 @@ class LaundryMachine(InteractableObject) :
         self.seconds = cg.LAUNDRY_CYCLE_LENGTH
 
         for sprite in indicator_sprites :
-            if sprite.name == 'laundry' :
+            if 'laundry' in sprite.name :
                 self.indicator = sprite
         
         self.button.rect.x += 16
@@ -416,10 +414,11 @@ class TowelRack(InteractableObject) :
 
         self.has_buttons = False
         self.is_empty = True
+        self.indicators = []
 
         for sprite in indicator_sprites :
-            if sprite.name == 'towel' :
-                self.indicator = sprite
+            if 'towel' in sprite.name :
+                self.indicators.append(sprite)
 
         self.player = player
         self.hitbox = self.rect.copy()
@@ -429,11 +428,13 @@ class TowelRack(InteractableObject) :
 
         if self.player.is_holding == 'basket_2_clean' and self.is_empty :
             self.has_buttons = True
-            self.indicator.show()
-            self.indicator.animate(dt)
+            for indicator in self.indicators :
+                indicator.show()
+                indicator.animate(dt)
         else :
             self.has_buttons = False
-            self.indicator.hide()
+            for indicator in self.indicators :
+                indicator.hide()
 
     def interact(self) :
         self.place_towel()
@@ -452,13 +453,14 @@ class BedSheet(InteractableObject) :
 
         self.has_buttons = False
         self.is_made = False
+        self.indicators = []
 
         self.button.rect.x += 16
         self.button.rect.y += 16
 
         for sprite in indicator_sprites :
-            if sprite.name == 'bed' :
-                self.indicator = sprite
+            if 'bed' in sprite.name :
+                self.indicators.append(sprite)
 
         self.player = player
         self.hitbox = self.rect.copy()
@@ -470,11 +472,13 @@ class BedSheet(InteractableObject) :
 
         if self.player.is_holding == 'basket_1_clean' and not self.is_made :
             self.has_buttons = True
-            self.indicator.show()
-            self.indicator.animate(dt)
+            for indicator in self.indicators :
+                indicator.show()
+                indicator.animate(dt)
         else :
             self.has_buttons = False
-            self.indicator.hide()
+            for indicator in self.indicators :
+                indicator.hide()
 
     def interact(self) :
         self.make_bed()
@@ -519,7 +523,7 @@ class Dresser(InteractableObject) :
         self.parts = parts
 
         for sprite in indicator_sprites :
-            if sprite.name == 'dresser' :
+            if 'dresser' in sprite.name :
                 self.indicator = sprite
 
         # rearrange order

@@ -76,9 +76,19 @@ class Level :
             InteractButton((int(obj.x), int(obj.y)), obj.name, self.display_surface, [self.all_sprites, self.interact_sprites])
         
         # draw indicator tiles
-        indicator_frames = import_folder('./graphics/tiles/indicator')
+        
         for obj in tmx_data.get_layer_by_name('Indicators') :
-            Indicator((int(obj.x), int(obj.y)), obj.name, indicator_frames, [self.all_sprites, self.indicator_sprites], self.player)
+            if 'vertical' in obj.name :
+                indicator_frames = import_folder('./graphics/tiles/indicator/vertical')
+            else :
+                indicator_frames = import_folder('./graphics/tiles/indicator/horizontal')
+
+            if 'floor' in obj.name :
+                z = cg.LAYERS['floor_decoration']
+            else :
+                z = cg.LAYERS['interact_buttons']
+            
+            Indicator((int(obj.x), int(obj.y)), obj.name, indicator_frames, [self.all_sprites, self.indicator_sprites], self.player, z)
 
         # draw dishes
         for obj in tmx_data.get_layer_by_name('Dishes') :
