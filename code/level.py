@@ -25,7 +25,8 @@ class Level :
         self.trashcan_sprites = pygame.sprite.Group()
         self.interact_sprites = pygame.sprite.Group()
         self.indicator_sprites = pygame.sprite.Group()
-        self.trash_sprites = pygame.sprite.Group()
+        self.floor_trash_sprites = pygame.sprite.Group()
+        self.counter_trash_sprites = pygame.sprite.Group()
 
         # fonts
         self.equip_font = pygame.font.Font('graphics/5x5.ttf', 15)
@@ -134,16 +135,20 @@ class Level :
         
         # draw trash
         for x, y, surface in tmx_data.get_layer_by_name('Trash').tiles() :
-            Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trash_sprites], self.player, self.player_sprite, self.interact_sprites, False)
+            Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.floor_trash_sprites], self.player, self.player_sprite, self.interact_sprites, False)
 
         for x, y, surface in tmx_data.get_layer_by_name('CounterTrash').tiles() :
-            Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, self.player, self.player_sprite, self.interact_sprites, True, z = cg.LAYERS['in_front_decoration'])
+            Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.counter_trash_sprites], self.player, self.player_sprite, self.interact_sprites, True, z = cg.LAYERS['in_front_decoration'])
 
         # draw broom
         for obj in tmx_data.get_layer_by_name('Broom') :
-            broom = Broom((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.trash_sprites, self.player)
+            broom = Broom((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.floor_trash_sprites, self.player)
             self.warning_items.append(broom)
-            
+        
+        # draw toilet
+        for obj in tmx_data.get_layer_by_name('Toilet') :
+            self.toilet = Toilet((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites)
+
         # draw door tiles
         door_frames = import_folder('./graphics/animated_tiles/right_door')
 
@@ -229,8 +234,12 @@ class Level :
         if self.dishes.put_away :
             self.completed_array[TaskIndex.DISHES.value] = True
 
-        if len(self.trash_sprites.sprites()) == 0 :
+        if len(self.floor_trash_sprites.sprites()) == 0 :
             self.completed_array[TaskIndex.SWEEP_TRASH.value] = True
+        
+        if len(self.counter_trash_sprites.sprites()) == 0 :
+            # COUNTER TRASH EVENT DONE
+            pass
 
         for sprite in self.trashcan_sprites :
             if sprite.interacted :

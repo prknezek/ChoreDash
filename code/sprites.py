@@ -112,6 +112,45 @@ class InteractableObject(Generic) :
                     if not self.interacted :
                         self.can_show_button = True
 
+class Toilet(InteractableObject) :
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['furniture']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+
+        self.hitbox = self.rect.copy().inflate((0, 0))
+
+        self.button.rect.y += 32
+
+    def update(self, dt) :
+        self.is_colliding()
+
+    def interact(self) :
+        pass
+
+    def is_colliding(self) :
+        for sprite in self.player_sprite.sprites() :
+            if hasattr(sprite, 'hitbox') :
+                if sprite.hitbox.colliderect(self.hitbox) :                    
+                    keys = pygame.key.get_pressed()
+
+                    if self.has_buttons :
+                        if keys[pygame.K_e] :
+                            self.interact()
+                            self.button.hide()
+                    else :
+                        self.interact()
+
+                    if self.can_show_button and self.has_buttons :
+                        self.button.show()
+
+                    self.can_show_button = False
+                else :                    
+                    if not self.can_show_button and self.has_buttons :
+                        self.button.hide()
+
+                    if not self.interacted :
+                        self.can_show_button = True
+
+
 class Trash(InteractableObject) :
     def __init__(self, pos, surface, groups, player, player_sprite, interact_sprites, has_buttons, z = cg.LAYERS['decoration']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
