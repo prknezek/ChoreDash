@@ -7,6 +7,7 @@ from phone import *
 from todolist import todoList
 from pause import Pause
 from pygame import mixer
+from intro import Intro
 
 class Game :
     def __init__(self) :        
@@ -22,8 +23,8 @@ class Game :
         self.cursor_img_mask = pygame.mask.from_surface(self.cursor_img)
 
         # loading screen here
-
-        self.level = Level()
+        self.intro = Intro()
+        self.level = Level()        
         self.phone  = Phone()
         self.todolist = todoList()          
         self.pause = Pause(self.cursor_img.get_width(), self.cursor_img.get_height())
@@ -51,6 +52,8 @@ class Game :
         
         # splash screen here with (Hungry Games)
         mixer.music.play(-1)
+        self.intro.run(self.screen)
+
         # game loop
         while True :
             if self.pause.retry_bool == True:
@@ -68,7 +71,7 @@ class Game :
             pygame.display.update()
 
 if __name__ == "__main__" :
-    game = Game()
+    game = Game()    
     game.run()
 
     
