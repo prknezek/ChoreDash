@@ -167,6 +167,7 @@ class Toilet(InteractableObject) :
         self.showing_bar = False
 
         self.clean = False
+        self.bar.image.set_alpha(0)
 
     def update(self, dt) :
         self.is_colliding()
@@ -187,6 +188,7 @@ class Toilet(InteractableObject) :
 
                     if self.has_buttons :
                         if keys[pygame.K_e] :
+                            self.bar.image.set_alpha(255)
                             self.bar.bg.show()
                             self.interact()
                     else :
