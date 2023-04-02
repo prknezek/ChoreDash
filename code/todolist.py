@@ -30,7 +30,8 @@ class todoList:
                             "CLEAN ROOM",
                             "DISHES",
                             "SWEEP TRASH"]
-        self.taskCompletions = [0,0,0,0,0]
+        self.taskCompletions = [False, False, False, False]
+        
         self.todo_surf = pygame.transform.scale(pygame.image.load('graphics/todolist.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
         # self.todo_surf = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
 
