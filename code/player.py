@@ -29,6 +29,7 @@ class Player(pygame.sprite.Sprite) :
         # events
         self.is_holding = 'None'
         self.lives = 3
+        self.has_broom = False
 
         # iframes
         self.iframes = False

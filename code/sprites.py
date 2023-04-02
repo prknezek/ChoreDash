@@ -116,16 +116,16 @@ class Trash(InteractableObject) :
     def __init__(self, pos, surface, groups, player, player_sprite, interact_sprites, z = cg.LAYERS['decoration']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
 
+        self.has_buttons = False
+        self.can_show_button = False
+
         self.hitbox = self.rect.copy().inflate(-12, -12)
         self.player = player
-        self.display_message = 'None'
         self.hitbox.y -= 14
 
     def interact(self) :
-        if self.player.is_holding == 'None' :
+        if self.player.has_broom :
             self.kill()
-        else :
-            self.display_message = 'cannot pickup while holding item'
 
 class Fridge(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['furniture']):
@@ -685,3 +685,17 @@ class DustParticle(Generic) :
         else :
             self.frame_index = 0
             self.image.set_alpha(0)
+
+class Broom(InteractableObject) :
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, trash_sprites, player, z = cg.LAYERS['decoration']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+
+        self.player = player
+        self.display_message = 'None'
+        self.hitbox = self.rect.copy().inflate((-10, -20))
+        self.trash_sprites = trash_sprites
+    
+    def interact(self) :
+        self.player.has_broom = True
+        self.interacted = True
+        self.image.set_alpha(0)

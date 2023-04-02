@@ -14,7 +14,7 @@ class Level :
         self.display_surface = pygame.display.get_surface()
 
         # task completion trackers
-        self.completed_array = [False, False, False, False]
+        self.completed_array = [False, False, False, False, False]
 
         # sprite groups
         self.all_sprites = CameraGroup()
@@ -124,13 +124,16 @@ class Level :
         
         # draw trash
         for x, y, surface in tmx_data.get_layer_by_name('Trash').tiles() :
-            trash = Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trash_sprites], self.player, self.player_sprite, self.interact_sprites)
-            self.warning_items.append(trash)
+            Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trash_sprites], self.player, self.player_sprite, self.interact_sprites)
 
         for x, y, surface in tmx_data.get_layer_by_name('CounterTrash').tiles() :
-            trash = Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trash_sprites], self.player, self.player_sprite, self.interact_sprites, z = cg.LAYERS['in_front_decoration'])
-            self.warning_items.append(trash)
+            Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trash_sprites], self.player, self.player_sprite, self.interact_sprites, z = cg.LAYERS['in_front_decoration'])
 
+        # draw broom
+        for obj in tmx_data.get_layer_by_name('Broom') :
+            broom = Broom((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.trash_sprites, self.player)
+            self.warning_items.append(broom)
+            
         # draw door tiles
         door_frames = import_folder('./graphics/animated_tiles/right_door')
 
@@ -213,6 +216,9 @@ class Level :
                 self.dishes.is_washing = False
                 self.clean_minigame = CleanMinigame(self.player, self.player_sprite, self.collision_sprites)
                 self.player.lives = 3
+
+        if len(self.trash_sprites.sprites()) == 0 :
+            self.completed_array[TaskIndex.SWEEP_TRASH.value] = True
 
         for sprite in self.trashcan_sprites :
             if sprite.interacted :
