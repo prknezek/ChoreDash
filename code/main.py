@@ -51,9 +51,9 @@ class Game :
     def run(self) :
         
         # splash screen here with (Hungry Games)
-        mixer.music.play(-1)
+        
         self.intro.run(self.screen)
-
+        mixer.music.play(-1)
         # game loop
         while True :
             if self.pause.retry_bool == True:
