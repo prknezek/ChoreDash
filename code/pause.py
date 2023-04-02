@@ -50,10 +50,6 @@ class Pause:
         self.mouse1_clicked = False
         self.highlight_retry = False
         self.highlight_resume = False
-        
-
-    def events(self):
-        return
 
     def display(self, screen):
         bg_surf = pygame.Surface((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT))
@@ -82,8 +78,9 @@ class Pause:
             self.pause_surf.blit(self.resume_highlight_surf, (0,0))
         screen.blit(self.pause_surf, self.pause_surf_rect)
 
-    def run(self, mask):
-        self.input()        
+    def run(self, mask, to_run_bool):
+        if to_run_bool:
+            self.input()        
         if self.show_pause == True:    
             self.display(self.display_surface)        
             self.cursor_collision(mask)            

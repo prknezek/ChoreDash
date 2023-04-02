@@ -84,8 +84,7 @@ class Phone:
         # timer
         self.last_time = 0
         self.minutes = 1
-        self.seconds = 0
-        self.countdown_time = 3 * 60 
+        self.seconds = 30
     
     def initTexts(self):
         self.totalHeight = 0        
@@ -120,6 +119,13 @@ class Phone:
         
 
     def display(self, display_surf):
+
+        # blur background
+        if self.start_timer == False:
+            bg_surf = pygame.Surface((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT))
+            bg_surf.set_alpha(120)
+            bg_surf.fill((0, 0, 0))    
+            display_surf.blit(bg_surf, (0,0))
 
         # set rectangle
         self.phone_rect = self.phone_surf.get_rect(bottom = cg.SCREEN_HEIGHT-1, left = self.left_coord)

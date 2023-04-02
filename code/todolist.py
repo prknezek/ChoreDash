@@ -30,7 +30,8 @@ class todoList:
                             "CLEAN ROOM",
                             "DISHES",
                             "SWEEP TRASH"]
-        self.taskCompletions = [0,0,0,0,0]
+        self.taskCompletions = [False, False, False, False]
+        
         self.todo_surf = pygame.transform.scale(pygame.image.load('graphics/todolist.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
         # self.todo_surf = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
 
@@ -73,15 +74,15 @@ class todoList:
 
     def checkCompletion(self):
         for x in self.taskCompletions:
-            if x == 0:
+            if not x:
                 self.allTasksCompleted = False
                 return
         self.allTasksCompleted = True
 
     def run(self, displayScreen, showToDoList, updatedArr):
         self.updateCompleted(updatedArr)
+        self.checkCompletion()
         if showToDoList:
             self.display(displayScreen)
         else:
-            return
-        self.checkCompletion()
+            return        

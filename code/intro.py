@@ -1,4 +1,5 @@
 import pygame
+import sys
 from pyvidplayer import Video
 
 class Intro:
@@ -29,6 +30,7 @@ class Intro:
                 if event.type == pygame.QUIT :
                     self.playing = self.running = False
                     pygame.quit()
+                    sys.exit()
                 if self.video.get_pos() > 25:
                     if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.KEYDOWN:
                         self.video.close()
