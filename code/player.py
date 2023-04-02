@@ -1,9 +1,6 @@
 import pygame
 import config as cg
 from support import import_folder
-from sprites import Door
-from clean_minigame import Sponge
-import sys
 
 class Player(pygame.sprite.Sprite) :
     def __init__(self, pos, group, collision_sprites, door_sprites) :
@@ -32,6 +29,7 @@ class Player(pygame.sprite.Sprite) :
         # events
         self.is_holding = 'None'
         self.lives = 3
+        self.has_broom = False
 
         # iframes
         self.iframes = False

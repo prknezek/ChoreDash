@@ -1,6 +1,7 @@
 import pygame
 import config as cg
 from support import *
+from random import randint
 
 class Generic(pygame.sprite.Sprite) :
     def __init__(self, pos, surface, groups, z = cg.LAYERS['main']) :
@@ -111,6 +112,23 @@ class InteractableObject(Generic) :
                     if not self.interacted :
                         self.can_show_button = True
 
+class Trash(InteractableObject) :
+    def __init__(self, pos, surface, groups, player, player_sprite, interact_sprites, has_buttons, z = cg.LAYERS['decoration']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+
+        self.has_buttons = has_buttons
+        self.can_show_button = has_buttons
+
+        self.hitbox = self.rect.copy().inflate(-12, -12)
+        self.player = player
+        self.hitbox.y -= 14
+
+    def interact(self) :
+        if self.player.has_broom and not self.has_buttons:
+            self.kill()
+        elif self.has_buttons :
+            self.kill()
+
 class Fridge(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['furniture']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
@@ -136,22 +154,30 @@ class Dishes(InteractableObject) :
         self.hitbox.y += 10
         self.is_washing = False
         self.clean = False
+        self.updated_image = False
+        self.put_away = False
         self.player = player
         self.display_message = 'None' 
     
     def interact(self) :
         self.display_message = 'None' 
-        if self.player.is_holding == 'None' :
-            self.is_washing = True
+        if not self.clean:
+            if self.player.is_holding == 'None' :
+                self.is_washing = True
+            else :
+                self.display_message = 'cannot perform while holding item'
         else :
-            self.display_message = 'cannot perform while holding item'
+            if self.player.is_holding == 'None' :
+                self.put_away = True
+                self.image.set_alpha(0)
+            else :
+                self.display_message = 'cannot perform while holding item'
 
     def update(self, dt) :
-        if not self.clean :
-            self.is_colliding()
-        if self.clean :
-            self.image.set_alpha(0)
-
+        self.is_colliding()
+        if self.clean and not self.updated_image :
+            self.updated_image = True
+            self.image = pygame.image.load('./graphics/tiles/clean_minigame/clean_dishes.png').convert_alpha()
 
 class Trashcan(InteractableObject) :
     def __init__(self, pos, surface, groups, player_sprite, interact_sprites, z = cg.LAYERS['trashcans']):
@@ -160,20 +186,89 @@ class Trashcan(InteractableObject) :
         # setup
         self.color = self.button.name
         self.has_buttons = True
+        #self.empty()
+
+        # game
+        self.letter_sequence = []
+        self.step = 0
+        self.do_sequence = False
+        self.moved_letter = False
         
         # collision
         self.hitbox = self.rect.copy()
-    
+
+    def update(self, dt) :
+        self.is_colliding()
+        if self.do_sequence :
+            self.run_sequence()
+
     def interact(self) :
-        self.empty()
+        if not self.do_sequence :
+            self.start_sequence()
     
+    def start_sequence(self) :
+        sequence_length = randint(3, 5)
+
+        for i in range(sequence_length) :
+            key = randint(1, 24)
+            key += 96 # convert to ascii
+            while key in [117, 118, 119, 97, 115, 100, 101] :
+                key = randint(1, 24)
+                key += 96
+            self.letter_sequence.append(key)
+
+        self.do_sequence = True
+    
+    def run_sequence(self) :
+        if self.step == len(self.letter_sequence) :
+            self.do_sequence = False
+            self.interacted = True
+            self.empty()
+
+        if not self.interacted :
+            keys = pygame.key.get_pressed()
+            letter = chr(self.letter_sequence[self.step])
+
+            self.move_letter()
+
+            self.button.image = pygame.image.load(f'./graphics/tiles/alphabet/{letter}.png').convert_alpha()
+            if (keys[self.letter_sequence[self.step]]) :
+                self.step += 1
+
+    def move_letter(self) :
+        if not self.moved_letter :
+            self.button.rect.x += 8
+            self.button.rect.y += 4
+            self.moved_letter = True
+
     def empty(self) :
         # update sprite and set interacted to true
-        if not self.interacted :
-            image_surface = pygame.image.load(f'./graphics/tiles/trashcans/{self.color}.png').convert_alpha()
+        image_surface = pygame.image.load(f'./graphics/tiles/trashcans/{self.color}.png').convert_alpha()
+        self.image = image_surface
+        self.button.hide()
 
-            self.image = image_surface
-            self.interacted = True
+    def is_colliding(self) :
+        for sprite in self.player_sprite.sprites() :
+            if hasattr(sprite, 'hitbox') :
+                if sprite.hitbox.colliderect(self.hitbox) :                    
+                    keys = pygame.key.get_pressed()
+
+                    if self.has_buttons :
+                        if keys[pygame.K_e] :
+                            self.interact()
+                    else :
+                        self.interact()
+
+                    if self.can_show_button and self.has_buttons :
+                        self.button.show()
+
+                    self.can_show_button = False
+                else :                    
+                    if not self.can_show_button and self.has_buttons :
+                        self.button.hide()
+
+                    if not self.interacted :
+                        self.can_show_button = True
 
 class Basket(InteractableObject) :
     def __init__(self, pos, name, surface, groups, player_sprite, interact_sprites, laundry_machine, player, z = cg.LAYERS['furniture']):
@@ -227,7 +322,7 @@ class LaundryMachine(InteractableObject) :
         self.seconds = cg.LAUNDRY_CYCLE_LENGTH
 
         for sprite in indicator_sprites :
-            if sprite.name == 'laundry' :
+            if 'laundry' in sprite.name :
                 self.indicator = sprite
         
         self.button.rect.x += 16
@@ -319,10 +414,11 @@ class TowelRack(InteractableObject) :
 
         self.has_buttons = False
         self.is_empty = True
+        self.indicators = []
 
         for sprite in indicator_sprites :
-            if sprite.name == 'towel' :
-                self.indicator = sprite
+            if 'towel' in sprite.name :
+                self.indicators.append(sprite)
 
         self.player = player
         self.hitbox = self.rect.copy()
@@ -332,11 +428,13 @@ class TowelRack(InteractableObject) :
 
         if self.player.is_holding == 'basket_2_clean' and self.is_empty :
             self.has_buttons = True
-            self.indicator.show()
-            self.indicator.animate(dt)
+            for indicator in self.indicators :
+                indicator.show()
+                indicator.animate(dt)
         else :
             self.has_buttons = False
-            self.indicator.hide()
+            for indicator in self.indicators :
+                indicator.hide()
 
     def interact(self) :
         self.place_towel()
@@ -355,13 +453,14 @@ class BedSheet(InteractableObject) :
 
         self.has_buttons = False
         self.is_made = False
+        self.indicators = []
 
         self.button.rect.x += 16
         self.button.rect.y += 16
 
         for sprite in indicator_sprites :
-            if sprite.name == 'bed' :
-                self.indicator = sprite
+            if 'bed' in sprite.name :
+                self.indicators.append(sprite)
 
         self.player = player
         self.hitbox = self.rect.copy()
@@ -373,11 +472,13 @@ class BedSheet(InteractableObject) :
 
         if self.player.is_holding == 'basket_1_clean' and not self.is_made :
             self.has_buttons = True
-            self.indicator.show()
-            self.indicator.animate(dt)
+            for indicator in self.indicators :
+                indicator.show()
+                indicator.animate(dt)
         else :
             self.has_buttons = False
-            self.indicator.hide()
+            for indicator in self.indicators :
+                indicator.hide()
 
     def interact(self) :
         self.make_bed()
@@ -422,7 +523,7 @@ class Dresser(InteractableObject) :
         self.parts = parts
 
         for sprite in indicator_sprites :
-            if sprite.name == 'dresser' :
+            if 'dresser' in sprite.name :
                 self.indicator = sprite
 
         # rearrange order
@@ -537,3 +638,80 @@ class Door(Generic) :
             self.frame_index = 0
 
         self.image = self.frames[int(self.frame_index)]
+
+class DustParticle(Generic) :
+    def __init__(self, pos, groups, player, z=cg.LAYERS['floor_decoration']):
+
+        self.player = player
+        self.pos = pos
+
+        # animation
+        self.set_dust_run_particles('horizontal')
+        self.frame_index = 0
+
+        super().__init__(pos, self.frames[self.frame_index], groups, z)
+
+    def update(self, dt) :
+        self.animate_dust(dt)
+
+    def set_dust_run_particles(self, direction) :
+        if direction == 'horizontal' :
+            self.frames = import_folder('./graphics/character/dust_particles/horizontal/')
+        else :
+            self.frames = import_folder('./graphics/character/dust_particles/vertical/')
+
+    def animate_dust(self, dt) :
+        if 'idle' not in self.player.status : # player is moving
+            self.image.set_alpha(255)
+            if self.player.status in ['right', 'left'] :
+                self.set_dust_run_particles('horizontal')
+            else :
+                self.set_dust_run_particles('vertical')
+    
+            self.frame_index += cg.DUST_ANIMATION_SPEED * dt
+            if self.frame_index >= len(self.frames) :
+                self.frame_index = 0
+
+            if self.player.status == 'right' :
+                self.pos = self.player.pos + pygame.math.Vector2(-24, 28)
+                self.rect.bottomleft = self.pos
+
+                dust_particle = self.frames[int(self.frame_index)]
+                self.image = dust_particle
+            elif self.player.status == 'left' :
+                self.pos = self.player.pos + pygame.math.Vector2(8, 28)
+                self.rect.bottomleft = self.pos
+
+                dust_particle = self.frames[int(self.frame_index)]
+                flipped_dust_particle = pygame.transform.flip(dust_particle, True, False)
+                self.image = flipped_dust_particle
+            elif self.player.status == 'down' :
+                self.pos = self.player.pos
+                self.rect.bottomleft = self.pos + pygame.math.Vector2(-8, -6)
+
+                dust_particle = self.frames[int(self.frame_index)]
+                flipped_dust_particle = pygame.transform.flip(dust_particle, False, True)
+                self.image = flipped_dust_particle
+            elif self.player.status == 'up' :
+                self.pos = self.player.pos
+                self.rect.bottomleft = self.pos + pygame.math.Vector2(-8, 40)
+
+                dust_particle = self.frames[int(self.frame_index)]
+                self.image = dust_particle
+        else :
+            self.frame_index = 0
+            self.image.set_alpha(0)
+
+class Broom(InteractableObject) :
+    def __init__(self, pos, surface, groups, player_sprite, interact_sprites, trash_sprites, player, z = cg.LAYERS['decoration']):
+        super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
+
+        self.player = player
+        self.display_message = 'None'
+        self.hitbox = self.rect.copy().inflate((-10, -20))
+        self.trash_sprites = trash_sprites
+    
+    def interact(self) :
+        self.player.has_broom = True
+        self.interacted = True
+        self.image.set_alpha(0)

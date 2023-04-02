@@ -69,8 +69,13 @@ class CleanMinigame :
                 sprite.kill()
         
         if self.won or self.loss :
-            self.player.pos.x = 644
-            self.player.pos.y = 380
+            pos = pygame.math.Vector2(644, 380)
+            self.player.pos = pos
+            self.player.hitbox.centerx = round(self.player.pos.x)
+            self.player.hitbox.centery = round(self.player.pos.y)
+            
+            self.player.rect.centerx - self.player.hitbox.centerx
+            self.player.rect.centery - self.player.hitbox.centery
     
     def text(self) :
         text_surf = self.bgfont.render("Lives: ", False, 'Black')

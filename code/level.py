@@ -5,7 +5,6 @@ from sprites import *
 from pytmx.util_pygame import load_pygame
 from support import *
 from todolist import TaskIndex
-from random import randint, uniform
 from camera_group import CameraGroup
 from clean_minigame import CleanMinigame
 
@@ -15,7 +14,7 @@ class Level :
         self.display_surface = pygame.display.get_surface()
 
         # task completion trackers
-        self.completed_array = [False, False, False, False]
+        self.completed_array = [False, False, False, False, False]
 
         # sprite groups
         self.all_sprites = CameraGroup()
@@ -26,6 +25,7 @@ class Level :
         self.trashcan_sprites = pygame.sprite.Group()
         self.interact_sprites = pygame.sprite.Group()
         self.indicator_sprites = pygame.sprite.Group()
+        self.trash_sprites = pygame.sprite.Group()
 
         # fonts
         self.equip_font = pygame.font.Font('graphics/5x5.ttf', 15)
@@ -64,6 +64,9 @@ class Level :
         # create clean minigame
         self.clean_minigame = CleanMinigame(self.player, self.player_sprite, self.collision_sprites)
 
+        # create dust particle object
+        DustParticle(self.player.pos, self.all_sprites, self.player)
+
         # draw fridge
         for obj in tmx_data.get_layer_by_name('Fridge') :
             self.fridge = Fridge((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites)
@@ -73,9 +76,19 @@ class Level :
             InteractButton((int(obj.x), int(obj.y)), obj.name, self.display_surface, [self.all_sprites, self.interact_sprites])
         
         # draw indicator tiles
-        indicator_frames = import_folder('./graphics/tiles/indicator')
+        
         for obj in tmx_data.get_layer_by_name('Indicators') :
-            Indicator((int(obj.x), int(obj.y)), obj.name, indicator_frames, [self.all_sprites, self.indicator_sprites], self.player)
+            if 'vertical' in obj.name :
+                indicator_frames = import_folder('./graphics/tiles/indicator/vertical')
+            else :
+                indicator_frames = import_folder('./graphics/tiles/indicator/horizontal')
+
+            if 'floor' in obj.name :
+                z = cg.LAYERS['floor_decoration']
+            else :
+                z = cg.LAYERS['interact_buttons']
+            
+            Indicator((int(obj.x), int(obj.y)), obj.name, indicator_frames, [self.all_sprites, self.indicator_sprites], self.player, z)
 
         # draw dishes
         for obj in tmx_data.get_layer_by_name('Dishes') :
@@ -120,9 +133,17 @@ class Level :
             Trashcan((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trashcan_sprites], self.player_sprite, self.interact_sprites)
         
         # draw trash
-        #for x, y, surface in tmx_data.get_layer_by_name('Trash').tiles() :
+        for x, y, surface in tmx_data.get_layer_by_name('Trash').tiles() :
+            Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trash_sprites], self.player, self.player_sprite, self.interact_sprites, False)
 
+        for x, y, surface in tmx_data.get_layer_by_name('CounterTrash').tiles() :
+            Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, self.player, self.player_sprite, self.interact_sprites, True, z = cg.LAYERS['in_front_decoration'])
 
+        # draw broom
+        for obj in tmx_data.get_layer_by_name('Broom') :
+            broom = Broom((int(obj.x), int(obj.y)), obj.image, self.all_sprites, self.player_sprite, self.interact_sprites, self.trash_sprites, self.player)
+            self.warning_items.append(broom)
+            
         # draw door tiles
         door_frames = import_folder('./graphics/animated_tiles/right_door')
 
@@ -161,15 +182,9 @@ class Level :
             text_surf = self.equip_font.render(item + " EQUIPPED", False, 'White')
             text_surf_rect = text_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 20))
             self.display_surface.blit(text_surf, text_surf_rect)
-
+        # warning messages
         for item in self.warning_items :
             if item.display_message != 'None' :
-                # print(item.display_message)
-                # if item in self.baskets and self.laundry_machine.contains != 'None' :
-                #     item.display_message = 'Cannot perform while laundry full'
-                # else :
-                #     item.display_message = 'cannot perform while holding item'
-
                 text_surf = self.warning_bgfont.render(f"{item.display_message}", False, 'Black')
                 text_surf_rect = text_surf.get_rect(center = (cg.SCREEN_WIDTH/2 + 1, cg.SCREEN_HEIGHT - 40 + 2))
                 self.display_surface.blit(text_surf, text_surf_rect)
@@ -189,10 +204,8 @@ class Level :
             self.last_time = current_time
             self.seconds -= 1
             if self.seconds == 0 :
-                self.laundry_machine.display_message = 'None' 
-                self.dishes.display_message = 'None' 
-                for basket in self.baskets :
-                    basket.display_message = 'None' 
+                for item in self.warning_items :
+                    item.display_message = 'None'
 
                 self.countdown = False
                 self.seconds = 3
@@ -208,11 +221,16 @@ class Level :
             if self.clean_minigame.won :
                 self.dishes.is_washing = False
                 self.dishes.clean = True
-                self.completed_array[TaskIndex.DISHES.value] = True
             elif self.clean_minigame.loss :
                 self.dishes.is_washing = False
                 self.clean_minigame = CleanMinigame(self.player, self.player_sprite, self.collision_sprites)
                 self.player.lives = 3
+            
+        if self.dishes.put_away :
+            self.completed_array[TaskIndex.DISHES.value] = True
+
+        if len(self.trash_sprites.sprites()) == 0 :
+            self.completed_array[TaskIndex.SWEEP_TRASH.value] = True
 
         for sprite in self.trashcan_sprites :
             if sprite.interacted :
