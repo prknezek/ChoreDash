@@ -11,6 +11,9 @@ from pygame import mixer
 from intro import Intro
 
 class Game :
+
+    retry = False
+
     def __init__(self) :        
         pygame.init()        
         pygame.key.set_repeat(1000)
@@ -23,8 +26,7 @@ class Game :
         self.cursor_img_rect = self.cursor_img.get_rect()
         self.cursor_img_mask = pygame.mask.from_surface(self.cursor_img)
 
-        # loading screen here
-        #self.intro = Intro()
+        # loading screen here        
         self.level = Level()        
         self.phone  = Phone()
         self.todolist = todoList()          
@@ -33,9 +35,14 @@ class Game :
         self.font = pygame.font.Font('graphics/5x5.ttf', 15)
         self.bgfont = pygame.font.Font('graphics/5x5.ttf', 15)
 
-        #music
-        mixer.music.load("./audio/bg.mp3")
-        mixer.music.set_volume(0.1)
+        if not self.retry:
+            self.intro = Intro()
+            #music
+            mixer.music.load("./audio/bg.mp3")
+            mixer.music.set_volume(0.1)
+            self.retry = True
+        #else:
+            #mixer.music.play(-1)
         
 
     def events(self) :
