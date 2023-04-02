@@ -23,7 +23,7 @@ class Game :
         self.cursor_img_mask = pygame.mask.from_surface(self.cursor_img)
 
         # loading screen here
-        self.intro = Intro()
+        #self.intro = Intro()
         self.level = Level()        
         self.phone  = Phone()
         self.todolist = todoList()          
@@ -33,7 +33,7 @@ class Game :
 
         #music
         mixer.music.load("./audio/bg.mp3")
-        mixer.music.set_volume(0.03)
+        mixer.music.set_volume(0.1)
         
 
 
@@ -53,7 +53,7 @@ class Game :
         
         # splash screen here with (Hungry Games)
         
-        self.intro.run(self.screen)
+        #self.intro.run(self.screen)
         mixer.music.play(-1)
         # game loop
         while True :
