@@ -131,7 +131,6 @@ class SpamBar(Generic) :
 
         self.pos = pos
         self.finished = False
-        self.width = 4
 
         self.max_presses = 100
         self.press_amount = 0
@@ -145,8 +144,8 @@ class SpamBar(Generic) :
 
     def update_bar(self) :
         if not self.finished :
-            self.width = (self.press_amount / self.max_presses * 24) + 1
-            self.image = pygame.transform.scale(self.image, (self.width, 6))
+            width = (self.press_amount / self.max_presses * 23) + 1
+            self.image = pygame.transform.scale(self.image, (width, 6))
             self.rect = self.image.get_rect(topleft = self.pos)
 
     def do_work(self) :
