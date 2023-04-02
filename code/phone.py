@@ -83,7 +83,7 @@ class Phone:
 
         # timer
         self.last_time = 0
-        self.minutes = 2
+        self.minutes = 1
         self.seconds = 0
     
     def initTexts(self):

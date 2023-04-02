@@ -46,7 +46,7 @@ class Game :
                 pygame.quit()
                 sys.exit()
         
-        if self.phone.is_Timer_Done:
+        if self.phone.is_Timer_Done or self.todolist.allTasksCompleted:
             self.end.show_end = True
 
         if self.pause.retry_bool or self.end.retry_bool == True:

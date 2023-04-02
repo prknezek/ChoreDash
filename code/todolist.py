@@ -74,15 +74,15 @@ class todoList:
 
     def checkCompletion(self):
         for x in self.taskCompletions:
-            if x == 0:
+            if not x:
                 self.allTasksCompleted = False
                 return
         self.allTasksCompleted = True
 
     def run(self, displayScreen, showToDoList, updatedArr):
         self.updateCompleted(updatedArr)
+        self.checkCompletion()
         if showToDoList:
             self.display(displayScreen)
         else:
-            return
-        self.checkCompletion()
+            return        
