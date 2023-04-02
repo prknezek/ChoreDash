@@ -124,10 +124,10 @@ class Level :
         
         # draw trash
         for x, y, surface in tmx_data.get_layer_by_name('Trash').tiles() :
-            Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trash_sprites], self.player, self.player_sprite, self.interact_sprites)
+            Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trash_sprites], self.player, self.player_sprite, self.interact_sprites, False)
 
         for x, y, surface in tmx_data.get_layer_by_name('CounterTrash').tiles() :
-            Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trash_sprites], self.player, self.player_sprite, self.interact_sprites, z = cg.LAYERS['in_front_decoration'])
+            Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, self.all_sprites, self.player, self.player_sprite, self.interact_sprites, True, z = cg.LAYERS['in_front_decoration'])
 
         # draw broom
         for obj in tmx_data.get_layer_by_name('Broom') :
@@ -211,11 +211,13 @@ class Level :
             if self.clean_minigame.won :
                 self.dishes.is_washing = False
                 self.dishes.clean = True
-                self.completed_array[TaskIndex.DISHES.value] = True
             elif self.clean_minigame.loss :
                 self.dishes.is_washing = False
                 self.clean_minigame = CleanMinigame(self.player, self.player_sprite, self.collision_sprites)
                 self.player.lives = 3
+            
+        if self.dishes.put_away :
+            self.completed_array[TaskIndex.DISHES.value] = True
 
         if len(self.trash_sprites.sprites()) == 0 :
             self.completed_array[TaskIndex.SWEEP_TRASH.value] = True

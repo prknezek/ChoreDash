@@ -113,18 +113,20 @@ class InteractableObject(Generic) :
                         self.can_show_button = True
 
 class Trash(InteractableObject) :
-    def __init__(self, pos, surface, groups, player, player_sprite, interact_sprites, z = cg.LAYERS['decoration']):
+    def __init__(self, pos, surface, groups, player, player_sprite, interact_sprites, has_buttons, z = cg.LAYERS['decoration']):
         super().__init__(pos, surface, groups, player_sprite, interact_sprites, z)
 
-        self.has_buttons = False
-        self.can_show_button = False
+        self.has_buttons = has_buttons
+        self.can_show_button = has_buttons
 
         self.hitbox = self.rect.copy().inflate(-12, -12)
         self.player = player
         self.hitbox.y -= 14
 
     def interact(self) :
-        if self.player.has_broom :
+        if self.player.has_broom and not self.has_buttons:
+            self.kill()
+        elif self.has_buttons :
             self.kill()
 
 class Fridge(InteractableObject) :
@@ -152,21 +154,31 @@ class Dishes(InteractableObject) :
         self.hitbox.y += 10
         self.is_washing = False
         self.clean = False
+        self.updated_image = False
+        self.put_away = False
         self.player = player
         self.display_message = 'None' 
     
     def interact(self) :
         self.display_message = 'None' 
-        if self.player.is_holding == 'None' :
-            self.is_washing = True
+        if not self.clean:
+            if self.player.is_holding == 'None' :
+                self.is_washing = True
+            else :
+                self.display_message = 'cannot perform while holding item'
         else :
-            self.display_message = 'cannot perform while holding item'
+            if self.player.is_holding == 'None' :
+                self.put_away = True
+                self.image.set_alpha(0)
+            else :
+                self.display_message = 'cannot perform while holding item'
 
     def update(self, dt) :
-        if not self.clean :
-            self.is_colliding()
-        if self.clean :
-            self.image.set_alpha(0)
+        self.is_colliding()
+        if self.clean and not self.updated_image :
+            self.updated_image = True
+            self.image = pygame.image.load('./graphics/tiles/clean_minigame/clean_dishes.png').convert_alpha()
+
 
 
 class Trashcan(InteractableObject) :
