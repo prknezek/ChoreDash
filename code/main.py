@@ -33,6 +33,7 @@ class Game :
 
         #music
         mixer.music.load("./audio/bg.mp3")
+        mixer.music.set_volume(0.03)
         
 
 

@@ -5,7 +5,6 @@ from ffpyplayer.tools import set_loglevel
 from pymediainfo import MediaInfo
 from errno import ENOENT
 
-
 class Video:
     def __init__(self, path):
         # print(f"Video path: {path}\n\n\n\n\n")

@@ -1,12 +1,11 @@
 import pygame
 from pyvidplayer import Video
 
-
-                
 class Intro:
     def __init__(self):
         self.video = Video("./video/fatFile_2.mp4")
         self.video.set_size((460,330))
+        self.video.set_volume(0.4)
 
         pygame.mouse.set_visible(False)
         self.cursor_img = pygame.image.load('graphics/cursor.png').convert_alpha()
