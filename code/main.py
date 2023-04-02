@@ -38,7 +38,6 @@ class Game :
         mixer.music.set_volume(0.1)
         
 
-
     def events(self) :
         # game loop eventssd
         for event in pygame.event.get() :
@@ -63,7 +62,6 @@ class Game :
 
         self.end.show_end = False
 
-        
         #self.intro.run(self.screen)
         mixer.music.play(-1)
         

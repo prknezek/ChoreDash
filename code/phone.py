@@ -83,8 +83,8 @@ class Phone:
 
         # timer
         self.last_time = 0
-        self.minutes = 0
-        self.seconds = 5
+        self.minutes = 2
+        self.seconds = 0
     
     def initTexts(self):
         self.totalHeight = 0        
