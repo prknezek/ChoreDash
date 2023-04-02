@@ -41,10 +41,8 @@ class Game :
             mixer.music.load("./audio/bg.mp3")
             mixer.music.set_volume(0.1)
             self.retry = True
-        else:
-            mixer.music.play(-1)
-        
-        
+        #else:
+            #mixer.music.play(-1)
         
 
     def events(self) :
