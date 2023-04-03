@@ -38,7 +38,12 @@ The intro.py file is responsible for playing the intro at the beginning of the g
 ### todolist.py
 ### phone.py
 ### clean_minigame.py
+The clean_minigame.py plays the minigame when you interact with the dishes.
 ### overlay.py
+The overlay.py displays the broom when it is equipped by the player. It is displayed on the bottom left of the screen.
 ### support.py
+The support.py is an auxiliary file for locating and animating assets.
 ### config.py
+The config.py file holds many important configurations required for the game, such as screen height and width, layers, and sprites that require time.
 ### camera_group.py
+The camera_group.py is responsible for the illusion of a camera following the player.
