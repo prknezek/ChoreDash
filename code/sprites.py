@@ -447,14 +447,15 @@ class LaundryMachine(InteractableObject) :
             self.washsfx.set_volume(0.1)
             self.washsfx.play()
             self.animate(dt)
-            
 
-        
         if self.clean :
             self.image = pygame.image.load('./graphics/tiles/bathroom/laundry_machine_done.png').convert_alpha()
             self.washsfx.stop()
+            
         elif not self.start_cycle :
             self.image = pygame.image.load('./graphics/tiles/bathroom/laundry_machine.png').convert_alpha()
+
+
 
     def animate(self, dt) :
         if self.frame_index < len(self.frames) - 1 :

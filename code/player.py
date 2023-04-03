@@ -122,10 +122,9 @@ class Player(pygame.sprite.Sprite) :
         if self.direction.magnitude() > 0 :
             self.direction = self.direction.normalize()
             #sounds bad
-            # self.walksound = mixer.Sound('./audio/stepstone_1.wav')
-            # self.walksound.set_volume(0.1)
-            # self.walksound.fadeout(1)
-            # self.walksound.play()
+            self.walksound = mixer.Sound('./audio/stepstone_1.wav')
+            self.walksound.set_volume(0.03)
+            self.walksound.play()
             
         
         # horizontal movement
