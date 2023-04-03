@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import * 
-import sys, os
+import sys
 import config as cg
 from level import Level
 from phone import *
@@ -9,16 +9,6 @@ from pause import Pause
 from ending import EndScreen
 from pygame import mixer
 from intro import Intro
-
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
 
 class Game :
     
@@ -46,7 +36,7 @@ class Game :
         pygame.display.set_caption("ChoreDash")        
 
         pygame.mouse.set_visible(False)
-        self.cursor_img = pygame.image.load(resource_path('graphics/UI/cursor.png')).convert_alpha()
+        self.cursor_img = pygame.image.load('graphics/UI/cursor.png').convert_alpha()
         self.cursor_img_rect = self.cursor_img.get_rect()
         self.cursor_img_mask = pygame.mask.from_surface(self.cursor_img)
 
