@@ -87,8 +87,23 @@ class EndScreen:
         # while len(score_str) < 3:              add 0s to end of score
         #     score_str = '0' + score_str
         score_text = self.smfont.render('Score: ' + score_str, False, 'Black')
-        score_text_rect = score_text.get_rect(midleft = ( self.scoretime_center_x, (cg.SCREEN_HEIGHT/2 - 40) ))
+        score_text_rect = score_text.get_rect(midleft = ( self.scoretime_center_x, (cg.SCREEN_HEIGHT/2 - 60) ))
         self.end_surf.blit(score_text, score_text_rect)
+
+        reaction_file_name = "indifferent"
+        match round(score / 20.0):
+            case 5:
+                reaction_file_name = "overjoyed"
+            case 4:
+                reaction_file_name = "happy"
+            case 3:
+                reaction_file_name = "indifferent"
+            case 2:
+                reaction_file_name = "sad"
+            case 1:
+                reaction_file_name = "angry"
+            case 0:
+                reaction_file_name = "angry"
 
         # time processing
         mins_str = ""
@@ -106,8 +121,17 @@ class EndScreen:
         else:
             sec_str = str(sec)
         time_text = self.smfont.render('Time: ' + mins_str + ":" + sec_str, False, 'Black')
-        time_text_rect = time_text.get_rect(midleft = ( self.scoretime_center_x, (cg.SCREEN_HEIGHT/2 - 15) ))
+        time_text_rect = time_text.get_rect(midleft = ( self.scoretime_center_x, (cg.SCREEN_HEIGHT/2 - 40) ))
         self.end_surf.blit(time_text, time_text_rect)
+
+        # mom reaction drawing
+        mom = pygame.image.load('graphics/character/mom/mom.png').convert_alpha()
+        mom_rect = mom.get_rect(center = (cg.SCREEN_WIDTH/4 - 25, (cg.SCREEN_HEIGHT/2 + 25)))
+        self.end_surf.blit(mom, mom_rect)
+
+        reaction = pygame.image.load('graphics/character/reactions/' + reaction_file_name + '.png').convert_alpha()
+        reaction_rect = reaction.get_rect(bottomleft = (mom_rect.right - 7, mom_rect.top + 20))
+        self.end_surf.blit(reaction, reaction_rect)
 
         screen.blit(bg_surf, (0,0))
         if self.highlight:
