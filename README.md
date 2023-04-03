@@ -17,9 +17,10 @@ Interact: E
 
 ### Dishwashing Mini-Game
 The dirty dishes are chasing you!<br>
-Have them touch the center piece to get them washed.<br>
+Have them touch the sponge to get them washed.<br>
 Be careful, you only have three lives!<br>
 
+Use the arrow keys to move the sponge!
 
 ## Design
 ### main.py
@@ -39,9 +40,12 @@ The todolist.py file is responsible for drawing the todolist on the topright of 
 ### phone.py
 The phone.py file is responsible for drawing the phone when opened and the tab-hint image when closed. This also holds the code for the timer, which is also displayed on the phone.
 ### clean_minigame.py
-The clean_minigame.py file is responsible for the code for the dishes minigame, where you run around and try to clean all the dishes with the sponge.
+The clean_minigame.py plays the minigame when you interact with the dishes.
 ### overlay.py
+The overlay.py displays the broom when it is equipped by the player. It is displayed on the bottom left of the screen.
 ### support.py
-### camera_group.py
+The support.py is an auxiliary file for locating and animating assets.
 ### config.py
-The config.py file holds major configuration options that are adjustable, such as FPS, tick rate, time, screen size, etc.
+The config.py file holds many important configurations required for the game, such as screen height and width, layers, and sprites that require time.
+### camera_group.py
+The camera_group.py is responsible for the illusion of a camera following the player.
