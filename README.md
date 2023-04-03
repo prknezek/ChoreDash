@@ -34,7 +34,9 @@ The intro.py file is responsible for playing the intro at the beginning of the g
 ### pause.py and ending.py
 These two files are responsible for the pause and end screen games, and allow for retrying the game. This is done by running the __init__ function in main again, re-initializing everything.
 ### level.py
+The level.py file controls the map and the various sprites in the game. By far the longest and most complicated file.
 ### sprites.py
+The sprites.py file includes all the sprites that are used in the game and their respective class. Inheritance is used heavily here.
 ### todolist.py
 The todolist.py file is responsible for drawing the todolist on the topright of the screen when the player approaches the fridge.
 ### phone.py
