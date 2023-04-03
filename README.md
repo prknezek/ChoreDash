@@ -16,10 +16,17 @@ Movement: WASD | W ⬆️, A ⬅️, S⬇️, D⬅️
 Interact: E
 
 ### Dishwashing Mini-Game
-The dirty dishes are chasing you!
-Have them touch the center piece to get them washed.
-Be careful, you only have three lives!
+The dirty dishes are chasing you!<br>
+Have them touch the center piece to get them washed.<br>
+Be careful, you only have three lives!<br>
 
 
 ## Design
-### Main.py
+### main.py
+The main.py file holds the main game loop. The Game class is located here, which is the main class that runs the game. Different functions are called
+within the Game class that allow the game to run.
+<br>
+### player.py
+The player.py file handles the input, collisions, and events that the main player experiences throughout the game.
+### intro.py
+The intro.py file is responsible for playing the intro at the beginning of the game.
