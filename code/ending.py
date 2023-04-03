@@ -126,11 +126,11 @@ class EndScreen:
 
         # mom reaction drawing
         mom = pygame.image.load('graphics/character/mom/mom.png').convert_alpha()
-        mom_rect = mom.get_rect(center = (cg.SCREEN_WIDTH/4 - 25, (cg.SCREEN_HEIGHT/2 + 25)))
+        mom_rect = mom.get_rect(center = (cg.SCREEN_WIDTH/4 - 30, (cg.SCREEN_HEIGHT/2 + 22)))
         self.end_surf.blit(mom, mom_rect)
 
         reaction = pygame.image.load('graphics/character/reactions/' + reaction_file_name + '.png').convert_alpha()
-        reaction_rect = reaction.get_rect(bottomleft = (mom_rect.right - 7, mom_rect.top + 20))
+        reaction_rect = reaction.get_rect(bottomleft = (mom_rect.right - 8, mom_rect.top + 20))
         self.end_surf.blit(reaction, reaction_rect)
 
         screen.blit(bg_surf, (0,0))
