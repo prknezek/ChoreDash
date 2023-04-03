@@ -8,7 +8,7 @@ from todolist import todoList
 from pause import Pause
 from ending import EndScreen
 from pygame import mixer
-# from intro import Intro
+from intro import Intro
 
 class Game :
     
@@ -43,7 +43,7 @@ class Game :
 
         # loading screen here        
         self.bigfont = pygame.font.Font('graphics/5x5.ttf', 25)        
-        self.loading()
+        self.loading()        
         self.level = Level()        
         self.phone  = Phone()
         self.todolist = todoList()          
@@ -55,7 +55,7 @@ class Game :
         print("done setup")
 
         if not self.retry:
-            #self.intro = Intro()                        
+            self.intro = Intro()                        
             #music
             mixer.music.load("./audio/bg.mp3")
             mixer.music.set_volume(0.1)
