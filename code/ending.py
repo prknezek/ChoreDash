@@ -36,7 +36,7 @@ class EndScreen:
         self.pause_text_top_offset = 38
         self.smalltext_spacing_from_mid = 40
         self.smalltext_bottom_offset = 39
-        self.scoretime_center_x = (cg.SCREEN_WIDTH/4 ) - 80
+        self.scoretime_center_x = (cg.SCREEN_WIDTH/4 ) - 70
 
         # critical variables        
         self.show_end = False

@@ -59,6 +59,8 @@ class Phone:
         self.phone_image = pygame.transform.scale(pygame.image.load('graphics/phone/phonesprite-2.png').convert_alpha(), (self.width, self.height))
         self.phone_image.set_colorkey((0, 0, 0))       
 
+        self.tab = pygame.transform.scale(pygame.image.load('graphics/phone/tabhint.png').convert_alpha(), (self.width, self.height))
+
         self.space = 10 # space between texts
         self.padding = 1 # padding in text bubble
         self.leftrightspace = 7 # space on left and right side of texts
@@ -152,7 +154,13 @@ class Phone:
         # draw phone to actual display        
         display_surf.blit(self.phone_surf, self.phone_rect)
 
-        # random vacuum text testing        
+    def displayAlt(self, screen):
+        tab_rect = self.tab.get_rect(bottom = cg.SCREEN_HEIGHT-1, left = self.left_coord)
+        screen.blit(self.tab, tab_rect)
+
+        tab_text = self.font.render("TAB", False, 'White')
+        tab_text_rect = tab_text.get_rect(bottom = cg.SCREEN_HEIGHT-2, centerx = self.left_coord + self.tab.get_width()/2 + 2)
+        screen.blit(tab_text, tab_text_rect)
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -172,4 +180,5 @@ class Phone:
         if self.show_phone:
             self.display(screen)
         else:
+            self.displayAlt(screen)
             return
