@@ -35,6 +35,9 @@ class Game :
         self.clock = pygame.time.Clock() # For setting framerate
         pygame.display.set_caption("ChoreDash")        
 
+        icon = pygame.image.load('graphics/UI/icon.png').convert_alpha()
+        pygame.display.set_icon(icon)
+
         pygame.mouse.set_visible(False)
         self.cursor_img = pygame.image.load('graphics/UI/cursor.png').convert_alpha()
         self.cursor_img_rect = self.cursor_img.get_rect()
