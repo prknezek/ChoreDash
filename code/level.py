@@ -7,6 +7,7 @@ from support import *
 from todolist import TaskIndex
 from camera_group import CameraGroup
 from clean_minigame import CleanMinigame
+from overlay import Overlay
 
 class Level :
     def __init__(self) :
@@ -41,6 +42,7 @@ class Level :
         self.countdown = False
 
         self.setup()
+        self.overlay = Overlay(self.player)
 
     def setup(self) :
         tmx_data = load_pygame('./house/house_data/house.tmx')
@@ -171,6 +173,8 @@ class Level :
         if whether_to_update:
             self.all_sprites.update(dt)
         self.equip_message()
+        if self.player.has_broom :
+            self.overlay.display()
         self.event_detection(dt)
 
     def equip_message(self):
