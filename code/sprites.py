@@ -222,6 +222,7 @@ class Trash(InteractableObject) :
         if self.player.has_broom and not self.has_buttons:
             self.kill()
         elif self.has_buttons :
+            self.button.kill()
             self.kill()
 
 class Fridge(InteractableObject) :
