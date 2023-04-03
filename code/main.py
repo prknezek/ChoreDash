@@ -69,7 +69,7 @@ class Game :
 
         #self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT))
         #self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT), SCALED)
-        #self.intro.run(self.screen)
+        self.intro.run(self.screen)
         mixer.music.play(-1)
         
         # game loop

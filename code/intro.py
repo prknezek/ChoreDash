@@ -4,8 +4,8 @@ from pyvidplayer import Video
 
 class Intro:
     def __init__(self):
-        self.video = Video("./video/fatFile_2.mp4")
-        self.video.set_size((460,330))
+        self.video = Video("./video/newFile.mp4")
+        self.video.set_size((920,660))
         self.video.set_volume(0.4)
 
         pygame.mouse.set_visible(False)
