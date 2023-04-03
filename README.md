@@ -12,7 +12,9 @@ While taking a nice peaceful nap, you get a text message from your mom. Without 
 ## How to Play
 
 ### General Gameplay
-Run around and complete the tasks that are listed on the fridge within the time limit. The timer can be accessed from the phone. You will receive a score at the end with the option to try again. Try to finish all the tasks within the time limit, and then try to do it as fast as possible!
+Run around and complete the tasks that are listed on the fridge within the time limit. The timer can be accessed from the phone. You will receive a score at the end with the option to try again.
+<br>
+Try to finish all the tasks within the time limit, and then try to do it as fast as possible!
 
 Movement: WASD | W ⬆️, A ⬅️, S⬇️, D⬅️
 <br>
