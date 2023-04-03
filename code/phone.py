@@ -76,7 +76,7 @@ class Phone:
         print(self.phonescreen_rect.width, self.phonescreen_rect.height)
 
         self.texts = [
-            ("mom's otw, do the chores !", "5:10"),
+            ("wasd to move, esc to pause !", "5:10"),
             ("check the list on the fridge", "5:28"),
             ("press tab to start ! ", "5:28")
         ]
@@ -102,7 +102,7 @@ class Phone:
 
     def showText(self, text_surf, top):
         # show text surf
-        text_surf_rect = text_surf.get_rect(midleft = (15, 31+top))
+        text_surf_rect = text_surf.get_rect(midleft = (16, 31+top))
         self.phone_surf.blit(text_surf, text_surf_rect)
 
     def tickTimer(self):
