@@ -283,7 +283,7 @@ class Trashcan(InteractableObject) :
         # setup
         self.color = self.button.name
         self.has_buttons = True
-        #self.empty()
+        self.is_empty = False
 
         # game
         self.letter_sequence = []
@@ -342,6 +342,7 @@ class Trashcan(InteractableObject) :
         # update sprite and set interacted to true
         image_surface = pygame.image.load(f'./graphics/tiles/trashcans/{self.color}.png').convert_alpha()
         self.image = image_surface
+        self.is_empty = True
         self.button.hide()
 
     def is_colliding(self) :

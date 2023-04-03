@@ -24,6 +24,7 @@ class Level :
         self.door_sprites = pygame.sprite.Group()
         self.player_sprite = pygame.sprite.Group()
         self.trashcan_sprites = pygame.sprite.Group()
+        self.trashcan_objects = []
         self.interact_sprites = pygame.sprite.Group()
         self.indicator_sprites = pygame.sprite.Group()
         self.floor_trash_sprites = pygame.sprite.Group()
@@ -133,8 +134,9 @@ class Level :
 
         # draw trashcans
         for x, y, surface in tmx_data.get_layer_by_name('Trashcans').tiles() :
-            Trashcan((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trashcan_sprites], self.player_sprite, self.interact_sprites)
-        
+            trash = Trashcan((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.trashcan_sprites], self.player_sprite, self.interact_sprites)
+            self.trashcan_objects.append(trash)
+
         # draw trash
         for x, y, surface in tmx_data.get_layer_by_name('Trash').tiles() :
             Trash((x * cg.TILESIZE, y * cg.TILESIZE), surface, [self.all_sprites, self.floor_trash_sprites], self.player, self.player_sprite, self.interact_sprites, False)

@@ -27,7 +27,7 @@ class todoList:
         # critical variables
         self.allTasksCompleted = False                      ### turns true when all tasks are completed
         self.taskStrings = ["TODO List:",
-                            "TAKE OUT TRASH",
+                            f"TAKE OUT TRASH ()",
                             "LAUNDRY",
                             "CLEAN ROOM",
                             "DISHES",
