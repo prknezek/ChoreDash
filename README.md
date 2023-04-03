@@ -33,8 +33,7 @@ Use the arrow keys to move the sponge!
 
 ## Design
 ### main.py
-The main.py file holds the main game loop. The Game class is located here, which is the main class that runs the game. Different functions are called
-within the Game class that allow the game to run.
+The main.py file holds the main game loop. The Game class is located here, which is the main class that runs the game. Here, all objects are initialized, and their respective run/update commands are called when necessary. Functions related to overall game flow are located here, such as loading screens, pause and retry mechanics, etc.
 <br>
 ### player.py
 The player.py file handles the input, collisions, and events that the main player experiences throughout the game.
