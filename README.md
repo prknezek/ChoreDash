@@ -1,8 +1,8 @@
 # ChoreDash
 
 Developed by Hungry Games: <br>
-Payton Knezek<br>
-Hemanth Mukesh<br>
+Payton Knezek, 
+Hemanth Mukesh, 
 Adnan Yusuf<br>
 
 ## Overview
