@@ -11,38 +11,56 @@ from pygame import mixer
 from intro import Intro
 
 class Game :
+    
+    def loading(self):
+        print("loading")
+        self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH*2, cg.SCREEN_HEIGHT*2))
+        surf = pygame.Surface((cg.SCREEN_WIDTH*2, cg.SCREEN_HEIGHT*2))        
+        surf.fill((0, 0, 0))
+        loading_text = self.bigfont.render("Loading...", False, 'White')
+        loading_text_rect = loading_text.get_rect(bottomleft = (20, cg.SCREEN_HEIGHT*2 - 15))
+        surf.blit(loading_text, loading_text_rect)
+        self.screen.blit(surf, (0,0))
+        pygame.display.flip()
+        pygame.time.delay(500)
+        print("done loading")
 
     retry = False
 
     def __init__(self) :        
         pygame.init()        
         pygame.key.set_repeat(1000)
-        self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT), SCALED)
+        self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH*2, cg.SCREEN_HEIGHT*2))
         self.clock = pygame.time.Clock() # For setting framerate
         pygame.display.set_caption("ChoreDash")        
 
         pygame.mouse.set_visible(False)
-        self.cursor_img = pygame.image.load('graphics/cursor.png').convert_alpha()
+        self.cursor_img = pygame.image.load('graphics/UI/cursor.png').convert_alpha()
         self.cursor_img_rect = self.cursor_img.get_rect()
         self.cursor_img_mask = pygame.mask.from_surface(self.cursor_img)
 
         # loading screen here        
+        self.bigfont = pygame.font.Font('graphics/5x5.ttf', 25)        
+        self.loading()
         self.level = Level()        
         self.phone  = Phone()
         self.todolist = todoList()          
         self.pause = Pause(self.cursor_img.get_width(), self.cursor_img.get_height())
-        self.end = EndScreen(self.cursor_img.get_width(), self.cursor_img.get_height())
+        self.end = EndScreen(self.cursor_img.get_width(), self.cursor_img.get_height())        
         self.font = pygame.font.Font('graphics/5x5.ttf', 15)
         self.bgfont = pygame.font.Font('graphics/5x5.ttf', 15)
 
+        print("done setup")
+
         if not self.retry:
-            self.intro = Intro()
+            self.intro = Intro()                        
             #music
             mixer.music.load("./audio/bg.mp3")
             mixer.music.set_volume(0.1)
             self.retry = True
-        #else:
-            #mixer.music.play(-1)
+        else:
+            self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT), SCALED)
+            mixer.music.play(-1)
         
 
     def events(self) :
@@ -57,6 +75,7 @@ class Game :
             self.end.show_end = True
 
         if self.pause.retry_bool or self.end.retry_bool == True:
+            mixer.music.stop()
             self.__init__()
 
     def displayCursor(self):
@@ -65,10 +84,11 @@ class Game :
 
     def run(self) :
         
-        # splash screen here with (Hungry Games)
+        # splash screen here with (Hungry Games)        
 
         self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH*2, cg.SCREEN_HEIGHT*2))        
         self.intro.run(self.screen)
+        self.loading()
         self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT), SCALED)
         mixer.music.play(-1)
         

@@ -5,7 +5,7 @@ from pause import Buttons
 class Buttons(pygame.sprite.Sprite):
     def __init__(self, width, height, xoff, yoff):
         super().__init__()
-        self.buttons_only_surf = pygame.transform.scale(pygame.image.load('graphics/endbuttonsonly.png').convert_alpha(), (width, height))
+        self.buttons_only_surf = pygame.transform.scale(pygame.image.load('graphics/UI/endbuttonsonly.png').convert_alpha(), (width, height))
         self.buttons_mask = pygame.mask.from_surface(self.buttons_only_surf)
         self.xoff = xoff
         self.yoff = yoff
@@ -40,11 +40,11 @@ class EndScreen:
 
         # critical variables        
         self.show_end = False
-        self.end_surf = pygame.transform.scale(pygame.image.load('graphics/endscreen.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
+        self.end_surf = pygame.transform.scale(pygame.image.load('graphics/UI/endscreen.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
         self.end_surf_rect = self.end_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT/2))
-        # self.retry_highlight_surf = pygame.transform.scale(pygame.image.load('graphics/retryhighlight.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
+        # self.retry_highlight_surf = pygame.transform.scale(pygame.image.load('graphics/UI/retryhighlight.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
         # self.retry_highlight_surf_rect = self.retry_highlight_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT/2))
-        self.resume_highlight_surf = pygame.transform.scale(pygame.image.load('graphics/resumehighlight.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
+        self.resume_highlight_surf = pygame.transform.scale(pygame.image.load('graphics/UI/resumehighlight.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
         self.resume_highlight_surf_rect = self.resume_highlight_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT/2))
         self.font = pygame.font.Font('graphics/5x5.ttf', 70)
         self.smfont = pygame.font.Font('graphics/5x5.ttf', 20)
@@ -71,7 +71,7 @@ class EndScreen:
         bg_surf.set_alpha(150)
         bg_surf.fill((0, 0, 0))
 
-        self.end_surf = pygame.transform.scale(pygame.image.load('graphics/endscreen.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
+        self.end_surf = pygame.transform.scale(pygame.image.load('graphics/UI/endscreen.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
 
         paused_text = self.font.render('End', False, 'White')
         paused_text_rect = paused_text.get_rect(center = (self.end_surf.get_width() / 2 + 3, self.pause_text_top_offset))

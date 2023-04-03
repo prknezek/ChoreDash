@@ -9,7 +9,7 @@ class Intro:
         self.video.set_volume(0.4)
 
         pygame.mouse.set_visible(False)
-        self.cursor_img = pygame.image.load('graphics/cursor.png').convert_alpha()
+        self.cursor_img = pygame.image.load('graphics/UI/cursor.png').convert_alpha()
         self.cursor_img_rect = self.cursor_img.get_rect()
         self.cursor_img_mask = pygame.mask.from_surface(self.cursor_img)
 
