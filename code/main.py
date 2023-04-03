@@ -30,6 +30,7 @@ class Game :
     def __init__(self) :        
         pygame.init()        
         pygame.key.set_repeat(1000)
+        self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT), SCALED)
         self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH*2, cg.SCREEN_HEIGHT*2))
         self.clock = pygame.time.Clock() # For setting framerate
         pygame.display.set_caption("ChoreDash")        
