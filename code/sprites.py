@@ -264,6 +264,7 @@ class Dishes(InteractableObject) :
                 self.display_message = 'cannot perform while holding item'
         else :
             if self.player.is_holding == 'None' :
+                self.interacted = True
                 self.put_away = True
                 self.image.set_alpha(0)
             else :
