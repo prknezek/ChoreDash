@@ -92,6 +92,13 @@ class CleanMinigame :
         live_surf_rect = live_surf.get_rect(center = (cg.SCREEN_WIDTH/2, cg.SCREEN_HEIGHT - 20))
         self.display_surface.blit(live_surf, live_surf_rect)
 
+        tip_text = self.live_bgfont.render("Tip: Use arrow keys to move sponge", False, 'Black')
+        tip_text_rect = tip_text.get_rect(center = (cg.SCREEN_WIDTH/2, 20+2))
+        self.display_surface.blit(tip_text, tip_text_rect)
+        tip_text = self.live_bgfont.render("Tip: Use arrow keys to move sponge", False, 'White')
+        tip_text_rect = tip_text.get_rect(center = (cg.SCREEN_WIDTH/2, 20))
+        self.display_surface.blit(tip_text, tip_text_rect)
+
     def spawn_enemies(self) :
         if self.enemy_spawn_number > 0 and len(self.enemy_sprites.sprites()) < 4 :
             self.determine_spawn_location()
