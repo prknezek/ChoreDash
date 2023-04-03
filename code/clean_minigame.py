@@ -160,7 +160,7 @@ class Enemy(pygame.sprite.Sprite) :
         super().__init__(group)
 
         # setup
-        image_path = './graphics/tiles/clean_minigame/enemies/' + str(randint(1, 7)) + '.png'
+        image_path = './graphics/tiles/clean_minigame/enemies/' + str( (randint(0,1) * 2) + 3) + '.png'       # 5 and 3 are the best
         self.image = pygame.image.load(image_path).convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
         self.z = cg.LAYERS['floor_decoration']

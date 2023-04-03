@@ -68,7 +68,7 @@ class Game :
         # splash screen here with (Hungry Games)
 
         self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH*2, cg.SCREEN_HEIGHT*2))        
-        # self.intro.run(self.screen)
+        self.intro.run(self.screen)
         self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT), SCALED)
         mixer.music.play(-1)
         
