@@ -40,7 +40,7 @@ The player.py file handles the input, collisions, and events that the main playe
 ### intro.py
 The intro.py file is responsible for playing the intro at the beginning of the game.
 ### pause.py and ending.py
-These two files are responsible for the pause and end screen games, and allow for retrying the game. This is done by running the __init__ function in main again, re-initializing everything.
+These two files are responsible for the pause and end screen games, and allow for retrying the game. Retrying is done by running the __init__ function in main again, re-initializing everything. The final score is calculated in ending.py and displayed to the player.
 ### level.py
 The level.py file controls the map and the various sprites in the game. By far the longest and most complicated file.
 ### sprites.py
