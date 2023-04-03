@@ -1,6 +1,7 @@
 import pygame
 import config as cg
 from support import import_folder
+from pygame import mixer
 
 class Player(pygame.sprite.Sprite) :
     def __init__(self, pos, group, collision_sprites, door_sprites) :
@@ -120,6 +121,12 @@ class Player(pygame.sprite.Sprite) :
     def move(self, dt) :
         if self.direction.magnitude() > 0 :
             self.direction = self.direction.normalize()
+            #sounds bad
+            # self.walksound = mixer.Sound('./audio/stepstone_1.wav')
+            # self.walksound.set_volume(0.1)
+            # self.walksound.fadeout(1)
+            # self.walksound.play()
+            
         
         # horizontal movement
         self.pos.x += self.direction.x * self.speed * dt
