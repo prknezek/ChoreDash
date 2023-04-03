@@ -132,7 +132,7 @@ class SpamBar(Generic) :
         self.pos = pos
         self.finished = False
 
-        self.max_presses = 100
+        self.max_presses = 200
         self.press_amount = 0
 
         self.bg.hide()
@@ -165,13 +165,15 @@ class Toilet(InteractableObject) :
         self.bar = progress_bar
         self.showing_bar = False
 
-        self.clean = False
+        self.is_clean = False
         self.bar.image.set_alpha(0)
 
     def update(self, dt) :
         self.is_colliding()
         if self.bar.finished :
-            self.clean = True
+            self.interacted = True
+            self.button.hide()
+            self.is_clean = True
             self.bar.bg.kill()
             self.bar.kill()
             self.image = pygame.image.load('./graphics/tiles/bathroom/clean_toilet.png').convert_alpha()

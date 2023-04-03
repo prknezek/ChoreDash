@@ -75,7 +75,7 @@ class Phone:
 
         self.texts = [
             ("mom's otw, do the chores !", "5:10"),
-            ("check the list on fridge", "5:28"),
+            ("check the list on the fridge", "5:28"),
             ("press tab to start ! ", "5:28")
         ]
 
@@ -83,7 +83,9 @@ class Phone:
 
         # timer
         self.last_time = 0
-        self.minutes = 1
+        self.total_minutes = 2
+        self.total_seconds = 30
+        self.minutes = 2
         self.seconds = 30
     
     def initTexts(self):

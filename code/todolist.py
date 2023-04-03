@@ -7,7 +7,9 @@ class TaskIndex(Enum):
     LAUNDRY = 1
     TOYS = 2
     DISHES = 3
-    SWEEP_TRASH = 4
+    CLEAN_FLOORS = 4
+    CLEAR_COUNTER = 5
+    TOILET = 6
 
 class todoList:
 
@@ -29,8 +31,10 @@ class todoList:
                             "LAUNDRY",
                             "CLEAN ROOM",
                             "DISHES",
-                            "SWEEP TRASH"]
-        self.taskCompletions = [False, False, False, False]
+                            "SWEEP FLOORS",
+                            "CLEAR COUNTER",
+                            "CLEAN TOILET"]
+        self.taskCompletions = [False, False, False, False, False]
         
         self.todo_surf = pygame.transform.scale(pygame.image.load('graphics/todolist.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
         # self.todo_surf = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
@@ -48,8 +52,6 @@ class todoList:
                 self.taskCompletions[TaskIndex.TOYS.value] = True
             case "dishes":
                 self.taskCompletions[TaskIndex.DISHES.value] = True
-            case "sweep_trash":
-                self.taskCompletions[TaskIndex.SWEEP_TRASH.value] = True
 
     def updateCompleted(self, updatedArr):
         self.taskCompletions = updatedArr

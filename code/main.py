@@ -67,9 +67,9 @@ class Game :
         
         # splash screen here with (Hungry Games)
 
-        self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT))
-        #self.intro.run(self.screen)
+        #self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT))
         self.screen = pygame.display.set_mode((cg.SCREEN_WIDTH, cg.SCREEN_HEIGHT), SCALED)
+        self.intro.run(self.screen)
         mixer.music.play(-1)
         
         # game loop
@@ -81,7 +81,9 @@ class Game :
             self.phone.run(self.screen, self.pause.show_pause or self.end.show_end)
             self.todolist.run(self.screen, self.level.fridge.show_todolist, self.level.completed_array)
             self.pause.run(self.cursor_img_mask, not self.end.show_end)            
-            self.end.run(self.cursor_img_mask, self.todolist.taskCompletions, self.phone.minutes, self.phone.seconds)
+            minutes = self.phone.total_minutes - self.phone.minutes
+            seconds = self.phone.total_seconds - self.phone.seconds
+            self.end.run(self.cursor_img_mask, self.todolist.taskCompletions, minutes, seconds)
             
             self.displayCursor()
 

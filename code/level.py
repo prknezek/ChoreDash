@@ -14,7 +14,7 @@ class Level :
         self.display_surface = pygame.display.get_surface()
 
         # task completion trackers
-        self.completed_array = [False, False, False, False, False]
+        self.completed_array = [False, False, False, False, False, False, False]
 
         # sprite groups
         self.all_sprites = CameraGroup()
@@ -237,15 +237,17 @@ class Level :
                 self.clean_minigame = CleanMinigame(self.player, self.player_sprite, self.collision_sprites)
                 self.player.lives = 3
             
+        if self.toilet.is_clean :
+            self.completed_array[TaskIndex.TOILET.value] = True
+        
         if self.dishes.put_away :
             self.completed_array[TaskIndex.DISHES.value] = True
 
         if len(self.floor_trash_sprites.sprites()) == 0 :
-            self.completed_array[TaskIndex.SWEEP_TRASH.value] = True
+            self.completed_array[TaskIndex.CLEAN_FLOORS.value] = True
         
         if len(self.counter_trash_sprites.sprites()) == 0 :
-            # COUNTER TRASH EVENT DONE
-            pass
+            self.completed_array[TaskIndex.CLEAR_COUNTER.value] = True
 
         for sprite in self.trashcan_sprites :
             if sprite.interacted :
