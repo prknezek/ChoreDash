@@ -16,12 +16,12 @@ class todoList:
     def __init__(self):
 
         # adjustable options
-        self.WIDTH = 100
-        self.HEIGHT = 100
+        self.WIDTH = 112
+        self.HEIGHT = 112
         self.box_top_offset = 8
         self.left_offset = 5
         self.top_offset = 5
-        self.spacing = 15
+        self.spacing = 14
         self.font_size = 10
 
         # critical variables
@@ -34,7 +34,7 @@ class todoList:
                             "SWEEP FLOORS",
                             "CLEAR COUNTER",
                             "CLEAN TOILET"]
-        self.taskCompletions = [False, False, False, False, False]
+        self.taskCompletions = [False, False, False, False, False, False, False]
         
         self.todo_surf = pygame.transform.scale(pygame.image.load('graphics/todolist.png').convert_alpha(), (self.WIDTH, self.HEIGHT))
         # self.todo_surf = pygame.Surface((self.WIDTH, self.HEIGHT), pygame.SRCALPHA)
