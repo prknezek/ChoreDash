@@ -31,12 +31,14 @@ within the Game class that allow the game to run.
 The player.py file handles the input, collisions, and events that the main player experiences throughout the game.
 ### intro.py
 The intro.py file is responsible for playing the intro at the beginning of the game.
-### pause.py
-### ending.py
+### pause.py and ending.py
+These two files are responsible for the pause and end screen games, and allow for retrying the game. This is done by running the __init__ function in main again, re-initializing everything.
 ### level.py
 ### sprites.py
 ### todolist.py
+The todolist.py file is responsible for drawing the todolist on the topright of the screen when the player approaches the fridge.
 ### phone.py
+The phone.py file is responsible for drawing the phone when opened and the tab-hint image when closed. This also holds the code for the timer, which is also displayed on the phone.
 ### clean_minigame.py
 The clean_minigame.py plays the minigame when you interact with the dishes.
 ### overlay.py
