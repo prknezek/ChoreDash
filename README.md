@@ -30,3 +30,14 @@ within the Game class that allow the game to run.
 The player.py file handles the input, collisions, and events that the main player experiences throughout the game.
 ### intro.py
 The intro.py file is responsible for playing the intro at the beginning of the game.
+### pause.py
+### ending.py
+### level.py
+### sprites.py
+### todolist.py
+### phone.py
+### clean_minigame.py
+### overlay.py
+### support.py
+### config.py
+### camera_group.py
