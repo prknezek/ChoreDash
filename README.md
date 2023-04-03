@@ -6,7 +6,7 @@ ChoreDash is a 2D game developed in Python using the pygame library for the Caps
 While taking a nice peaceful nap, you get a text message from your mom. Without even looking at your phone, you realize what you have done...
 
 **YOU FORGOT TO DO THE CHORES!**
-
+<br>
 **HURRY UP AND GET THEM DONE BEFORE YOUR MOM GETS HOME!**
 
 ## How to Play
@@ -15,6 +15,8 @@ While taking a nice peaceful nap, you get a text message from your mom. Without 
 Movement: WASD | W ⬆️, A ⬅️, S⬇️, D⬅️
 <br>
 Interact: E
+<br>
+Pause: Escape
 
 ### Dishwashing Mini-Game
 The dirty dishes are chasing you!<br>
