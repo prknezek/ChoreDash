@@ -16,6 +16,8 @@ Movement: WASD | W ⬆️, A ⬅️, S⬇️, D⬅️
 <br>
 Interact: E
 <br>
+Phone: Tab
+<br>
 Pause: Escape
 
 ### Dishwashing Mini-Game
