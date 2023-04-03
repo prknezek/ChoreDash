@@ -431,8 +431,8 @@ class LaundryMachine(InteractableObject) :
         self.hitbox.y -= 20
 
         #sounds
-        self.washsfx = mixer.Sound('./audio/wash_mac.mp3')
-        self.ping = mixer.Sound('./audio/ping.mp3')
+        # self.washsfx = mixer.Sound('./audio/wash_mac.mp3')
+        # self.ping = mixer.Sound('./audio/ping.mp3')
 
     def update(self, dt) :
         self.tick_timer()
@@ -444,13 +444,13 @@ class LaundryMachine(InteractableObject) :
         self.indicator_control(dt)
 
         if self.start_cycle :
-            self.washsfx.set_volume(0.1)
-            self.washsfx.play()
+            # self.washsfx.set_volume(0.1)
+            # self.washsfx.play()
             self.animate(dt)
 
         if self.clean :
             self.image = pygame.image.load('./graphics/tiles/bathroom/laundry_machine_done.png').convert_alpha()
-            self.washsfx.stop()
+            # self.washsfx.stop()
             
         elif not self.start_cycle :
             self.image = pygame.image.load('./graphics/tiles/bathroom/laundry_machine.png').convert_alpha()
