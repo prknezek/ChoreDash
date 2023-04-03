@@ -83,10 +83,10 @@ class Phone:
 
         # timer
         self.last_time = 0
-        self.total_minutes = 2
-        self.total_seconds = 30
-        self.minutes = 2
-        self.seconds = 30
+        self.total_minutes = cg.TOTAL_MINUTES
+        self.total_seconds = cg.TOTAL_SECONDS
+        self.minutes = self.total_minutes
+        self.seconds = self.total_seconds
     
     def initTexts(self):
         self.totalHeight = 0        
