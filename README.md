@@ -17,9 +17,10 @@ Interact: E
 
 ### Dishwashing Mini-Game
 The dirty dishes are chasing you!<br>
-Have them touch the center piece to get them washed.<br>
+Have them touch the sponge to get them washed.<br>
 Be careful, you only have three lives!<br>
 
+Use the arrow keys to move the sponge!
 
 ## Design
 ### main.py
