@@ -21,7 +21,7 @@ Run around and complete the tasks that are listed on the fridge within the time 
 <br>
 Try to finish all the tasks within the time limit, and then try to do it as fast as possible!
 
-Movement: WASD | W ⬆️, A ⬅️, S⬇️, D⬅️
+Movement: WASD | W ⬆️, A ⬅️, S⬇️, D⬅➡️
 <br>
 Interact: E
 <br>
